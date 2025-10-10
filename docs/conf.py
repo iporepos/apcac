@@ -46,7 +46,7 @@ sys.path.insert(0, os.path.abspath("../src"))  # <-- [CHECK THIS] src layout
 # ***********************************************************************
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "copyme"  # <-- [CHANGE HERE]
+project = "apcac"  # <-- [CHANGE HERE]
 copyright = "2025, Iporã Possantti"  # <-- [CHANGE HERE]
 author = "Iporã Possantti"  # <-- [CHANGE HERE]
 release = "0.0.1"  # <-- [CHANGE HERE]
@@ -81,6 +81,8 @@ source_suffix = {
 autodoc_mock_imports = [
     "numpy",
     "pandas",
+    "geopandas",
+    "processing",
     # ... keep adding as new dependencies arise
 ]
 

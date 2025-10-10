@@ -36,46 +36,32 @@ Print a message
 
 
 """
-
-
 # IMPORTS
 # ***********************************************************************
 # import modules from other libs
 
 # Native imports
 # =======================================================================
-# import {module}
+import os, shutil
+import time
+
 # ... {develop}
 
 # External imports
 # =======================================================================
-# import {module}
+import processing
+
 # ... {develop}
 
 # Project-level imports
 # =======================================================================
 # import {module}
-from copyme.module import HELLO  # import from internal modules
-
 # ... {develop}
 
 
 # CONSTANTS
 # ***********************************************************************
 # define constants in uppercase
-
-# CONSTANTS -- Project-level
-# =======================================================================
-# ... {develop}
-
-# Subsubsection example
-# -----------------------------------------------------------------------
-HELLO2 = "Hello Mars!"  # example
-# ... {develop}
-
-# CONSTANTS -- Module-level
-# =======================================================================
-# ... {develop}
 
 
 # FUNCTIONS
@@ -87,63 +73,63 @@ HELLO2 = "Hello Mars!"  # example
 
 # Demo example
 # -----------------------------------------------------------------------
-def myfunc2(parameter1):
-    # todo docstring
-    print(f" >>>> {parameter1}")
+def process_data(input1, input2, output_folder):
+    """
+    Demo for processing data
+
+    :param input1: file path to input data 1
+    :type input1: str
+    :param input2: file path to input data 1
+    :type input2: str
+    :param output_folder: file path to output folder
+    :type output_folder: str
+    """
+    # Setup input variables
+    # -------------------------------------------------------------------
+    input1_basename = os.path.basename(input1)
+    input1_name = input1_basename.split(".")[0]
+
+    input2_basename = os.path.basename(input2)
+    input2_name = input2_basename.split(".")[0]
+
+    shutil.copy(src=input1, dst=f"{output_folder}/{input1_basename}")
+    shutil.copy(src=input2, dst=f"{output_folder}/{input2_basename}")
+
+    # Setup output variables
+    # -------------------------------------------------------------------
+    os.makedirs(output_folder, exist_ok=True)
+    output_file = f"{output_folder}/result.tif"
+
+    # Run processes
+    # -------------------------------------------------------------------
+    processing.run(
+        "native:rastercalc",
+        {
+            "LAYERS": [input1, input2],
+            "EXPRESSION": '"{}@1" * "{}@1"'.format(input1_name, input2_name),
+            "EXTENT": None,
+            "CELL_SIZE": None,
+            "CRS": None,
+            "OUTPUT": output_file,
+        },
+    )
+
+    # Wrap up
+    # -------------------------------------------------------------------
+
     return None
 
 
 # ... {develop}
 
+
 # FUNCTIONS -- Module-level
 # =======================================================================
-# ... {develop}
+def waiter():
+    print("hey!")
+    time.sleep(3)
 
 
-# CLASSES
-# ***********************************************************************
-
-# CLASSES -- Project-level
-# =======================================================================
-
-
-# Demo example
-# -----------------------------------------------------------------------
-class MySubClass:
-    # todo docstring
-
-    def __init__(self):
-        # todo docstring
-        print("start class")
-        self.value = 10
-
-    # Internal methods
-    # -------------------------------------------------------------------
-    def _reset_value(self):
-        # todo docstring
-        self.value = 10
-        return None
-
-    # Public methods
-    # -------------------------------------------------------------------
-    def print_value(self):
-        # todo docstring
-        print(self.value)
-        return None
-
-    # Static methods
-    # -------------------------------------------------------------------
-    @staticmethod
-    def print_message(s="Hello world!"):
-        # todo docstring
-        print(s)
-        return None
-
-
-# ... {develop}
-
-# CLASSES -- Module-level
-# =======================================================================
 # ... {develop}
 
 
@@ -152,12 +138,4 @@ class MySubClass:
 # standalone behaviour as a script
 if __name__ == "__main__":
 
-    # Script section
-    # ===================================================================
-    print("Hello world!")
-    # ... {develop}
-
-    # Script subsection
-    # -------------------------------------------------------------------
-    myfunc2(HELLO2)
-    # ... {develop}
+    print("Hello World")

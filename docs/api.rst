@@ -1,6 +1,3 @@
-.. a cool badge for the source. replace or remove if appropriate [CHANGE THIS]:
-
-.. include:: ./badge_source.rst
 
 .. _api:
 
@@ -26,23 +23,28 @@ This reference, automatically generated using Sphinx, provides a complete overvi
 .. autosummary::
    :toctree: generated
 
-   copyme
+   apcac
 
 
 .. autosummary::
    :toctree: generated
 
-   copyme.module
+   apcac.module
 
 
 .. autosummary::
    :toctree: generated
 
-   copyme.mypackage
+   apcac.variables
 
 
 .. autosummary::
    :toctree: generated
 
-   copyme.mypackage.submodule
+   apcac.indexes
 
+
+.. autosummary::
+   :toctree: generated
+
+   apcac.classes

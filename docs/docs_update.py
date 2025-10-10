@@ -42,7 +42,7 @@ Update docs
 # =======================================================================
 import subprocess
 import webbrowser
-import glob
+import glob, os
 from pathlib import Path
 
 # External imports

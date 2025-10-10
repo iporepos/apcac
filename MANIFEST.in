@@ -21,8 +21,6 @@ include LICENSE
 # OTHER RESOURCES
 # =======================================================================
 # [CHECK THIS] Include docs folder
-recursive-include docs * 
-# [CHECK THIS] Include examples folder
-# recursive-include examples *  # Uncomment to include example scripts
+recursive-include docs *
 
 # ... [ADD MORE IF NEDDED]

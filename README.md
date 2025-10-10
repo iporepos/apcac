@@ -7,67 +7,58 @@
 ![Tests Status](https://github.com/iporepos/copyme/actions/workflows/tests.yaml/badge.svg)
 
 
-<a logo>
-<img src="https://raw.githubusercontent.com/iporepos/copyme/master/docs/figs/logo.png" height="130" width="130">
-</a>
-
 ---
 
-# copyme
+# APCAC
 
-A simple template for python development. Use this repository as a template for developing a python library or package.
+This repository aims to organize the processing workflow for the classification of  
+APCAC – *Priority Areas for Water Conservation in the Cerrado*.
 
 > [!NOTE]
-> Check out the [documentation website](https://iporepos.github.io/copyme/)
+> Check out the [documentation website](https://iporepos.github.io/apcac/) for more details.
 
----
+# Installation
 
-# Templates
+The Python modules maintained here are developed for the [QGIS 3](https://qgis.org/download/) environment.  
+QGIS 3 should be installed in advanced mode, so that the following Python libraries are included:
 
-When copying files from this repo, remember that they are _templates_. So:
-
-1) look for `[CHANGE THIS]` for mandatory modifications;
-2) look for `[CHECK THIS]` for possible modifications;
-3) look for `[EXAMPLE]` for simple examples (comment or uncomment it if needed);
-4) look for `[ADD MORE IF NEDDED]` for possible extra features;
-5) placeholders are designated by curly braces: `{replace-this}`.
+- numpy  
+- pandas  
+- geopandas
 
 
----
+# Running routines
 
-# Configuration files
+The routines are developed as Python functions.  
+These functions must be executed through the QGIS “Run Script” tool,  
+using scripts with the following structure:
 
-This repository relies on several **configuration files** that are essential for the proper functioning of the template. Each file has a specific role, and some of them work together, so they should be edited thoughtfully. Below is an overview of the main configuration files and what you should know about them.
 
+```python
+# use the importlib library
+import importlib.util as iu
 
-| File                               | Purpose | Key Notes |
-|------------------------------------|---------|-----------|
-| **`pyproject.toml`**               | Project configuration | Manages dependencies, build system, and project settings. Update when adding dependencies or changing project structure. |
-| **`.gitignore`**                   | Git ignore rules | Specifies files/folders Git should ignore (e.g., temp files, datasets, build outputs). Keeps repo clean. |
-| **`.github/workflows/style.yaml`** | Style CI configuration | Runs code style checks using [Black](https://black.readthedocs.io/en/stable/). Depends on `pyproject.toml` dev dependencies. |
-| **`docs/conf.py`**                 | Docs configuration | Configures [Sphinx](https://www.sphinx-doc.org/en/master/index.html) for building documentation. Update if project structure changes. |
-| **`.github/workflows/docs.yaml`**  | Docs CI configuration | Automates online docs build. Relies on `pyproject.toml` and `docs/conf.py`. Requires extra steps (see file). |
-| **`tests/conftest.py`**            | Testing configuration | Provides shared fixtures and settings for tests. Can be customized to fit project needs. |
-| **`.github/workflows/tests.yaml`** | Testing CI configuration | Runs automated unit tests on CI. Ensures code correctness after changes. |
+# specify the module
+the_module = "path/to/the/module.py"
+spec = iu.spec_from_file_location("module", the_module)
+module = iu.module_from_spec(spec)
+spec.loader.exec_module(module)
 
-> [!NOTE]  
-> All config files are commented with recommended actions and extra steps.
+# Now call the function
+module.process_data(
+    input1="path/to/data1.tif",
+    input2="path/to/data2.tif",
+    output_folder="path/to/results"
+)
+```
 
-> [!WARNING]  
-> Online documentation build may require additional setup — check `.github/workflows/docs.yml`.
-
-> [!IMPORTANT]  
-> Continous Integration (CI) steup allows for check-ups for commits and not allowing bad code
-> to be pushed to the main branch. So Style, Docs and Tests must always pass.
+> [!NOTE]
+> Check out the [documentation website](https://iporepos.github.io/apcac/) for more details.
 
 ---
 
 # Repo layout
 
-A standard python repo may use the following layout. 
-This layout is known as `src` layout, since it stores the source code under a `src/{repo}` folder.
-
-> See more on [flat vs src layout](https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/) 
 
 ```txt
 copyme/
@@ -87,14 +78,12 @@ copyme/
 │         └── docs.yml            # [CHECK THIS] configuration file for docs build workflow
 │
 ├── src/                          # source code folder
-│    ├── copyme.egg-info          # [ignored] [generated] files for local development
-│    └── copyme/                  # [CHANGE THIS] source code root
+│    ├── apcac.egg-info          # [ignored] [generated] files for local development
+│    └── apcac/                  # [CHANGE THIS] source code root
 │         ├── __init__.py         # template init file
-│         ├── module.py           # template module
-│         ├── ...                 # develop your modules
-│         ├── mypackage/          # template package
-│         │    ├── __init__.py
-│         │    └── submodule.py
+│         ├── variables.py        
+│         ├── indexes.py        
+│         ├── classes.py        
 │         └── data/               # run-time data
 │              └── src_data.txt   # dummy data file
 │
@@ -112,29 +101,23 @@ copyme/
 │    │     └── dataset1/          # [ignored] subfolders in data
 │    └── outputs/                 # [ignored] tests outputs
 │
-├── docs/                         # documentation folder
-│    ├── docs_update.rst          # updating script
-│    ├── about.rst                # info about the repo
-│    ├── api.rst                  # api reference using sphinx autodoc
-│    ├── conf.py                  # [CHECK THIS] configuration file for sphinx
-│    ├── dummy.md                 # markdown docs also works
-│    ├── index.rst                # home page for documentation
-│    ├── usage.rst                # instructions for using this repo
-│    ├── make.bat                 # (optional) [generated] sphinx auxiliar file 
-│    ├── Makefile                 # (optional) [generated] sphinx auxiliar file 
-│    ├── figs/                    # figs-only files
-│    │    ├── logo.png
-│    │    ├── logo.svg
-│    │    └── fig1.png               
-│    ├── data/                    # docs-only data
-│    │    └── docs.txt            # dummy data file
-│    ├── generated/               # [generated] sphinx created files 
-│    ├── _templates/              # [ignored] [generated] sphinx created stuff
-│    ├── _static/                 # [ignored] [generated] sphinx created stuff
-│    └── _build/                  # [ignored] [generated] sphinx build
-│
-└── examples/                     # (optional) learning resources 
-     ├── examples_01.ipynb    
-     └── examples_02.ipynb            
+└── docs/                         # documentation folder
+     ├── docs_update.rst          # updating script
+     ├── about.rst                # info about the repo
+     ├── conf.py                  # [CHECK THIS] configuration file for sphinx
+     ├── dummy.md                 # markdown docs also works
+     ├── index.rst                # home page for documentation
+     ├── usage.rst                # instructions for using this repo
+     ├── figs/                    # figs-only files
+     │    ├── logo.png
+     │    ├── logo.svg
+     │    └── fig1.png               
+     ├── data/                    # docs-only data
+     │    └── docs.txt            # dummy data file
+     ├── generated/               # [generated] sphinx created files 
+     ├── _templates/              # [ignored] [generated] sphinx created stuff
+     ├── _static/                 # [ignored] [generated] sphinx created stuff
+     └── _build/                  # [ignored] [generated] sphinx build
+         
 
 ```
