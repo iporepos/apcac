@@ -1,23 +1,11 @@
-.. a cool badge for the source. replace or remove if appropriate [CHANGE THIS]:
-
-.. include:: ./badge_source.rst
-
-.. a cool logo. replace or remove if appropriate [CHANGE THIS]:
-
-.. include:: ./logo.rst
-
-----
-
-.. rename title [CHANGE THIS]:
-
 .. _home:
 
-Copyme
+APCAC
 ############################################
 
 .. adapt this welcoming message [CHANGE THIS]:
 
-Welcome to ``copyme`` documentation! A simple template for python development.
+Welcome to ``apcac`` documentation! A simple template for python development.
 
 .. remove this note after enter maintenance mode [CHANGE THIS]:
 
@@ -39,4 +27,3 @@ Contents
    usage
    api
    development
-   dummy

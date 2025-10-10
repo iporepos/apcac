@@ -1,0 +1,15 @@
+﻿apcac.indexes
+=============
+
+.. automodule:: apcac.indexes
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      compute_t
+      fuzzify
+      process_data
+      waiter
+   

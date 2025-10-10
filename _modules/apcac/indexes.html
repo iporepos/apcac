@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>copyme.module &#8212; copyme 0.0.1 documentation</title>
+    <title>apcac.indexes &#8212; apcac 0.0.1 documentation</title>
   
   
   
@@ -43,7 +43,7 @@
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/copyme/module';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/apcac/indexes';</script>
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">copyme 0.0.1 documentation</p>
+    <p class="title logo__title">apcac 0.0.1 documentation</p>
   
 </a></div>
     
@@ -141,7 +141,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../usage.html">
-    Usage
+    User Guide
   </a>
 </li>
 
@@ -159,23 +159,6 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../../dummy.html">
-    Dummy file
-  </a>
-</li>
-
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -263,7 +246,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../usage.html">
-    Usage
+    User Guide
   </a>
 </li>
 
@@ -278,13 +261,6 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../development.html">
     Development
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../dummy.html">
-    Dummy file
   </a>
 </li>
 
@@ -348,7 +324,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">copyme.module</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">apcac.indexes</span></li>
   </ul>
 </nav>
 </div>
@@ -365,7 +341,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for copyme.module</h1><div class="highlight"><pre>
+  <h1>Source code for apcac.indexes</h1><div class="highlight"><pre>
 <span></span><span class="c1"># SPDX-License-Identifier: GPL-3.0-or-later</span>
 <span class="c1">#</span>
 <span class="c1"># Copyright (C) 2025 The Project Authors</span>
@@ -410,12 +386,16 @@
 
 <span class="c1"># Native imports</span>
 <span class="c1"># =======================================================================</span>
-<span class="c1"># import {module}</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
 <span class="c1"># ... {develop}</span>
 
 <span class="c1"># External imports</span>
 <span class="c1"># =======================================================================</span>
-<span class="c1"># import {module}</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">processing</span>
+
+
 <span class="c1"># ... {develop}</span>
 
 <span class="c1"># Project-level imports</span>
@@ -428,19 +408,6 @@
 <span class="c1"># ***********************************************************************</span>
 <span class="c1"># define constants in uppercase</span>
 
-<span class="c1"># CONSTANTS -- Project-level</span>
-<span class="c1"># =======================================================================</span>
-<span class="c1"># ... {develop}</span>
-
-<span class="c1"># Subsubsection example</span>
-<span class="c1"># -----------------------------------------------------------------------</span>
-<span class="n">HELLO</span> <span class="o">=</span> <span class="s2">&quot;Hello World!&quot;</span>  <span class="c1"># example</span>
-<span class="c1"># ... {develop}</span>
-
-<span class="c1"># CONSTANTS -- Module-level</span>
-<span class="c1"># =======================================================================</span>
-<span class="c1"># ... {develop}</span>
-
 
 <span class="c1"># FUNCTIONS</span>
 <span class="c1"># ***********************************************************************</span>
@@ -449,136 +416,127 @@
 <span class="c1"># =======================================================================</span>
 
 
-<span class="c1"># Demo example</span>
-<span class="c1"># -----------------------------------------------------------------------</span>
-<div class="viewcode-block" id="myfunc">
-<a class="viewcode-back" href="../../generated/copyme.module.html#copyme.module.myfunc">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">myfunc</span><span class="p">(</span><span class="n">parameter1</span><span class="p">):</span>
-    <span class="c1"># todo docstring</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">parameter1</span><span class="p">)</span>
-    <span class="n">ls_variable</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]</span>
+<div class="viewcode-block" id="compute_t">
+<a class="viewcode-back" href="../../generated/apcac.indexes.html#apcac.indexes.compute_t">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_t</span><span class="p">(</span><span class="n">input_hand</span><span class="p">,</span> <span class="n">input_twi</span><span class="p">,</span> <span class="n">output_folder</span><span class="p">,</span> <span class="n">hand_max</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">hand_w</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">twi_max</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+
+    <span class="c1"># Setup input variables</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># twi w</span>
+    <span class="c1"># ----------------</span>
+    <span class="n">twi_w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">hand_w</span>
+
+    <span class="c1"># Setup output variables</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># files</span>
+    <span class="c1"># ----------------</span>
+    <span class="n">output_fuzzy_hand</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/hand_f.tif&quot;</span>
+    <span class="n">output_fuzzy_twi</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/twi_f.tif&quot;</span>
+
+    <span class="c1"># Run processes</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># fuzzify hand</span>
+    <span class="c1"># ----------------</span>
+    <span class="n">fuzzify</span><span class="p">(</span><span class="n">input_hand</span><span class="p">,</span> <span class="n">output_fuzzy_hand</span><span class="p">,</span> <span class="n">hand_max</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># fuzzify twi</span>
+    <span class="c1"># ----------------</span>
+    <span class="n">fuzzify</span><span class="p">(</span><span class="n">input_twi</span><span class="p">,</span> <span class="n">output_fuzzy_twi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">twi_max</span><span class="p">)</span>
+
+    <span class="c1"># Wrap up</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
 
-<div class="viewcode-block" id="add">
-<a class="viewcode-back" href="../../generated/copyme.module.html#copyme.module.add">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">num1</span><span class="p">,</span> <span class="n">num2</span><span class="p">):</span>
+<span class="c1"># Demo example</span>
+<span class="c1"># -----------------------------------------------------------------------</span>
+<div class="viewcode-block" id="process_data">
+<a class="viewcode-back" href="../../generated/apcac.indexes.html#apcac.indexes.process_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">input1</span><span class="p">,</span> <span class="n">input2</span><span class="p">,</span> <span class="n">output_folder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add two numbers</span>
+<span class="sd">    Demo for processing data</span>
 
-<span class="sd">    :param num1: number 1</span>
-<span class="sd">    :type num1: int or float</span>
-<span class="sd">    :param num2: number 2</span>
-<span class="sd">    :type num2: int or float</span>
-<span class="sd">    :return: sum of numbers</span>
-<span class="sd">    :rtype: int or float</span>
-
-<span class="sd">    **Examples**</span>
-
-<span class="sd">    &gt;&gt;&gt; add(2, 3)</span>
-<span class="sd">    5</span>
-
-<span class="sd">    &gt;&gt;&gt; add(20, 2.3)</span>
-<span class="sd">    22.3</span>
-
+<span class="sd">    :param input1: file path to input data 1</span>
+<span class="sd">    :type input1: str</span>
+<span class="sd">    :param input2: file path to input data 1</span>
+<span class="sd">    :type input2: str</span>
+<span class="sd">    :param output_folder: file path to output folder</span>
+<span class="sd">    :type output_folder: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">num1</span> <span class="o">+</span> <span class="n">num2</span></div>
+    <span class="c1"># Setup input variables</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">input1_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input1</span><span class="p">)</span>
+    <span class="n">input1_name</span> <span class="o">=</span> <span class="n">input1_basename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">input2_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input2</span><span class="p">)</span>
+    <span class="n">input2_name</span> <span class="o">=</span> <span class="n">input2_basename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">input1</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">input1_basename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">input2</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">input2_basename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Setup output variables</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/result.tif&quot;</span>
+
+    <span class="c1"># Run processes</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">processing</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="s2">&quot;native:rastercalc&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;LAYERS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">input1</span><span class="p">,</span> <span class="n">input2</span><span class="p">],</span>
+            <span class="s2">&quot;EXPRESSION&quot;</span><span class="p">:</span> <span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">@1&quot; * &quot;</span><span class="si">{}</span><span class="s1">@1&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input1_name</span><span class="p">,</span> <span class="n">input2_name</span><span class="p">),</span>
+            <span class="s2">&quot;EXTENT&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;CELL_SIZE&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;CRS&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;OUTPUT&quot;</span><span class="p">:</span> <span class="n">output_file</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Wrap up</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
 
 
 
-<div class="viewcode-block" id="multiply">
-<a class="viewcode-back" href="../../generated/copyme.module.html#copyme.module.multiply">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="n">num1</span><span class="p">,</span> <span class="n">num2</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Multiply two numbers</span>
-
-<span class="sd">    :param num1: number 1</span>
-<span class="sd">    :type num1: int or float</span>
-<span class="sd">    :param num2: number 2</span>
-<span class="sd">    :type num2: int or float</span>
-<span class="sd">    :return: product of numbers</span>
-<span class="sd">    :rtype: int or float</span>
-
-<span class="sd">    **Examples**</span>
-
-<span class="sd">    &gt;&gt;&gt; multiply(2, 3)</span>
-<span class="sd">    6</span>
-
-<span class="sd">    &gt;&gt;&gt; multiply(20, 2)</span>
-<span class="sd">    40</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">num1</span> <span class="o">*</span> <span class="n">num2</span></div>
+<div class="viewcode-block" id="fuzzify">
+<a class="viewcode-back" href="../../generated/apcac.indexes.html#apcac.indexes.fuzzify">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fuzzify</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">hi</span><span class="p">):</span>
+    <span class="c1"># Run processes</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">processing</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="s2">&quot;native:fuzzifyrasterlinearmembership&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;INPUT&quot;</span><span class="p">:</span> <span class="n">input_file</span><span class="p">,</span>
+            <span class="s2">&quot;BAND&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;FUZZYLOWBOUND&quot;</span><span class="p">:</span> <span class="n">low</span><span class="p">,</span>
+            <span class="s2">&quot;FUZZYHIGHBOUND&quot;</span><span class="p">:</span> <span class="n">hi</span><span class="p">,</span>
+            <span class="s2">&quot;OUTPUT&quot;</span><span class="p">:</span> <span class="n">output_file</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_file</span></div>
 
 
 
 <span class="c1"># ... {develop}</span>
+
 
 <span class="c1"># FUNCTIONS -- Module-level</span>
 <span class="c1"># =======================================================================</span>
-<span class="c1"># ... {develop}</span>
-
-
-<span class="c1"># CLASSES</span>
-<span class="c1"># ***********************************************************************</span>
-
-<span class="c1"># CLASSES -- Project-level</span>
-<span class="c1"># =======================================================================</span>
-
-
-<span class="c1"># Demo example</span>
-<span class="c1"># -----------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MyClass">
-<a class="viewcode-back" href="../../generated/copyme.module.html#copyme.module.MyClass">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
-    <span class="c1"># todo docstring</span>
-
-<div class="viewcode-block" id="MyClass.__init__">
-<a class="viewcode-back" href="../../generated/copyme.module.html#copyme.module.MyClass.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># todo docstring</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start class&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">10</span></div>
-
-
-    <span class="c1"># Internal methods</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MyClass._reset_value">
-<a class="viewcode-back" href="../../generated/copyme.module.html#copyme.module.MyClass._reset_value">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_reset_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># todo docstring</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
-
-
-    <span class="c1"># Public methods</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MyClass.print_value">
-<a class="viewcode-back" href="../../generated/copyme.module.html#copyme.module.MyClass.print_value">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">print_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># todo docstring</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
-
-
-    <span class="c1"># Static methods</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-<div class="viewcode-block" id="MyClass.print_message">
-<a class="viewcode-back" href="../../generated/copyme.module.html#copyme.module.MyClass.print_message">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">print_message</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">):</span>
-        <span class="c1"># todo docstring</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
-</div>
+<div class="viewcode-block" id="waiter">
+<a class="viewcode-back" href="../../generated/apcac.indexes.html#apcac.indexes.waiter">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">waiter</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hey!&quot;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
 
 
 
-<span class="c1"># ... {develop}</span>
-
-<span class="c1"># CLASSES -- Module-level</span>
-<span class="c1"># =======================================================================</span>
 <span class="c1"># ... {develop}</span>
 
 
@@ -586,20 +544,7 @@
 <span class="c1"># ***********************************************************************</span>
 <span class="c1"># standalone behaviour as a script</span>
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1"># Test doctests</span>
-    <span class="c1"># ===================================================================</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
-
-    <span class="c1"># Script section</span>
-    <span class="c1"># ===================================================================</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
-    <span class="c1"># ... {develop}</span>
-
-    <span class="c1"># Script subsection</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="c1"># ... {develop}</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
 </pre></div>
 
                 </article>
