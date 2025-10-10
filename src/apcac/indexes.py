@@ -71,6 +71,7 @@ import processing
 # FUNCTIONS -- Project-level
 # =======================================================================
 
+
 def compute_t(input_hand, input_twi, output_folder, hand_max=15, hand_w=1, twi_max=30):
 
     # Setup input variables
@@ -99,11 +100,11 @@ def compute_t(input_hand, input_twi, output_folder, hand_max=15, hand_w=1, twi_m
     # ----------------
     fuzzify(input_twi, output_fuzzy_twi, 0, twi_max)
 
-
     # Wrap up
     # -------------------------------------------------------------------
 
     return None
+
 
 # Demo example
 # -----------------------------------------------------------------------
@@ -160,14 +161,15 @@ def fuzzify(input_file, output_file, low, hi):
     processing.run(
         "native:fuzzifyrasterlinearmembership",
         {
-            'INPUT': input_file,
-            'BAND': 1,
-            'FUZZYLOWBOUND': low,
-            'FUZZYHIGHBOUND': hi,
-            'OUTPUT': output_file
-        }
+            "INPUT": input_file,
+            "BAND": 1,
+            "FUZZYLOWBOUND": low,
+            "FUZZYHIGHBOUND": hi,
+            "OUTPUT": output_file,
+        },
     )
     return output_file
+
 
 # ... {develop}
 
