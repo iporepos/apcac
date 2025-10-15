@@ -9,11 +9,13 @@
    .. autosummary::
    
       analysis_apcac
+      analysis_apcac_upscaled
       classify_apcac
       compute_apcac
       compute_apcac_stats
       compute_index_a
       compute_index_e
+      compute_upscaled_indexes
       fuzzify
       fuzzify_indexes
       fuzzify_linear
@@ -25,5 +27,5 @@
       save_gdf
       summarise
       summarise_latex
-      upscale_apcac
+      upscale_indexes
    

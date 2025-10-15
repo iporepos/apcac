@@ -460,20 +460,26 @@ customized analyses.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.analysis_apcac" title="apcac.classes.analysis_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analysis_apcac</span></code></a>(input_db, raster_files, ...)</p></td>
 <td><p>Orchestrates the complete APCAC (Áreas Prioritárias para Conservação de Água) analysis workflow, from sampling raster indexes to generating the final classification GeoPackage, summary CSV, and LaTeX table.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.classify_apcac" title="apcac.classes.classify_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classify_apcac</span></code></a>(gdf)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.analysis_apcac_upscaled" title="apcac.classes.analysis_apcac_upscaled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analysis_apcac_upscaled</span></code></a>(input_db, output_folder)</p></td>
+<td><p>Orchestrates the complete APCAC analysis workflow at an upscaled (aggregated) spatial unit, performing area-weighted aggregation of indexes before calculating the final APCAC classification.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.classify_apcac" title="apcac.classes.classify_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classify_apcac</span></code></a>(gdf)</p></td>
 <td><p>Classifies catchments based on natural/anthropic, hydrology, and risk factors using a three-level system (APCAC).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.compute_apcac" title="apcac.classes.compute_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_apcac</span></code></a>(output_folder, input_db[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.compute_apcac" title="apcac.classes.compute_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_apcac</span></code></a>(output_folder, input_db[, ...])</p></td>
 <td><p>Calculates the final APCAC (Áreas Prioritárias para Conservação de Água) classification codes and IDs for the input catchment GeoDataFrame.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.compute_apcac_stats" title="apcac.classes.compute_apcac_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_apcac_stats</span></code></a>(output_folder, input_db)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.compute_apcac_stats" title="apcac.classes.compute_apcac_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_apcac_stats</span></code></a>(output_folder, input_db)</p></td>
 <td><p>Computes and exports a summary of APCAC classification statistics, including total area and percentages for the Biome (Cerrado) and the Hydrological Influence Zone (ZHI).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.compute_index_a" title="apcac.classes.compute_index_a"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_a</span></code></a>(output_folder, input_db[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.compute_index_a" title="apcac.classes.compute_index_a"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_a</span></code></a>(output_folder, input_db[, ...])</p></td>
 <td><p>Computes the raw and fuzzified <code class="docutils literal notranslate"><span class="pre">a</span></code> (hydrology importance) index as a multiplicative combination of the fuzzified <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">s</span></code>, <code class="docutils literal notranslate"><span class="pre">g</span></code>, and <code class="docutils literal notranslate"><span class="pre">c</span></code> indexes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.compute_index_e" title="apcac.classes.compute_index_e"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_e</span></code></a>(output_folder, input_db[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.compute_index_e" title="apcac.classes.compute_index_e"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_e</span></code></a>(output_folder, input_db[, ...])</p></td>
 <td><p>Computes the binary <code class="docutils literal notranslate"><span class="pre">e</span></code> (erosion/degradation risk) index, classifying areas as having risk (1) if they meet at least one of the three predefined risk conditions: low <code class="docutils literal notranslate"><span class="pre">n</span></code>, high <code class="docutils literal notranslate"><span class="pre">slope</span></code>, or high <code class="docutils literal notranslate"><span class="pre">uslek</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.compute_upscaled_indexes" title="apcac.classes.compute_upscaled_indexes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_upscaled_indexes</span></code></a>(output_folder, input_db)</p></td>
+<td><p>Computes area-weighted upscaled (aggregated) values for various indexes and boolean flags from a fine-resolution GeoDataFrame to a coarser spatial unit defined by a grouping field, and saves the results as a new GeoPackage layer.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.fuzzify" title="apcac.classes.fuzzify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fuzzify</span></code></a>(v, v_lo, v_up)</p></td>
 <td><p>Fuzzifies an array using a trapezoidal membership function, limiting values outside the bounds.</p></td>
@@ -508,8 +514,8 @@ customized analyses.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.summarise_latex" title="apcac.classes.summarise_latex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summarise_latex</span></code></a>(df)</p></td>
 <td><p>Generates a full LaTeX table environment, including caption and formatting, from a summary DataFrame of APCAC classifications.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.upscale_apcac" title="apcac.classes.upscale_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upscale_apcac</span></code></a>(output_folder, input_db)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.upscale_indexes" title="apcac.classes.upscale_indexes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upscale_indexes</span></code></a>(gdf, field_upscale, field_area)</p></td>
+<td><p>Upscales various numeric indexes and boolean flags from a finer-resolution GeoDataFrame to a coarser resolution based on an aggregation field.</p></td>
 </tr>
 </tbody>
 </table>
@@ -601,6 +607,71 @@ classification, computing summary statistics, and finally generating the LaTeX t
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.analysis_apcac_upscaled">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">analysis_apcac_upscaled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_upscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#analysis_apcac_upscaled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.analysis_apcac_upscaled" title="Link to this definition">#</a></dt>
+<dd><p>Orchestrates the complete APCAC analysis workflow at an upscaled (aggregated)
+spatial unit, performing area-weighted aggregation of indexes
+before calculating the final APCAC classification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_db</strong> (<em>str</em>) – Path to the GeoPackage or database file containing the <strong>fine-resolution</strong> input vector layer.</p></li>
+<li><p><strong>output_folder</strong> (<em>str</em>) – Path to the main directory where the final and temporary results will be organized.</p></li>
+<li><p><strong>input_layer</strong> (<em>str</em>) – Name of the vector layer within the input database (fine-resolution) to be processed. Default value = “apcac_bho5k”</p></li>
+<li><p><strong>field_upscale</strong> (<em>str</em>) – [optional] The column name in the input data to use for grouping/dissolving (the ID of the coarser unit). Default value = “nunivotto5”</p></li>
+<li><p><strong>field_area</strong> (<em>str</em>) – [optional] The column name representing the area of the features, used for weighted averaging. Default value = None</p></li>
+<li><p><strong>cleanup</strong> (<em>bool</em>) – Flag to indicate whether the intermediate, run-specific folders created during the workflow should be deleted. Default value = True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The file path to the final GeoPackage file, which contains the complete APCAC classification results for the upscaled spatial units.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p><strong>Notes</strong></p>
+<p>The function first computes the upscaled indexes and
+geometries using <code class="docutils literal notranslate"><span class="pre">compute_upscaled_indexes</span></code>, then proceeds with the
+standard steps: fuzzifying indexes, computing index ‘a’ (hydrology),
+computing index ‘e’ (erosion risk), calculating the final
+APCAC classification for the upscaled units, computing summary statistics,
+and finally generating the LaTeX table.</p>
+<p><strong>Script example</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">iu</span>
+
+<span class="c1"># define the paths to this module</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">the_module</span> <span class="o">=</span> <span class="s2">&quot;path/to/classes.py&quot;</span>
+
+<span class="c1"># setup module with importlib</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">iu</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="n">the_module</span><span class="p">)</span>
+<span class="n">module</span> <span class="o">=</span> <span class="n">iu</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+<span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+
+<span class="c1"># define the paths to input and output folders</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">input_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/input_folder&quot;</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/output_folder&quot;</span>
+
+<span class="c1"># define the path to input database</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">input_db</span> <span class="o">=</span> <span class="s2">&quot;path/to/data.gpkg&quot;</span>
+
+<span class="c1"># call the function</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">output_file</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">analysis_apcac_upscaled</span><span class="p">(</span>
+    <span class="n">input_db</span><span class="o">=</span><span class="n">input_db</span><span class="p">,</span>
+    <span class="n">output_folder</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+    <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
+    <span class="n">field_upscale</span><span class="o">=</span><span class="s2">&quot;nunivotto4&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="apcac.classes.sample_indexes">
 <span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">sample_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raster_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raster_multipliers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#sample_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.sample_indexes" title="Link to this definition">#</a></dt>
 <dd><p>Samples mean values from multiple raster files over a vector layer
@@ -612,7 +683,7 @@ classification, computing summary statistics, and finally generating the LaTeX t
 <li><p><strong>input_db</strong> (<em>str</em>) – Path to the GeoPackage or database file containing the input vector layer.</p></li>
 <li><p><strong>raster_files</strong> (<em>dict</em>) – Dictionary where keys are the desired column names (index names) and values are the full paths to the corresponding raster files.</p></li>
 <li><p><strong>input_layer</strong> (<em>str</em>) – Name of the vector layer within the input database to use for zonal statistics. Default value = “apcac_bho5k”</p></li>
-<li><p><strong>raster_multipliers</strong> (<em>dict</em>) – [optional] Dictionary where keys are the index names (from <cite>raster_files</cite>) and values are factors by which the sampled mean values should be divided (e.g., to convert units).</p></li>
+<li><p><strong>raster_multipliers</strong> (<em>dict</em>) – [optional] Dictionary where keys are the index names (from <code class="docutils literal notranslate"><span class="pre">raster_files</span></code>) and values are factors by which the sampled mean values should be divided (e.g., to convert units).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -844,9 +915,66 @@ conditions: low <code class="docutils literal notranslate"><span class="pre">n</
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.upscale_apcac">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">upscale_apcac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#upscale_apcac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.upscale_apcac" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="apcac.classes.compute_upscaled_indexes">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">compute_upscaled_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_upscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#compute_upscaled_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.compute_upscaled_indexes" title="Link to this definition">#</a></dt>
+<dd><p>Computes area-weighted upscaled (aggregated) values for various
+indexes and boolean flags from a fine-resolution GeoDataFrame to
+a coarser spatial unit defined by a grouping field, and
+saves the results as a new GeoPackage layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_folder</strong> (<em>str</em>) – Path to the directory where temporary and final output files will be stored.</p></li>
+<li><p><strong>input_db</strong> (<em>str</em>) – Path to the GeoPackage or database file containing the input vector layer (fine-resolution catchments).</p></li>
+<li><p><strong>field_upscale</strong> (<em>str</em>) – [optional] The column name in the input data to use for grouping/dissolving (the ID of the coarser unit). Default value = “nunivotto5”</p></li>
+<li><p><strong>input_layer</strong> (<em>str</em>) – Name of the vector layer within the input database to be processed. Default value = “apcac_bho5k”</p></li>
+<li><p><strong>field_area</strong> (<em>str</em>) – [optional] The column name representing the area of the features, used for weighted averaging. Default value = “nuareacont”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The file path to the final GeoPackage file, which contains the upscaled indexes merged with the dissolved geometries of the coarser spatial units.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p><strong>Notes</strong></p>
+<p>The function first calculates the upscaled values using <code class="docutils literal notranslate"><span class="pre">upscale_indexes</span></code>,
+then dissolves the geometries based on the grouping field, and finally
+merges the upscaled data with the dissolved geometries.</p>
+<p><strong>Script example</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">iu</span>
+
+<span class="c1"># define the paths to this module</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">the_module</span> <span class="o">=</span> <span class="s2">&quot;path/to/classes.py&quot;</span>
+
+<span class="c1"># setup module with importlib</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">iu</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="n">the_module</span><span class="p">)</span>
+<span class="n">module</span> <span class="o">=</span> <span class="n">iu</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+<span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+
+<span class="c1"># define the paths to input and output folders</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">input_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/input_folder&quot;</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/output_folder&quot;</span>
+
+<span class="c1"># define the path to input database</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">input_db</span> <span class="o">=</span> <span class="s2">&quot;path/to/data.gpkg&quot;</span>
+
+<span class="c1"># call the function</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">output_file</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">compute_upscaled_indexes</span><span class="p">(</span>
+    <span class="n">input_db</span><span class="o">=</span><span class="n">input_db</span><span class="p">,</span>
+    <span class="n">output_folder</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+    <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
+    <span class="n">field_upscale</span><span class="o">=</span><span class="s2">&quot;nunivotto4&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="apcac.classes.compute_apcac">
@@ -1049,6 +1177,28 @@ hydrology, and risk factors using a three-level system (APCAC).</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.upscale_indexes">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">upscale_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_upscale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_area</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#upscale_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.upscale_indexes" title="Link to this definition">#</a></dt>
+<dd><p>Upscales various numeric indexes and boolean flags from a finer-resolution GeoDataFrame to a coarser resolution based on an aggregation field.</p>
+<p>Numeric indexes are upscaled using an area-weighted average, and boolean fields are upscaled to be true (1) if any part of the aggregated unit contains a true value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gdf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code>) – GeoDataFrame containing the fine-resolution data, including all index fields, the aggregation field, and the area field.</p></li>
+<li><p><strong>field_upscale</strong> (<em>str</em>) – The column name in <cite>gdf</cite> to use for grouping and upscaling (e.g., a coarser watershed ID).</p></li>
+<li><p><strong>field_area</strong> (<em>str</em>) – The column name in <cite>gdf</cite> that represents the area of the features, used for weighted averaging of indexes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame containing the upscaled results, with one row per unique value in <cite>field_upscale</cite>, including the area-weighted mean for each index and the aggregated boolean flags.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="apcac.classes.groupby">
 <span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">groupby</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#groupby"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.groupby" title="Link to this definition">#</a></dt>
 <dd><p>Groups a GeoDataFrame by a specified label, aggregates a value
@@ -1243,16 +1393,18 @@ and upper bounds. If both bounds are equal, 1.0 is returned for non-NaN values.<
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#script-example">Script Example</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.analysis_apcac"><code class="docutils literal notranslate"><span class="pre">analysis_apcac()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.analysis_apcac_upscaled"><code class="docutils literal notranslate"><span class="pre">analysis_apcac_upscaled()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.sample_indexes"><code class="docutils literal notranslate"><span class="pre">sample_indexes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.fuzzify_indexes"><code class="docutils literal notranslate"><span class="pre">fuzzify_indexes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_index_a"><code class="docutils literal notranslate"><span class="pre">compute_index_a()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_index_e"><code class="docutils literal notranslate"><span class="pre">compute_index_e()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.upscale_apcac"><code class="docutils literal notranslate"><span class="pre">upscale_apcac()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_upscaled_indexes"><code class="docutils literal notranslate"><span class="pre">compute_upscaled_indexes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_apcac"><code class="docutils literal notranslate"><span class="pre">compute_apcac()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_apcac_stats"><code class="docutils literal notranslate"><span class="pre">compute_apcac_stats()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.get_latex_table"><code class="docutils literal notranslate"><span class="pre">get_latex_table()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.save_gdf"><code class="docutils literal notranslate"><span class="pre">save_gdf()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.classify_apcac"><code class="docutils literal notranslate"><span class="pre">classify_apcac()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.upscale_indexes"><code class="docutils literal notranslate"><span class="pre">upscale_indexes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.groupby"><code class="docutils literal notranslate"><span class="pre">groupby()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.summarise"><code class="docutils literal notranslate"><span class="pre">summarise()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.summarise_latex"><code class="docutils literal notranslate"><span class="pre">summarise_latex()</span></code></a></li>
