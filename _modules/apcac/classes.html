@@ -348,35 +348,97 @@
 <span class="c1"># See pyproject.toml for authors/maintainers.</span>
 <span class="c1"># See LICENSE for license details.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">{Short module description (1-3 sentences)}</span>
-<span class="sd">todo docstring</span>
+<span class="sd">Complete workflow to perform ``APCAC`` classification on polygons using vector and raster data.</span>
+
+<span class="sd">It is designed for use within ``QGIS`` via the Python script tool, allowing both full</span>
+<span class="sd">workflow execution and independent function calls for custom analyses.</span>
+
+<span class="sd">.. warning::</span>
+
+<span class="sd">    This module is intended to run under the QGIS Python Environment.</span>
+
+
+<span class="sd">.. important::</span>
+
+<span class="sd">    The following external Python dependencies must be installed in the</span>
+<span class="sd">    QGIS Environment via advanced mode: ``numpy``, ``pandas`` and ``geopandas``</span>
+
 
 <span class="sd">Features</span>
 <span class="sd">--------</span>
-<span class="sd">todo docstring</span>
-
-<span class="sd">* {feature 1}</span>
-<span class="sd">* {feature 2}</span>
-<span class="sd">* {feature 3}</span>
-<span class="sd">* {etc}</span>
+<span class="sd">* Orchestrate a full ``APCAC`` analysis, from raster sampling to classification and LaTeX report.</span>
+<span class="sd">* Modular functions to compute hydrology and erosion indexes, fuzzification, and risk classification.</span>
+<span class="sd">* Automatic management of timestamped output folders for reproducible runs and organized outputs.</span>
+<span class="sd">* Easy integration into QGIS Python tools using ``importlib``, with no external installation required.</span>
 
 <span class="sd">Overview</span>
 <span class="sd">--------</span>
-<span class="sd">todo docstring</span>
-<span class="sd">{Overview description}</span>
+<span class="sd">The module defines the main processing steps as functions. Each function creates an output folder</span>
+<span class="sd">with a timestamp for easy tracking. Users may run the full workflow through ``analysis_apcac``</span>
+<span class="sd">or call individual functions independently for more</span>
+<span class="sd">customized analyses.</span>
 
-<span class="sd">Examples</span>
-<span class="sd">--------</span>
-<span class="sd">todo docstring</span>
-<span class="sd">{Examples in rST}</span>
+<span class="sd">Script Example</span>
+<span class="sd">--------------</span>
 
-<span class="sd">Print a message</span>
+<span class="sd">The following script runs a full ``APCAC`` analysis:</span>
 
 <span class="sd">.. code-block:: python</span>
 
-<span class="sd">    # print message</span>
-<span class="sd">    print(&quot;Hello world!&quot;)</span>
-<span class="sd">    # [Output] &gt;&gt; &#39;Hello world!&#39;</span>
+<span class="sd">    import importlib.util as iu</span>
+
+<span class="sd">    # define the paths to this module</span>
+<span class="sd">    # ----------------------------------------</span>
+<span class="sd">    the_module = &quot;path/to/classes.py&quot;</span>
+
+<span class="sd">    # setup module with importlib</span>
+<span class="sd">    # ----------------------------------------</span>
+<span class="sd">    spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
+<span class="sd">    module = iu.module_from_spec(spec)</span>
+<span class="sd">    spec.loader.exec_module(module)</span>
+
+<span class="sd">    # define the paths to input and output folders</span>
+<span class="sd">    # ----------------------------------------</span>
+<span class="sd">    input_dir = &quot;path/to/input_folder&quot;</span>
+<span class="sd">    output_dir = &quot;path/to/output_folder&quot;</span>
+
+<span class="sd">    # define the path to input database</span>
+<span class="sd">    # ----------------------------------------</span>
+<span class="sd">    input_db = &quot;path/to/data.gpkg&quot;</span>
+
+<span class="sd">    # define the paths to input rasters</span>
+<span class="sd">    # ----------------------------------------</span>
+<span class="sd">    raster_files = {</span>
+<span class="sd">        # change this paths</span>
+<span class="sd">        &quot;t&quot;: &quot;path/to/raster_t.tif&quot;, # topography layer</span>
+<span class="sd">        &quot;s&quot;: &quot;path/to/raster_s.tif&quot;, # soil/pedology layer</span>
+<span class="sd">        &quot;g&quot;: &quot;path/to/raster_g.tif&quot;, # geology/aquifers layer</span>
+<span class="sd">        &quot;c&quot;: &quot;path/to/raster_c.tif&quot;, # climate layer</span>
+<span class="sd">        &quot;n&quot;: &quot;path/to/raster_n.tif&quot;, # conservation layer</span>
+<span class="sd">        &quot;v&quot;: &quot;path/to/raster_v.tif&quot;, # anthropic risk layer</span>
+<span class="sd">        &quot;slope&quot;: &quot;path/to/raster_slope.tif&quot;, # terrain slope layer</span>
+<span class="sd">        &quot;uslek&quot;: &quot;path/to/raster_uslex.tif&quot;, # erodibility layer</span>
+<span class="sd">    }</span>
+
+<span class="sd">    # define which index has multipliers (the value is divided)</span>
+<span class="sd">    # ----------------------------------------</span>
+<span class="sd">    raster_multipliers = {</span>
+<span class="sd">        &quot;t&quot;: 1000,</span>
+<span class="sd">        &quot;s&quot;: 100,</span>
+<span class="sd">        &quot;slope&quot;: 100,</span>
+<span class="sd">        # change and add more if needed</span>
+<span class="sd">    }</span>
+
+<span class="sd">    # call the function</span>
+<span class="sd">    # ----------------------------------------</span>
+<span class="sd">    module.analysis_apcac(</span>
+<span class="sd">        input_db=input_db,</span>
+<span class="sd">        input_layer=&quot;apcac_bho5k&quot;,</span>
+<span class="sd">        raster_files=raster_files,</span>
+<span class="sd">        output_folder=output_dir,</span>
+<span class="sd">        raster_multipliers=raster_multipliers ,</span>
+<span class="sd">        cleanup=True</span>
+<span class="sd">    )</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -388,6 +450,7 @@
 <span class="c1"># =======================================================================</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># ... {develop}</span>
@@ -409,6 +472,8 @@
 
 <span class="c1"># CONSTANTS</span>
 <span class="c1"># ***********************************************************************</span>
+<span class="c1"># define constants in uppercase</span>
+
 <span class="n">FIELDS_BASE</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;idbacia&quot;</span><span class="p">,</span>
     <span class="s2">&quot;cotrecho&quot;</span><span class="p">,</span>
@@ -426,6 +491,8 @@
     <span class="s2">&quot;nutrjus&quot;</span><span class="p">,</span>
     <span class="s2">&quot;id_uph&quot;</span><span class="p">,</span>
     <span class="s2">&quot;id_rhi&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_cerrado&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_zhi&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="n">FIELDS_INDEXES_INPUTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;slope&quot;</span><span class="p">,</span> <span class="s2">&quot;uslek&quot;</span><span class="p">]</span>
@@ -436,11 +503,247 @@
 <span class="n">SLOPE_THRESHOLD</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">USLEK_THRESHOLD</span> <span class="o">=</span> <span class="mi">300</span>
 
-<span class="c1"># define constants in uppercase</span>
+<span class="n">APCAC_LABELS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;cd_apcac&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;IAN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IAR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IBN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IBR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ICN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ICR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IXN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IXR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IIAN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IIAR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IIBN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IIBR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IICN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IICR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IIXN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;IIXR&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;lb_apcac&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Predominância natural, importância extremamente alta, baixo risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância natural, importância extremamente alta, alto risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância natural, importância muito alta, baixo risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância natural, importância muito alta, alto risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância natural, importância alta, baixo risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância natural, importância alta, alto risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância natural, importância regular, baixo risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância natural, importância regular, alto risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância antrópica, importância extremamente alta, baixo risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância antrópica, importância extremamente alta, alto risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância antrópica, importância muito alta, baixo risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância antrópica, importância muito alta, alto risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância antrópica, importância alta, baixo risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância antrópica, importância alta, alto risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância antrópica, importância regular, baixo risco&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Predominância antrópica, importância regular, alto risco&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span>
 
 
 <span class="c1"># FUNCTIONS</span>
 <span class="c1"># ***********************************************************************</span>
+
+<span class="c1"># FUNCTIONS -- Large processes</span>
+<span class="c1"># =======================================================================</span>
+
+
+<div class="viewcode-block" id="analysis_apcac">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.analysis_apcac">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">analysis_apcac</span><span class="p">(</span>
+    <span class="n">input_db</span><span class="p">,</span>
+    <span class="n">raster_files</span><span class="p">,</span>
+    <span class="n">output_folder</span><span class="p">,</span>
+    <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
+    <span class="n">raster_multipliers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Orchestrates the complete APCAC (Áreas Prioritárias para Conservação de Água) analysis workflow,</span>
+<span class="sd">    from sampling raster indexes to generating the final classification GeoPackage, summary CSV, and LaTeX table.</span>
+
+<span class="sd">    :param input_db: Path to the initial GeoPackage or database file containing the input vector layer (e.g., catchment polygons).</span>
+<span class="sd">    :type input_db: str</span>
+<span class="sd">    :param raster_files: Dictionary where keys are the desired index names and values are the full paths to the corresponding raster files to be sampled.</span>
+<span class="sd">    :type raster_files: dict</span>
+<span class="sd">    :param output_folder: Path to the main directory where the final and temporary results will be organized.</span>
+<span class="sd">    :type output_folder: str</span>
+<span class="sd">    :param input_layer: Name of the vector layer within the input database to be processed. Default value = &quot;apcac_bho5k&quot;</span>
+<span class="sd">    :type input_layer: str</span>
+<span class="sd">    :param raster_multipliers: [optional] Dictionary of factors to divide the sampled raster mean values by (used for unit conversion).</span>
+<span class="sd">    :type raster_multipliers: dict</span>
+<span class="sd">    :param cleanup: Flag to indicate whether the intermediate, run-specific folders created during the workflow should be deleted. Default value = True</span>
+<span class="sd">    :type cleanup: bool</span>
+<span class="sd">    :return: The file path to the final GeoPackage file containing the complete APCAC classification results.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    The function executes the following steps in sequence: sampling raster values, fuzzifying indexes,</span>
+<span class="sd">    computing index ``a`` (hydrology), computing index ``e`` (erosion risk), calculating the final APCAC</span>
+<span class="sd">    classification, computing summary statistics, and finally generating the LaTeX table.</span>
+
+<span class="sd">    **Script example**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import importlib.util as iu</span>
+
+<span class="sd">        # define the paths to this module</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
+
+<span class="sd">        # setup module with importlib</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
+<span class="sd">        module = iu.module_from_spec(spec)</span>
+<span class="sd">        spec.loader.exec_module(module)</span>
+
+<span class="sd">        # define the paths to input and output folders</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
+<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
+
+<span class="sd">        # define the path to input database</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_db = &quot;path/to/data.gpkg&quot;</span>
+
+<span class="sd">        # define the paths to input rasters</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        raster_files = {</span>
+<span class="sd">            # change this paths</span>
+<span class="sd">            &quot;t&quot;: &quot;path/to/raster_t.tif&quot;, # topography layer</span>
+<span class="sd">            &quot;s&quot;: &quot;path/to/raster_s.tif&quot;, # soil/pedology layer</span>
+<span class="sd">            &quot;g&quot;: &quot;path/to/raster_g.tif&quot;, # geology/aquifers layer</span>
+<span class="sd">            &quot;c&quot;: &quot;path/to/raster_c.tif&quot;, # climate layer</span>
+<span class="sd">            &quot;n&quot;: &quot;path/to/raster_n.tif&quot;, # conservation layer</span>
+<span class="sd">            &quot;v&quot;: &quot;path/to/raster_v.tif&quot;, # anthropic risk layer</span>
+<span class="sd">            &quot;slope&quot;: &quot;path/to/raster_slope.tif&quot;, # terrain slope layer</span>
+<span class="sd">            &quot;uslek&quot;: &quot;path/to/raster_uslex.tif&quot;, # erodibility layer</span>
+<span class="sd">        }</span>
+
+<span class="sd">        # define which index has multipliers (the value is divided)</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        raster_multipliers = {</span>
+<span class="sd">            &quot;t&quot;: 1000,</span>
+<span class="sd">            &quot;s&quot;: 100,</span>
+<span class="sd">            &quot;slope&quot;: 100,</span>
+<span class="sd">            # change and add more if needed</span>
+<span class="sd">        }</span>
+
+<span class="sd">        # call the function</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        module.analysis_apcac(</span>
+<span class="sd">            input_db=input_db,</span>
+<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
+<span class="sd">            raster_files=raster_files,</span>
+<span class="sd">            output_folder=output_dir,</span>
+<span class="sd">            raster_multipliers=raster_multipliers ,</span>
+<span class="sd">            cleanup=True</span>
+<span class="sd">        )</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Startup</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="n">analysis_apcac</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running: </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Setup input variables</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># Setup output variables</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># folders</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+
+    <span class="c1"># files</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Run processes</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">sample_indexes</span><span class="p">(</span>
+        <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
+        <span class="n">input_db</span><span class="o">=</span><span class="n">input_db</span><span class="p">,</span>
+        <span class="n">raster_files</span><span class="o">=</span><span class="n">raster_files</span><span class="p">,</span>
+        <span class="n">input_layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">,</span>
+        <span class="n">raster_multipliers</span><span class="o">=</span><span class="n">raster_multipliers</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">f2</span> <span class="o">=</span> <span class="n">fuzzify_indexes</span><span class="p">(</span>
+        <span class="n">input_db</span><span class="o">=</span><span class="n">f1</span><span class="p">,</span>
+        <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">f3</span> <span class="o">=</span> <span class="n">compute_index_a</span><span class="p">(</span>
+        <span class="n">input_db</span><span class="o">=</span><span class="n">f2</span><span class="p">,</span>
+        <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">f4</span> <span class="o">=</span> <span class="n">compute_index_e</span><span class="p">(</span>
+        <span class="n">input_db</span><span class="o">=</span><span class="n">f3</span><span class="p">,</span>
+        <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
+        <span class="n">uslek_threshold</span><span class="o">=</span><span class="mi">4500</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">f_apcac</span> <span class="o">=</span> <span class="n">compute_apcac</span><span class="p">(</span>
+        <span class="n">input_db</span><span class="o">=</span><span class="n">f4</span><span class="p">,</span>
+        <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">f_stats</span> <span class="o">=</span> <span class="n">compute_apcac_stats</span><span class="p">(</span>
+        <span class="n">input_db</span><span class="o">=</span><span class="n">f_apcac</span><span class="p">,</span>
+        <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">f_latex</span> <span class="o">=</span> <span class="n">get_latex_table</span><span class="p">(</span>
+        <span class="n">input_csv</span><span class="o">=</span><span class="n">f_stats</span><span class="p">,</span>
+        <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Export</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># copy files</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+        <span class="n">src</span><span class="o">=</span><span class="n">f_apcac</span><span class="p">,</span>
+        <span class="n">dst</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+        <span class="n">src</span><span class="o">=</span><span class="n">f_stats</span><span class="p">,</span>
+        <span class="n">dst</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.gpkg&quot;</span><span class="p">,</span> <span class="s2">&quot;.csv&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+        <span class="n">src</span><span class="o">=</span><span class="n">f_latex</span><span class="p">,</span>
+        <span class="n">dst</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.gpkg&quot;</span><span class="p">,</span> <span class="s2">&quot;.tex&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># delete intermediate files</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="k">if</span> <span class="n">cleanup</span><span class="p">:</span>
+        <span class="n">ls_removals</span> <span class="o">=</span> <span class="p">[</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">,</span> <span class="n">f4</span><span class="p">,</span> <span class="n">f_apcac</span><span class="p">,</span> <span class="n">f_stats</span><span class="p">,</span> <span class="n">f_latex</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">ls_removals</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output_file</span></div>
+
+
 
 <span class="c1"># FUNCTIONS -- Project-level</span>
 <span class="c1"># =======================================================================</span>
@@ -449,9 +752,92 @@
 <div class="viewcode-block" id="sample_indexes">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.sample_indexes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_indexes</span><span class="p">(</span>
-    <span class="n">input_db</span><span class="p">,</span> <span class="n">raster_files</span><span class="p">,</span> <span class="n">output_folder</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span> <span class="n">raster_multipliers</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">output_folder</span><span class="p">,</span>
+    <span class="n">input_db</span><span class="p">,</span>
+    <span class="n">raster_files</span><span class="p">,</span>
+    <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
+    <span class="n">raster_multipliers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="c1"># todo docstring</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Samples mean values from multiple raster files over a vector layer</span>
+<span class="sd">    (e.g., catchments) and merges the results into a GeoDataFrame.</span>
+
+<span class="sd">    :param output_folder: Path to the directory where temporary and final output files will be stored.</span>
+<span class="sd">    :type output_folder: str</span>
+<span class="sd">    :param input_db: Path to the GeoPackage or database file containing the input vector layer.</span>
+<span class="sd">    :type input_db: str</span>
+<span class="sd">    :param raster_files: Dictionary where keys are the desired column names (index names) and values are the full paths to the corresponding raster files.</span>
+<span class="sd">    :type raster_files: dict</span>
+<span class="sd">    :param input_layer: Name of the vector layer within the input database to use for zonal statistics. Default value = &quot;apcac_bho5k&quot;</span>
+<span class="sd">    :type input_layer: str</span>
+<span class="sd">    :param raster_multipliers: [optional] Dictionary where keys are the index names (from `raster_files`) and values are factors by which the sampled mean values should be divided (e.g., to convert units).</span>
+<span class="sd">    :type raster_multipliers: dict</span>
+<span class="sd">    :return: The file path to the final GeoPackage file containing the input layer with the new sampled index columns.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    The process uses QGIS&#39;s native zonal statistics algorithm (``native:zonalstatisticsfb``)</span>
+<span class="sd">    to calculate the mean of each raster within the polygons of the input vector layer.</span>
+
+
+<span class="sd">    **Script example**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import importlib.util as iu</span>
+
+<span class="sd">        # define the paths to this module</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
+
+<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
+<span class="sd">        module = iu.module_from_spec(spec)</span>
+<span class="sd">        spec.loader.exec_module(module)</span>
+
+<span class="sd">        # define the paths to input and output folders</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
+<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
+
+<span class="sd">        # define the path to input database</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_db = f&quot;{input_dir}/path/to/data.gpkg&quot;</span>
+
+<span class="sd">        # define the paths to input rasters</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        raster_files = {</span>
+<span class="sd">            # change this paths</span>
+<span class="sd">            &quot;t&quot;: f&quot;{input_dir}/path/to/raster_t.tif&quot;,</span>
+<span class="sd">            &quot;s&quot;: f&quot;{input_dir}/path/to/raster_s.tif&quot;,</span>
+<span class="sd">            &quot;g&quot;: f&quot;{input_dir}/path/to/raster_g.tif&quot;,</span>
+<span class="sd">            &quot;c&quot;: f&quot;{input_dir}/path/to/raster_c.tif&quot;,</span>
+<span class="sd">            &quot;n&quot;: f&quot;{input_dir}/path/to/raster_n.tif&quot;,</span>
+<span class="sd">            &quot;v&quot;: f&quot;{input_dir}/path/to/raster_v.tif&quot;,</span>
+<span class="sd">            &quot;slope&quot;: f&quot;{input_dir}/path/to/raster_slope.tif&quot;,</span>
+<span class="sd">            &quot;uslek&quot;: f&quot;{input_dir}/path/to/raster_uslek.tif&quot;,</span>
+<span class="sd">        }</span>
+
+<span class="sd">        # define which index has multipliers (the value is divided)</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        raster_multipliers = {</span>
+<span class="sd">            &quot;t&quot;: 1000,</span>
+<span class="sd">            &quot;s&quot;: 100,</span>
+<span class="sd">            &quot;slope&quot;: 100,</span>
+<span class="sd">            # change and add more if needed</span>
+<span class="sd">        }</span>
+
+<span class="sd">        # call the function</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        module.sample_indexes(</span>
+<span class="sd">            input_db=input_db,</span>
+<span class="sd">            raster_files=raster_files,</span>
+<span class="sd">            output_folder=output_dir,</span>
+<span class="sd">            raster_multipliers=raster_multipliers,</span>
+<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Startup</span>
     <span class="c1"># -------------------------------------------------------------------</span>
@@ -468,11 +854,11 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">folder_outputs</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">\apcac.gpkg&quot;</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
 
     <span class="c1"># Run processes</span>
     <span class="c1"># -------------------------------------------------------------------</span>
@@ -487,7 +873,7 @@
         <span class="n">processing</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
             <span class="s2">&quot;native:zonalstatisticsfb&quot;</span><span class="p">,</span>
             <span class="p">{</span>
-                <span class="s2">&quot;INPUT&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">|layername=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="p">),</span>
+                <span class="s2">&quot;INPUT&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">|layername=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="p">),</span>
                 <span class="s2">&quot;INPUT_RASTER&quot;</span><span class="p">:</span> <span class="n">index_file</span><span class="p">,</span>
                 <span class="s2">&quot;RASTER_BAND&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                 <span class="s2">&quot;COLUMN_PREFIX&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">index_name</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">,</span>
@@ -501,7 +887,7 @@
 
     <span class="c1"># load data</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
     <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">FIELDS_BASE</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="c1"># organization loop</span>
@@ -524,7 +910,7 @@
     <span class="c1"># save</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -534,8 +920,58 @@
 
 <div class="viewcode-block" id="fuzzify_indexes">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.fuzzify_indexes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fuzzify_indexes</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">output_folder</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
-    <span class="c1"># todo docstring</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fuzzify_indexes</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies a fuzzification function to a predefined list of index columns</span>
+<span class="sd">    in a GeoDataFrame, scaling their values between 0 and 1.</span>
+
+<span class="sd">    :param output_folder: Path to the directory where temporary and final output files will be stored.</span>
+<span class="sd">    :type output_folder: str</span>
+<span class="sd">    :param input_db: Path to the GeoPackage or database file containing the input vector layer.</span>
+<span class="sd">    :type input_db: str</span>
+<span class="sd">    :param input_layer: Name of the vector layer within the input database to be processed. Default value = &quot;apcac_bho5k&quot;</span>
+<span class="sd">    :type input_layer: str</span>
+<span class="sd">    :return: The file path to the final GeoPackage file, which contains the input layer with the new fuzzified index columns (e.g., ``t_f``, ``s_f``).</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    The fuzzification is typically a linear scaling based on the minimum</span>
+<span class="sd">    and maximum values observed in each column.</span>
+
+<span class="sd">    **Script example**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import importlib.util as iu</span>
+
+<span class="sd">        # define the paths to this module</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
+
+<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
+<span class="sd">        module = iu.module_from_spec(spec)</span>
+<span class="sd">        spec.loader.exec_module(module)</span>
+
+<span class="sd">        # define the paths to input and output folders</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
+<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
+
+<span class="sd">        # define the path to input database</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_db = f&quot;{input_dir}/path/to/data.gpkg&quot;</span>
+
+
+<span class="sd">        # call the function</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        output_file = module.fuzzify_indexes(</span>
+<span class="sd">            input_db=input_db,</span>
+<span class="sd">            output_folder=output_dir,</span>
+<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Startup</span>
     <span class="c1"># -------------------------------------------------------------------</span>
@@ -552,11 +988,11 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">folder_outputs</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
 
     <span class="c1"># variables</span>
     <span class="c1"># -----------------------------------</span>
@@ -566,7 +1002,7 @@
 
     <span class="c1"># load data</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
 
     <span class="c1"># fuzzify fields</span>
     <span class="c1"># -----------------------------------</span>
@@ -581,7 +1017,7 @@
 
     <span class="c1"># save</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -591,8 +1027,53 @@
 
 <div class="viewcode-block" id="compute_index_a">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.compute_index_a">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_index_a</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">output_folder</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
-    <span class="c1"># todo docstring</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_index_a</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the raw and fuzzified ``a`` (hydrology importance) index as</span>
+<span class="sd">    a multiplicative combination of the fuzzified ``t``, ``s``, ``g``, and ``c`` indexes.</span>
+
+<span class="sd">    :param output_folder: Path to the directory where temporary and final output files will be stored.</span>
+<span class="sd">    :type output_folder: str</span>
+<span class="sd">    :param input_db: Path to the GeoPackage or database file containing the input vector layer.</span>
+<span class="sd">    :type input_db: str</span>
+<span class="sd">    :param input_layer: Name of the vector layer within the input database to be processed. Default value = &quot;apcac_bho5k&quot;</span>
+<span class="sd">    :type input_layer: str</span>
+<span class="sd">    :return: The file path to the final GeoPackage file, which contains the input layer with the new ``a_raw`` and fuzzified ``a`` columns.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Script example**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import importlib.util as iu</span>
+
+<span class="sd">        # define the paths to this module</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
+
+<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
+<span class="sd">        module = iu.module_from_spec(spec)</span>
+<span class="sd">        spec.loader.exec_module(module)</span>
+
+<span class="sd">        # define the paths to input and output folders</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
+<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
+
+<span class="sd">        # define the path to input database</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_db = f&quot;{input_dir}/path/to/data.gpkg&quot;</span>
+
+
+<span class="sd">        # call the function</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        output_file = module.compute_index_a(</span>
+<span class="sd">            input_db=input_db,</span>
+<span class="sd">            output_folder=output_dir,</span>
+<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Startup</span>
     <span class="c1"># -------------------------------------------------------------------</span>
@@ -608,11 +1089,11 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">folder_outputs</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
 
     <span class="c1"># variables</span>
     <span class="c1"># -----------------------------------</span>
@@ -622,7 +1103,7 @@
 
     <span class="c1"># load data</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
 
     <span class="c1"># compute a raw</span>
     <span class="c1"># -----------------------------------</span>
@@ -639,7 +1120,7 @@
 
     <span class="c1"># save</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">output_file</span></div>
@@ -649,14 +1130,66 @@
 <div class="viewcode-block" id="compute_index_e">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.compute_index_e">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_index_e</span><span class="p">(</span>
-    <span class="n">input_db</span><span class="p">,</span>
     <span class="n">output_folder</span><span class="p">,</span>
-    <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
+    <span class="n">input_db</span><span class="p">,</span>
+    <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
     <span class="n">n_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">slope_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">uslek_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="c1"># todo docstring</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the binary ``e`` (erosion/degradation risk) index, classifying areas</span>
+<span class="sd">    as having risk (1) if they meet at least one of the three predefined risk</span>
+<span class="sd">    conditions: low ``n``, high ``slope``, or high ``uslek``.</span>
+
+<span class="sd">    :param output_folder: Path to the directory where temporary and final output files will be stored.</span>
+<span class="sd">    :type output_folder: str</span>
+<span class="sd">    :param input_db: Path to the GeoPackage or database file containing the input vector layer.</span>
+<span class="sd">    :type input_db: str</span>
+<span class="sd">    :param input_layer: Name of the vector layer within the input database to be processed. Default value = &quot;apcac_bho5k&quot;</span>
+<span class="sd">    :type n_threshold: [optional] The maximum ``n`` value (vegetation index) considered to indicate risk. Default value = N1</span>
+<span class="sd">    :type n_threshold: float</span>
+<span class="sd">    :param slope_threshold: [optional] The minimum ``slope`` value considered to indicate risk. Default value = SLOPE_THRESHOLD</span>
+<span class="sd">    :type slope_threshold: float</span>
+<span class="sd">    :param uslek_threshold: [optional] The minimum ``uslek`` value (soil erodibility) considered to indicate risk. Default value = USLEK_THRESHOLD</span>
+<span class="sd">    :type uslek_threshold: float</span>
+<span class="sd">    :return: The file path to the final GeoPackage file, which contains the input layer with the new boolean risk columns (``is_risk_n``, ``is_risk_slope``, ``is_risk_uslek``) and the final ``e`` index.</span>
+<span class="sd">    :rtype: str</span>
+
+
+<span class="sd">    **Script example**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import importlib.util as iu</span>
+
+<span class="sd">        # define the paths to this module</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
+
+<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
+<span class="sd">        module = iu.module_from_spec(spec)</span>
+<span class="sd">        spec.loader.exec_module(module)</span>
+
+<span class="sd">        # define the paths to input and output folders</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
+<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
+
+<span class="sd">        # define the path to input database</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_db = f&quot;{input_dir}/path/to/data.gpkg&quot;</span>
+
+
+<span class="sd">        # call the function</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        output_file = module.compute_index_e(</span>
+<span class="sd">            input_db=input_db,</span>
+<span class="sd">            output_folder=output_dir,</span>
+<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Startup</span>
     <span class="c1"># -------------------------------------------------------------------</span>
@@ -681,11 +1214,11 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">folder_outputs</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
 
     <span class="c1"># variables</span>
     <span class="c1"># -----------------------------------</span>
@@ -695,7 +1228,7 @@
 
     <span class="c1"># load data</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
 
     <span class="c1"># compute boolean risk factors</span>
     <span class="c1"># -----------------------------------</span>
@@ -714,7 +1247,7 @@
 
     <span class="c1"># save</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">output_file</span></div>
@@ -723,7 +1256,7 @@
 
 <div class="viewcode-block" id="upscale_apcac">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.upscale_apcac">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">upscale_apcac</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">output_folder</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">upscale_apcac</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_db</span><span class="p">):</span>
     <span class="c1"># todo docstring</span>
     <span class="c1"># todo develop</span>
     <span class="c1"># Setup input variables</span>
@@ -736,12 +1269,12 @@
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span>
-        <span class="n">run_name</span><span class="o">=</span><span class="n">compute_index_a</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">folder_outputs</span><span class="o">=</span><span class="n">output_folder</span>
+        <span class="n">run_name</span><span class="o">=</span><span class="n">compute_index_a</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span>
     <span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/result.tif&quot;</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
 
     <span class="c1"># Run processes</span>
     <span class="c1"># -------------------------------------------------------------------</span>
@@ -763,8 +1296,64 @@
 
 <div class="viewcode-block" id="compute_apcac">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.compute_apcac">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_apcac</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">output_folder</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
-    <span class="c1"># todo docstring</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_apcac</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the final APCAC (Áreas Prioritárias para Conservação de Água)</span>
+<span class="sd">    classification codes and IDs for the input catchment GeoDataFrame.</span>
+
+<span class="sd">    :param output_folder: Path to the directory where temporary and final output files will be stored.</span>
+<span class="sd">    :type output_folder: str</span>
+<span class="sd">    :param input_db: Path to the GeoPackage or database file containing the input vector layer with all required index columns.</span>
+<span class="sd">    :type input_db: str</span>
+<span class="sd">    :param input_layer: Name of the vector layer within the input database to be processed. Default value = &quot;apcac_bho5k&quot;</span>
+<span class="sd">    :type input_layer: str</span>
+<span class="sd">    :return: The file path to the final GeoPackage file, which contains the input layer with the full set of APCAC classification columns (``cd_apcac``, ``id_apcac``, and their component parts).</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    This function wraps the three-level classification logic</span>
+<span class="sd">    (natural/anthropic, hydrology, and risk) defined in ``classify_apcac``.</span>
+
+<span class="sd">    **Script example**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import importlib.util as iu</span>
+
+<span class="sd">        # define the paths to this module</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
+
+<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
+<span class="sd">        module = iu.module_from_spec(spec)</span>
+<span class="sd">        spec.loader.exec_module(module)</span>
+
+<span class="sd">        # define the paths to input and output folders</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
+<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
+
+<span class="sd">        # define the path to input database</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_db = f&quot;{input_dir}/path/to/data.gpkg&quot;</span>
+
+
+<span class="sd">        # call the function</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        output_file = module.compute_apcac(</span>
+<span class="sd">            input_db=input_db,</span>
+<span class="sd">            output_folder=output_dir,</span>
+<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Startup</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="n">compute_apcac</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running: </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
     <span class="c1"># Setup input variables</span>
     <span class="c1"># -------------------------------------------------------------------</span>
 
@@ -774,20 +1363,18 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span>
-        <span class="n">run_name</span><span class="o">=</span><span class="n">compute_apcac</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">folder_outputs</span><span class="o">=</span><span class="n">output_folder</span>
-    <span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
 
     <span class="c1"># Run processes</span>
     <span class="c1"># -------------------------------------------------------------------</span>
 
     <span class="c1"># load data</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
 
     <span class="c1"># compute apcac</span>
     <span class="c1"># -----------------------------------</span>
@@ -798,62 +1385,202 @@
 
     <span class="c1"># save</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">output_file</span></div>
 
 
 
-<span class="c1"># Demo example</span>
-<span class="c1"># -----------------------------------------------------------------------</span>
-<div class="viewcode-block" id="process_data">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.process_data">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">input1</span><span class="p">,</span> <span class="n">input2</span><span class="p">,</span> <span class="n">output_folder</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_apcac_stats">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.compute_apcac_stats">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_apcac_stats</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Demo for processing data</span>
+<span class="sd">    Computes and exports a summary of APCAC classification statistics,</span>
+<span class="sd">    including total area and percentages for the Biome (Cerrado)</span>
+<span class="sd">    and the Hydrological Influence Zone (ZHI).</span>
 
-<span class="sd">    :param input1: file path to input data 1</span>
-<span class="sd">    :type input1: str</span>
-<span class="sd">    :param input2: file path to input data 1</span>
-<span class="sd">    :type input2: str</span>
-<span class="sd">    :param output_folder: file path to output folder</span>
+<span class="sd">    :param output_folder: Path to the directory where the output CSV file will be saved.</span>
 <span class="sd">    :type output_folder: str</span>
+<span class="sd">    :param input_db: Path to the GeoPackage or database file containing the classified vector layer.</span>
+<span class="sd">    :type input_db: str</span>
+<span class="sd">    :param input_layer: Name of the vector layer within the input database to be processed, which must contain the ``cd_apcac`` column. Default value = &quot;apcac_bho5k&quot;</span>
+<span class="sd">    :type input_layer: str</span>
+<span class="sd">    :return: The file path to the resulting CSV file containing the APCAC summary statistics.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    This function loads the classified catchment data, calls the `summarise`</span>
+<span class="sd">    function to aggregate the statistics, and saves the resulting table to a CSV file.</span>
+
+<span class="sd">    **Script example**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import importlib.util as iu</span>
+
+<span class="sd">        # define the paths to this module</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
+
+<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
+<span class="sd">        module = iu.module_from_spec(spec)</span>
+<span class="sd">        spec.loader.exec_module(module)</span>
+
+<span class="sd">        # define the paths to input and output folders</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
+<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
+
+<span class="sd">        # define the path to input database</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_db = f&quot;{input_dir}/path/to/data.gpkg&quot;</span>
+
+
+<span class="sd">        # call the function</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        output_file = module.compute_apcac_stats(</span>
+<span class="sd">            input_db=input_db,</span>
+<span class="sd">            output_folder=output_dir,</span>
+<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
+<span class="sd">        )</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Startup</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="n">compute_apcac_stats</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running: </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
     <span class="c1"># Setup input variables</span>
     <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">input1_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input1</span><span class="p">)</span>
-    <span class="n">input1_name</span> <span class="o">=</span> <span class="n">input1_basename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="n">input2_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input2</span><span class="p">)</span>
-    <span class="n">input2_name</span> <span class="o">=</span> <span class="n">input2_basename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">input1</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">input1_basename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">input2</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">input2_basename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Setup output variables</span>
     <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># folders</span>
+    <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/result.tif&quot;</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+
+    <span class="c1"># files</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac_stats.csv&quot;</span><span class="p">)</span>
 
     <span class="c1"># Run processes</span>
     <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">processing</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-        <span class="s2">&quot;native:rastercalc&quot;</span><span class="p">,</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;LAYERS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">input1</span><span class="p">,</span> <span class="n">input2</span><span class="p">],</span>
-            <span class="s2">&quot;EXPRESSION&quot;</span><span class="p">:</span> <span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">@1&quot; * &quot;</span><span class="si">{}</span><span class="s1">@1&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input1_name</span><span class="p">,</span> <span class="n">input2_name</span><span class="p">),</span>
-            <span class="s2">&quot;EXTENT&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;CELL_SIZE&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;CRS&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;OUTPUT&quot;</span><span class="p">:</span> <span class="n">output_file</span><span class="p">,</span>
-        <span class="p">},</span>
-    <span class="p">)</span>
 
-    <span class="c1"># Wrap up</span>
+    <span class="c1"># load data</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
+
+    <span class="c1"># compute apcac stats</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">summarise</span><span class="p">(</span><span class="n">gdf</span><span class="p">)</span>
+
+    <span class="c1"># Export</span>
     <span class="c1"># -------------------------------------------------------------------</span>
 
-    <span class="k">return</span> <span class="kc">None</span></div>
+    <span class="c1"># save data</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output_file</span></div>
+
+
+
+<div class="viewcode-block" id="get_latex_table">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.get_latex_table">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_latex_table</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_csv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a CSV file containing APCAC summary statistics, converts</span>
+<span class="sd">    the data into a fully formatted LaTeX table using `summarise_latex`,</span>
+<span class="sd">    and saves the resulting LaTeX code to a .tex file.</span>
+
+<span class="sd">    :param output_folder: Path to the directory where the output LaTeX file will be saved.</span>
+<span class="sd">    :type output_folder: str</span>
+<span class="sd">    :param input_csv: Path to the input CSV file containing the APCAC summary statistics (e.g., the output of `compute_apcac_stats`).</span>
+<span class="sd">    :type input_csv: str</span>
+<span class="sd">    :return: The file path to the resulting LaTeX (.tex) file containing the formatted APCAC summary table.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Script example**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import importlib.util as iu</span>
+
+<span class="sd">        # define the paths to this module</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
+
+<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
+<span class="sd">        module = iu.module_from_spec(spec)</span>
+<span class="sd">        spec.loader.exec_module(module)</span>
+
+<span class="sd">        # define the paths to input and output folders</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
+<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
+
+<span class="sd">        # define the path to input data</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_file = f&quot;{input_dir}/path/to/data.csv&quot;</span>
+
+<span class="sd">        # call the function</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        output_file = module.get_latex_table(</span>
+<span class="sd">            input_csv=input_file,</span>
+<span class="sd">            output_folder=output_dir,</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Startup</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="n">get_latex_table</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running: </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Setup input variables</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># Setup output variables</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># folders</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+
+    <span class="c1"># files</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac_stats.tex&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Run processes</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># load data</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">input_csv</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># convert to LaTeX table</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">s_table</span> <span class="o">=</span> <span class="n">summarise_latex</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="c1"># Export</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># save table</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s_table</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output_file</span></div>
 
 
 
@@ -862,80 +1589,35 @@
 
 <span class="c1"># FUNCTIONS -- Module-level</span>
 <span class="c1"># =======================================================================</span>
-<div class="viewcode-block" id="waiter">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.waiter">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">waiter</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hey!&quot;</span><span class="p">)</span>
-    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="get_timestamp">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.get_timestamp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_timestamp</span><span class="p">():</span>
-    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H%M%S&quot;</span><span class="p">))</span></div>
-
-
-
-<div class="viewcode-block" id="make_run_folder">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.make_run_folder">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="p">,</span> <span class="n">folder_outputs</span><span class="p">):</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">ts</span> <span class="o">=</span> <span class="n">get_timestamp</span><span class="p">()</span>
-        <span class="n">folder_run</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">folder_outputs</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder_run</span><span class="p">):</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder_run</span><span class="p">)</span>
-            <span class="k">break</span>
-
-    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">folder_run</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="fuzzify">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.fuzzify">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fuzzify</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="p">,</span> <span class="n">v_up</span><span class="p">):</span>
-    <span class="c1"># apply function</span>
-    <span class="n">v_f</span> <span class="o">=</span> <span class="n">fuzzify_linear</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="p">,</span> <span class="n">v_up</span><span class="p">)</span>
-    <span class="c1"># get bounds</span>
-    <span class="n">v_lo_bool</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span> <span class="o">&lt;</span> <span class="n">v_lo</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">v_up_bool</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span> <span class="o">&gt;</span> <span class="n">v_up</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># return boolean product</span>
-    <span class="k">return</span> <span class="n">v_f</span> <span class="o">*</span> <span class="n">v_lo_bool</span> <span class="o">*</span> <span class="n">v_up_bool</span></div>
-
-
-
-<div class="viewcode-block" id="fuzzify_linear">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.fuzzify_linear">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fuzzify_linear</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">v_up</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Fuzzify a NumPy array to [0, 1] ignoring NaNs, preserving them in the result.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">v_lo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">v_lo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">v_up</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">v_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">v_lo</span> <span class="o">==</span> <span class="n">v_up</span><span class="p">:</span>
-        <span class="c1"># If all valid values are equal, return 1.0 where not NaN</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">v_lo</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">v_up</span> <span class="o">-</span> <span class="n">v_lo</span><span class="p">)</span></div>
-
 
 
 <div class="viewcode-block" id="save_gdf">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.save_gdf">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">layer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves a GeoDataFrame to a GeoPackage file, ensuring the</span>
+<span class="sd">    ``geometry`` column is the last column.</span>
+
+<span class="sd">    :param gdf: The GeoDataFrame to be saved.</span>
+<span class="sd">    :type gdf: :class:`geopandas.GeoDataFrame`</span>
+<span class="sd">    :param db: The file path for the output GeoPackage database.</span>
+<span class="sd">    :type db: str or :class:`pathlib.Path`</span>
+<span class="sd">    :param layer: The name of the layer (table) to create within the GeoPackage.</span>
+<span class="sd">    :type layer: str</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    The function first reorders the GeoDataFrame columns to</span>
+<span class="sd">    place the ``geometry``  column at the end, which is a common</span>
+<span class="sd">    convention or requirement for some geospatial operations,</span>
+<span class="sd">    and then writes the data to the specified GeoPackage file.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># organize columns</span>
     <span class="n">my_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">item</span> <span class="o">=</span> <span class="n">my_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">my_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;geometry&quot;</span><span class="p">))</span>  <span class="c1"># remove and get the item</span>
     <span class="n">my_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">my_list</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &gt;&gt; saving...&quot;</span><span class="p">)</span>
     <span class="n">gdf</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">&quot;GPKG&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span></div>
@@ -945,14 +1627,24 @@
 <div class="viewcode-block" id="classify_apcac">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.classify_apcac">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">classify_apcac</span><span class="p">(</span><span class="n">gdf</span><span class="p">):</span>
-    <span class="c1"># todo docstring</span>
-    <span class="c1"># CLASSIFY</span>
-    <span class="c1"># level 2 -- natural or anthropic</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classifies catchments based on natural/anthropic,</span>
+<span class="sd">    hydrology, and risk factors using a three-level system (APCAC).</span>
+
+<span class="sd">    :param gdf: GeoDataFrame containing catchment data with ``n``, ``a``, ``v``, and ``e`` columns for classification.</span>
+<span class="sd">    :type gdf: :class:`geopandas.GeoDataFrame`</span>
+<span class="sd">    :return: GeoDataFrame with added classification columns: ``cd_apcac_n``, ``id_apcac_n``, ``cd_apcac_a``, ``id_apcac_a``, ``cd_apcac_risk``, ``id_apcac_risk``, ``cd_apcac``, and ``id_apcac``.</span>
+<span class="sd">    :rtype: :class:`geopandas.GeoDataFrame`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># level 1 -- natural or anthropic</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
     <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;II&quot;</span><span class="p">)</span>
     <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;id_apcac_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
     <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;id_apcac_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;id_apcac_n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="c1"># level 2 --- hydrology</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
     <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">thresholds</span> <span class="o">=</span> <span class="p">[</span>
         <span class="mi">0</span><span class="p">,</span>
@@ -961,7 +1653,6 @@
         <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">90</span><span class="p">),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
     <span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">thresholds</span><span class="p">)</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">]</span>
     <span class="n">labels_id</span> <span class="o">=</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
     <span class="c1"># Bin values</span>
@@ -974,14 +1665,19 @@
     <span class="n">gdf_a</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_n == &#39;II&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="c1"># level 3 --- special cases</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
     <span class="c1"># risk in natural catchments</span>
     <span class="n">gdf_n</span><span class="p">[</span><span class="s2">&quot;cd_apcac_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_n</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">V1</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">)</span>
     <span class="n">gdf_n</span><span class="p">[</span><span class="s2">&quot;id_apcac_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_n</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">V1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">gdf_n</span><span class="p">[</span><span class="s2">&quot;id_apcac_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf_n</span><span class="p">[</span><span class="s2">&quot;id_apcac_risk&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="c1"># risk in anthropic catchments</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
     <span class="n">gdf_a</span><span class="p">[</span><span class="s2">&quot;cd_apcac_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_a</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">)</span>
     <span class="n">gdf_a</span><span class="p">[</span><span class="s2">&quot;id_apcac_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_a</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># wrap up</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
 
     <span class="c1"># concat</span>
     <span class="n">gdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gdf_n</span><span class="p">,</span> <span class="n">gdf_a</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -999,6 +1695,331 @@
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">gdf</span></div>
+
+
+
+<div class="viewcode-block" id="groupby">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.groupby">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">groupby</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">rename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Groups a GeoDataFrame by a specified label, aggregates a value</span>
+<span class="sd">    column by summing, and calculates the percentage of the total for the summed value.</span>
+
+<span class="sd">    :param gdf: GeoDataFrame to be processed.</span>
+<span class="sd">    :type gdf: :class:`geopandas.GeoDataFrame`</span>
+<span class="sd">    :param label: Column name to use for grouping (the index of the resulting DataFrame).</span>
+<span class="sd">    :type label: str</span>
+<span class="sd">    :param value: Column name to be summed within each group.</span>
+<span class="sd">    :type value: str</span>
+<span class="sd">    :param rename: Base name for the new columns created for the summed value and its percentage.</span>
+<span class="sd">    :type rename: str</span>
+<span class="sd">    :return: DataFrame with the grouped label, the sum of the value column (renamed), and the percentage of the total sum (renamed with ``_p`` suffix).</span>
+<span class="sd">    :rtype: :class:`pandas.DataFrame`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gdf_ups</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">label</span><span class="p">)[</span><span class="n">value</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">gdf_ups</span> <span class="o">=</span> <span class="n">gdf_ups</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;sum&quot;</span><span class="p">:</span> <span class="n">rename</span><span class="p">})</span>
+    <span class="n">gdf_ups</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rename</span><span class="si">}</span><span class="s2">_p&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">gdf_ups</span><span class="p">[</span><span class="n">rename</span><span class="p">]</span> <span class="o">/</span> <span class="n">gdf_ups</span><span class="p">[</span><span class="n">rename</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">gdf_ups</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rename</span><span class="si">}</span><span class="s2">_p&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf_ups</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rename</span><span class="si">}</span><span class="s2">_p&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">gdf_ups</span><span class="p">[</span><span class="n">rename</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf_ups</span><span class="p">[</span><span class="n">rename</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gdf_ups</span></div>
+
+
+
+<div class="viewcode-block" id="summarise">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.summarise">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">summarise</span><span class="p">(</span><span class="n">gdf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Summarizes catchment data by calculating the total area and percentage</span>
+<span class="sd">    of area for each APCAC classification, both for a specific biome (Cerrado)</span>
+<span class="sd">    and for the full dataset.</span>
+
+<span class="sd">    :param gdf: GeoDataFrame containing catchment data with required columns ``id_uph``, ``is_cerrado``, ``nuareacont``, and ``cd_apcac``.</span>
+<span class="sd">    :type gdf: :class:`geopandas.GeoDataFrame`</span>
+<span class="sd">    :return: DataFrame with APCAC labels, the total area (in km²) and percentage of area for each classification within the Cerrado biome, and the total area and percentage for the full extent.</span>
+<span class="sd">    :rtype: :class:`pandas.DataFrame`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gdf_labels</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">APCAC_LABELS</span><span class="p">)</span>
+
+    <span class="c1"># filter fields</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[[</span><span class="s2">&quot;id_uph&quot;</span><span class="p">,</span> <span class="s2">&quot;is_cerrado&quot;</span><span class="p">,</span> <span class="s2">&quot;nuareacont&quot;</span><span class="p">,</span> <span class="s2">&quot;cd_apcac&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># run biome scale analysis</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">gdf_main_cerrado</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;is_cerrado == 1&quot;</span><span class="p">)</span>
+    <span class="n">gdf_grouped_bio</span> <span class="o">=</span> <span class="n">groupby</span><span class="p">(</span>
+        <span class="n">gdf</span><span class="o">=</span><span class="n">gdf_main_cerrado</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="s2">&quot;nuareacont&quot;</span><span class="p">,</span>
+        <span class="n">rename</span><span class="o">=</span><span class="s2">&quot;bio_area_km2&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># run full scale analysis</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">gdf_grouped_zhi</span> <span class="o">=</span> <span class="n">groupby</span><span class="p">(</span>
+        <span class="n">gdf</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;nuareacont&quot;</span><span class="p">,</span> <span class="n">rename</span><span class="o">=</span><span class="s2">&quot;zhi_area_km2&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># merges</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">gdf_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">left</span><span class="o">=</span><span class="n">gdf_grouped_bio</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">gdf_grouped_zhi</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">gdf_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">gdf_labels</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">gdf_output</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="n">gdf_output</span> <span class="o">=</span> <span class="n">gdf_output</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gdf_output</span></div>
+
+
+
+<div class="viewcode-block" id="summarise_latex">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.summarise_latex">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">summarise_latex</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a full LaTeX table environment, including caption and formatting,</span>
+<span class="sd">    from a summary DataFrame of APCAC classifications.</span>
+
+<span class="sd">    :param df: DataFrame containing APCAC summary results, including ``cd_apcac``, ``lb_apcac``, ``bio_area_km2``, ``bio_area_km2_p``, ``zhi_area_km2``, and ``zhi_area_km2_p`` columns.</span>
+<span class="sd">    :type df: :class:`pandas.DataFrame`</span>
+<span class="sd">    :return: A string containing the complete LaTeX code for the formatted table.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    The table organizes data by ``Importância Hidrológica`` (Hydrological Importance)</span>
+<span class="sd">    with subtotals and includes ``Risco`` (Risk) and ``Ocupação`` (Occupation), showing</span>
+<span class="sd">    area (km²) and percentage for both the Biome (Cerrado) and the Hydrological Influence Zone (ZHI).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Map keywords to importance levels in Portuguese</span>
+    <span class="n">importance_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;extremamente alta&quot;</span><span class="p">:</span> <span class="s2">&quot;Extremamente alta&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;muito alta&quot;</span><span class="p">:</span> <span class="s2">&quot;Muito alta&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alta&quot;</span><span class="p">:</span> <span class="s2">&quot;Alta&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;regular&quot;</span><span class="p">:</span> <span class="s2">&quot;Regular&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Parse the descriptive column to extract occupation, importance, and risk</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_description</span><span class="p">(</span><span class="n">desc</span><span class="p">):</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">)</span>
+        <span class="n">occupation</span> <span class="o">=</span> <span class="s2">&quot;Antrópica&quot;</span> <span class="k">if</span> <span class="s2">&quot;antrópica&quot;</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;Natural&quot;</span>
+        <span class="n">importance</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">importance_map</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">importance_map</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">risk</span> <span class="o">=</span> <span class="s2">&quot;Alto&quot;</span> <span class="k">if</span> <span class="s2">&quot;alto risco&quot;</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;Baixo&quot;</span>
+        <span class="k">return</span> <span class="n">occupation</span><span class="p">,</span> <span class="n">importance</span><span class="p">,</span> <span class="n">risk</span>
+
+    <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;Ocupação&quot;</span><span class="p">,</span> <span class="s2">&quot;Importância Hidrológica&quot;</span><span class="p">,</span> <span class="s2">&quot;Risco&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;lb_apcac&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">parse_description</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Sort by importance order</span>
+    <span class="n">importance_order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Extremamente alta&quot;</span><span class="p">,</span> <span class="s2">&quot;Muito alta&quot;</span><span class="p">,</span> <span class="s2">&quot;Alta&quot;</span><span class="p">,</span> <span class="s2">&quot;Regular&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Importância Hidrológica&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">importance_order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;Ocupação&quot;</span><span class="p">,</span> <span class="s2">&quot;Risco&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Format numbers for Brazilian style</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fmt</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fmt_p</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Compute totals per importance group</span>
+    <span class="n">totals</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Importância Hidrológica&quot;</span><span class="p">)[</span>
+            <span class="p">[</span><span class="s2">&quot;bio_area_km2&quot;</span><span class="p">,</span> <span class="s2">&quot;bio_area_km2_p&quot;</span><span class="p">,</span> <span class="s2">&quot;zhi_area_km2&quot;</span><span class="p">,</span> <span class="s2">&quot;zhi_area_km2_p&quot;</span><span class="p">]</span>
+        <span class="p">]</span>
+        <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">grand_total</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span>
+        <span class="p">[</span><span class="s2">&quot;bio_area_km2&quot;</span><span class="p">,</span> <span class="s2">&quot;bio_area_km2_p&quot;</span><span class="p">,</span> <span class="s2">&quot;zhi_area_km2&quot;</span><span class="p">,</span> <span class="s2">&quot;zhi_area_km2_p&quot;</span><span class="p">]</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="c1"># Start LaTeX table construction</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">begin</span><span class="si">{tabular}{llllrrrr}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">toprule&quot;</span><span class="p">)</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">textbf</span><span class="si">{Classe}</span><span class="s2"> &amp; </span><span class="se">\\</span><span class="s2">textbf{Importância Hidrológica} &amp; </span><span class="se">\\</span><span class="s2">textbf</span><span class="si">{Risco}</span><span class="s2"> &amp; </span><span class="se">\\</span><span class="s2">textbf</span><span class="si">{Ocupação}</span><span class="s2"> &amp; &quot;</span>
+        <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">textbf{Bioma (km²)} &amp; </span><span class="se">\\</span><span class="s2">textbf{Bioma (</span><span class="se">\\</span><span class="s2">%)} &amp; </span><span class="se">\\</span><span class="s2">textbf{ZHI (km²)} &amp; </span><span class="se">\\</span><span class="s2">textbf{ZHI (</span><span class="se">\\</span><span class="s2">%)} </span><span class="se">\\\\</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">midrule&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Iterate over importance groups</span>
+    <span class="k">for</span> <span class="n">imp</span> <span class="ow">in</span> <span class="n">importance_order</span><span class="p">:</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Importância Hidrológica&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">imp</span><span class="p">]</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">totals</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">totals</span><span class="p">[</span><span class="s2">&quot;Importância Hidrológica&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">imp</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Subtotal line for each importance group</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;     &amp; </span><span class="se">\\</span><span class="s2">textbf</span><span class="se">{{</span><span class="si">{</span><span class="n">imp</span><span class="si">}</span><span class="se">}}</span><span class="s2"> &amp; &amp; &amp; &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">textbf</span><span class="se">{{</span><span class="si">{</span><span class="n">fmt</span><span class="p">(</span><span class="n">total</span><span class="o">.</span><span class="n">bio_area_km2</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2"> &amp; </span><span class="se">\\</span><span class="s2">textbf</span><span class="se">{{</span><span class="si">{</span><span class="n">fmt_p</span><span class="p">(</span><span class="n">total</span><span class="o">.</span><span class="n">bio_area_km2_p</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2"> &amp; &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">textbf</span><span class="se">{{</span><span class="si">{</span><span class="n">fmt</span><span class="p">(</span><span class="n">total</span><span class="o">.</span><span class="n">zhi_area_km2</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2"> &amp; </span><span class="se">\\</span><span class="s2">textbf</span><span class="se">{{</span><span class="si">{</span><span class="n">fmt_p</span><span class="p">(</span><span class="n">total</span><span class="o">.</span><span class="n">zhi_area_km2_p</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\\\</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Detailed rows</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sub</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">cd_apcac</span><span class="si">}</span><span class="s2"> &amp; </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Importância Hidrológica&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &amp; </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">Risco</span><span class="si">}</span><span class="s2"> &amp; </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">Ocupação</span><span class="si">}</span><span class="s2"> &amp; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fmt</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">bio_area_km2</span><span class="p">)</span><span class="si">}</span><span class="s2"> &amp; </span><span class="si">{</span><span class="n">fmt_p</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">bio_area_km2_p</span><span class="p">)</span><span class="si">}</span><span class="s2"> &amp; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fmt</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">zhi_area_km2</span><span class="p">)</span><span class="si">}</span><span class="s2"> &amp; </span><span class="si">{</span><span class="n">fmt_p</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">zhi_area_km2_p</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="se">\\\\</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">midrule&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Final total line</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">textbf</span><span class="se">{{</span><span class="s2">Total</span><span class="se">}}</span><span class="s2"> &amp; &amp; &amp; &amp; </span><span class="se">\\</span><span class="s2">textbf</span><span class="se">{{</span><span class="si">{</span><span class="n">fmt</span><span class="p">(</span><span class="n">grand_total</span><span class="o">.</span><span class="n">bio_area_km2</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2"> &amp; &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">textbf</span><span class="se">{{</span><span class="s2">100</span><span class="se">}}</span><span class="s2"> &amp; </span><span class="se">\\</span><span class="s2">textbf</span><span class="se">{{</span><span class="si">{</span><span class="n">fmt</span><span class="p">(</span><span class="n">grand_total</span><span class="o">.</span><span class="n">zhi_area_km2</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2"> &amp; </span><span class="se">\\</span><span class="s2">textbf</span><span class="se">{{</span><span class="s2">100</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\\\</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">bottomrule&quot;</span><span class="p">)</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">end</span><span class="si">{tabular}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">tabular</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+    <span class="c1"># === Wrap inside a full table environment ===</span>
+    <span class="n">latex_table</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">% start the table</span>
+<span class="se">\\</span><span class="s2">begin</span><span class="se">{{</span><span class="s2">table</span><span class="se">}}</span><span class="s2">[h!] % placed on top of page</span>
+<span class="se">\\</span><span class="s2">centering   </span>
+<span class="se">\\</span><span class="s2">scriptsize % table font size</span>
+<span class="se">\\</span><span class="s2">sffamily % table font style</span>
+<span class="se">\\</span><span class="s2">caption[Resultados na malha BHO]</span><span class="se">{{</span>
+<span class="s2">Resultados da classificação de áreas prioritárias para a conservação de água na malha de bacias hidrográficas da BHO5k. </span>
+<span class="s2">Resumo dos percentuais de área e de classes obtidas, com agregação no âmbito do Bioma Cerrado e da Zona de Influência Hidrológica (ZHI) — </span>
+<span class="s2">definida como o conjunto de bacias hidrográficas que intersectam o Cerrado.</span>
+<span class="se">}}</span>
+<span class="se">\\</span><span class="s2">label</span><span class="se">{{</span><span class="s2">tbl:results</span><span class="se">}}</span>
+<span class="s2">% set alternating colors</span>
+<span class="se">\\</span><span class="s2">rowcolors</span><span class="se">{{</span><span class="s2">2</span><span class="se">}}{{</span><span class="s2">white</span><span class="se">}}{{</span><span class="s2">rowgray</span><span class="se">}}</span>
+<span class="s2">% start the tabular environment</span>
+<span class="se">\\</span><span class="s2">centering</span>
+
+<span class="si">{</span><span class="n">tabular</span><span class="si">}</span>
+
+<span class="se">\\</span><span class="s2">end</span><span class="se">{{</span><span class="s2">table</span><span class="se">}}</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Remove indentation from the triple-quoted string</span>
+    <span class="n">latex_table</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">latex_table</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">latex_table</span></div>
+
+
+
+<span class="c1"># FUNCTIONS -- Utils</span>
+<span class="c1"># =======================================================================</span>
+
+
+<div class="viewcode-block" id="get_timestamp">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.get_timestamp">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_timestamp</span><span class="p">():</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H%M%S&quot;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="make_run_folder">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.make_run_folder">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_run_folder</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">run_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a unique, time-stamped run folder within a specified output directory.</span>
+
+<span class="sd">    :param output_folder: The parent directory where the new run folder will be created.</span>
+<span class="sd">    :type output_folder: str or :class:`pathlib.Path`</span>
+<span class="sd">    :param run_name: The base name for the new folder. A timestamp will be appended to it.</span>
+<span class="sd">    :type run_name: str</span>
+<span class="sd">    :return: The absolute path to the newly created run folder.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    It appends a unique timestamp to the run name and ensures the</span>
+<span class="sd">    folder doesn&#39;t already exist before creating it.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">get_timestamp</span><span class="p">()</span>
+        <span class="n">folder_run</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_folder</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder_run</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder_run</span><span class="p">)</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">folder_run</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="fuzzify">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.fuzzify">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fuzzify</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="p">,</span> <span class="n">v_up</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fuzzifies an array using a trapezoidal membership function, limiting values outside the bounds.</span>
+
+<span class="sd">    :param v: The input array of values to fuzzify.</span>
+<span class="sd">    :type v: :class:`numpy.ndarray`</span>
+<span class="sd">    :param v_lo: The lower bound for the trapezoidal function&#39;s base. Values below this will have a membership of 0.</span>
+<span class="sd">    :type v_lo: float</span>
+<span class="sd">    :param v_up: The upper bound for the trapezoidal function&#39;s base. Values above this will have a membership of 0.</span>
+<span class="sd">    :type v_up: float</span>
+<span class="sd">    :return: The fuzzified array, with membership degrees between 0 and 1.</span>
+<span class="sd">    :rtype: :class:`numpy.ndarray`</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    This function first applies linear scaling (min-max normalization)</span>
+<span class="sd">     to the values and then sets the membership degree to 0 for any value strictly outside the given bounds.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># apply function</span>
+    <span class="n">v_f</span> <span class="o">=</span> <span class="n">fuzzify_linear</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="p">,</span> <span class="n">v_up</span><span class="p">)</span>
+    <span class="c1"># get bounds</span>
+    <span class="n">v_lo_bool</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span> <span class="o">&lt;</span> <span class="n">v_lo</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">v_up_bool</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span> <span class="o">&gt;</span> <span class="n">v_up</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># return boolean product</span>
+    <span class="k">return</span> <span class="n">v_f</span> <span class="o">*</span> <span class="n">v_lo_bool</span> <span class="o">*</span> <span class="n">v_up_bool</span></div>
+
+
+
+<div class="viewcode-block" id="fuzzify_linear">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.fuzzify_linear">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fuzzify_linear</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">v_up</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Briefly fuzzifies a linear array using min-max scaling.</span>
+
+
+<span class="sd">    :param v: The input array of values to fuzzify.</span>
+<span class="sd">    :type v: :class:`numpy.ndarray`</span>
+<span class="sd">    :param v_lo: [optional] The lower bound for scaling (0.0). If None, the minimum non-NaN value of `v` is used.</span>
+<span class="sd">    :type v_lo: float or None</span>
+<span class="sd">    :param v_up: [optional] The upper bound for scaling (1.0). If None, the maximum non-NaN value of `v` is used.</span>
+<span class="sd">    :type v_up: float or None</span>
+<span class="sd">    :return: The fuzzified array, scaled between 0 and 1.</span>
+<span class="sd">    :rtype: :class:`numpy.ndarray`</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    The array is scaled between 0 and 1 using the provided lower</span>
+<span class="sd">    and upper bounds. If both bounds are equal, 1.0 is returned for non-NaN values.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">v_lo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">v_lo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">v_up</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">v_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">v_lo</span> <span class="o">==</span> <span class="n">v_up</span><span class="p">:</span>
+        <span class="c1"># If all valid values are equal, return 1.0 where not NaN</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">v_lo</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">v_up</span> <span class="o">-</span> <span class="n">v_lo</span><span class="p">)</span></div>
 
 
 
