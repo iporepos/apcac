@@ -336,17 +336,20 @@ def analysis_apcac(
     # -----------------------------------
     f2 = fuzzify_indexes(
         input_db=f1,
+        input_layer=input_layer,
         output_folder=output_folder,
     )
     # -----------------------------------
     f3 = compute_index_a(
         input_db=f2,
+        input_layer=input_layer,
         output_folder=output_folder,
     )
 
     # -----------------------------------
     f4 = compute_index_e(
         input_db=f3,
+        input_layer=input_layer,
         output_folder=output_folder,
         uslek_threshold=4500,
     )
@@ -354,11 +357,192 @@ def analysis_apcac(
     # -----------------------------------
     f_apcac = compute_apcac(
         input_db=f4,
+        input_layer=input_layer,
         output_folder=output_folder,
     )
     # -----------------------------------
     f_stats = compute_apcac_stats(
         input_db=f_apcac,
+        input_layer=input_layer,
+        output_folder=output_folder,
+    )
+    # -----------------------------------
+    f_latex = get_latex_table(
+        input_csv=f_stats,
+        output_folder=output_folder,
+    )
+
+    # Export
+    # -------------------------------------------------------------------
+
+    # copy files
+    # -----------------------------------
+    shutil.copy(
+        src=f_apcac,
+        dst=output_file,
+    )
+    shutil.copy(
+        src=f_stats,
+        dst=str(output_file).replace(".gpkg", ".csv"),
+    )
+    shutil.copy(
+        src=f_latex,
+        dst=str(output_file).replace(".gpkg", ".tex"),
+    )
+
+    # delete intermediate files
+    # -----------------------------------
+    if cleanup:
+        ls_removals = [f1, f2, f3, f4, f_apcac, f_stats, f_latex]
+        for f in ls_removals:
+            d = Path(f).parent
+            shutil.rmtree(d)
+
+    print(f"run successfull. see for outputs:\n{output_folder}")
+
+    return output_file
+
+
+def analysis_apcac_upscaled(
+    input_db,
+    output_folder,
+    input_layer="apcac_bho5k",
+    field_upscale=None,
+    field_area=None,
+    cleanup=True,
+):
+    """
+    Orchestrates the complete APCAC analysis workflow at an upscaled (aggregated)
+    spatial unit, performing area-weighted aggregation of indexes
+    before calculating the final APCAC classification.
+
+
+    :param input_db: Path to the GeoPackage or database file containing the **fine-resolution** input vector layer.
+    :type input_db: str
+    :param output_folder: Path to the main directory where the final and temporary results will be organized.
+    :type output_folder: str
+    :param input_layer: Name of the vector layer within the input database (fine-resolution) to be processed. Default value = "apcac_bho5k"
+    :type input_layer: str
+    :param field_upscale: [optional] The column name in the input data to use for grouping/dissolving (the ID of the coarser unit). Default value = "nunivotto5"
+    :type field_upscale: str
+    :param field_area: [optional] The column name representing the area of the features, used for weighted averaging. Default value = None
+    :type field_area: str
+    :param cleanup: Flag to indicate whether the intermediate, run-specific folders created during the workflow should be deleted. Default value = True
+    :type cleanup: bool
+    :return: The file path to the final GeoPackage file, which contains the complete APCAC classification results for the upscaled spatial units.
+    :rtype: str
+
+    **Notes**
+
+    The function first computes the upscaled indexes and
+    geometries using ``compute_upscaled_indexes``, then proceeds with the
+    standard steps: fuzzifying indexes, computing index 'a' (hydrology),
+    computing index 'e' (erosion risk), calculating the final
+    APCAC classification for the upscaled units, computing summary statistics,
+    and finally generating the LaTeX table.
+
+    **Script example**
+
+    .. code-block:: python
+
+        import importlib.util as iu
+
+        # define the paths to this module
+        # ----------------------------------------
+        the_module = "path/to/classes.py"
+
+        # setup module with importlib
+        # ----------------------------------------
+        spec = iu.spec_from_file_location("module", the_module)
+        module = iu.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        # define the paths to input and output folders
+        # ----------------------------------------
+        input_dir = "path/to/input_folder"
+        output_dir = "path/to/output_folder"
+
+        # define the path to input database
+        # ----------------------------------------
+        input_db = "path/to/data.gpkg"
+
+        # call the function
+        # ----------------------------------------
+        output_file = module.analysis_apcac_upscaled(
+            input_db=input_db,
+            output_folder=output_dir,
+            input_layer="apcac_bho5k",
+            field_upscale="nunivotto4"
+        )
+
+
+    """
+
+    # Startup
+    # -------------------------------------------------------------------
+    func_name = analysis_apcac_upscaled.__name__
+    print(f"running: {func_name}")
+
+    # Setup input variables
+    # -------------------------------------------------------------------
+    if field_upscale is None:
+        field_upscale = "nunivotto5"
+
+    # Setup output variables
+    # -------------------------------------------------------------------
+
+    # folders
+    # -----------------------------------
+    os.makedirs(output_folder, exist_ok=True)
+    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
+
+    # files
+    # -----------------------------------
+    output_file = Path(f"{output_folder}/apcac.gpkg")
+
+    # Run processes
+    # -------------------------------------------------------------------
+
+    # -----------------------------------
+    f1 = compute_upscaled_indexes(
+        input_db=input_db,
+        input_layer=input_layer,
+        output_folder=output_folder,
+        field_upscale=field_upscale,
+        field_area=field_area,
+    )
+
+    # -----------------------------------
+    f2 = fuzzify_indexes(
+        input_db=f1,
+        input_layer=f"apcac_{field_upscale}",
+        output_folder=output_folder,
+    )
+    # -----------------------------------
+    f3 = compute_index_a(
+        input_db=f2,
+        input_layer=f"apcac_{field_upscale}",
+        output_folder=output_folder,
+    )
+
+    # -----------------------------------
+    f4 = compute_index_e(
+        input_db=f3,
+        input_layer=f"apcac_{field_upscale}",
+        output_folder=output_folder,
+        uslek_threshold=4500,
+    )
+
+    # -----------------------------------
+    f_apcac = compute_apcac(
+        input_db=f4,
+        input_layer=f"apcac_{field_upscale}",
+        output_folder=output_folder,
+    )
+    # -----------------------------------
+    f_stats = compute_apcac_stats(
+        input_db=f_apcac,
+        input_layer=f"apcac_{field_upscale}",
         output_folder=output_folder,
     )
     # -----------------------------------
@@ -421,7 +605,7 @@ def sample_indexes(
     :type raster_files: dict
     :param input_layer: Name of the vector layer within the input database to use for zonal statistics. Default value = "apcac_bho5k"
     :type input_layer: str
-    :param raster_multipliers: [optional] Dictionary where keys are the index names (from `raster_files`) and values are factors by which the sampled mean values should be divided (e.g., to convert units).
+    :param raster_multipliers: [optional] Dictionary where keys are the index names (from ``raster_files``) and values are factors by which the sampled mean values should be divided (e.g., to convert units).
     :type raster_multipliers: dict
     :return: The file path to the final GeoPackage file containing the input layer with the new sampled index columns.
     :rtype: str
@@ -895,11 +1079,86 @@ def compute_index_e(
     return output_file
 
 
-def upscale_apcac(output_folder, input_db):
-    # todo docstring
-    # todo develop
+def compute_upscaled_indexes(
+    output_folder,
+    input_db,
+    field_upscale=None,
+    input_layer="apcac_bho5k",
+    field_area=None,
+):
+    """
+    Computes area-weighted upscaled (aggregated) values for various
+    indexes and boolean flags from a fine-resolution GeoDataFrame to
+    a coarser spatial unit defined by a grouping field, and
+    saves the results as a new GeoPackage layer.
+
+    :param output_folder: Path to the directory where temporary and final output files will be stored.
+    :type output_folder: str
+    :param input_db: Path to the GeoPackage or database file containing the input vector layer (fine-resolution catchments).
+    :type input_db: str
+    :param field_upscale: [optional] The column name in the input data to use for grouping/dissolving (the ID of the coarser unit). Default value = "nunivotto5"
+    :type field_upscale: str
+    :param input_layer: Name of the vector layer within the input database to be processed. Default value = "apcac_bho5k"
+    :type input_layer: str
+    :param field_area: [optional] The column name representing the area of the features, used for weighted averaging. Default value = "nuareacont"
+    :type field_area: str
+    :return: The file path to the final GeoPackage file, which contains the upscaled indexes merged with the dissolved geometries of the coarser spatial units.
+    :rtype: str
+
+    **Notes**
+
+    The function first calculates the upscaled values using ``upscale_indexes``,
+    then dissolves the geometries based on the grouping field, and finally
+    merges the upscaled data with the dissolved geometries.
+
+    **Script example**
+
+    .. code-block:: python
+
+        import importlib.util as iu
+
+        # define the paths to this module
+        # ----------------------------------------
+        the_module = "path/to/classes.py"
+
+        # setup module with importlib
+        # ----------------------------------------
+        spec = iu.spec_from_file_location("module", the_module)
+        module = iu.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        # define the paths to input and output folders
+        # ----------------------------------------
+        input_dir = "path/to/input_folder"
+        output_dir = "path/to/output_folder"
+
+        # define the path to input database
+        # ----------------------------------------
+        input_db = "path/to/data.gpkg"
+
+        # call the function
+        # ----------------------------------------
+        output_file = module.compute_upscaled_indexes(
+            input_db=input_db,
+            output_folder=output_dir,
+            input_layer="apcac_bho5k",
+            field_upscale="nunivotto4",
+        )
+
+    """
+
+    # Startup
+    # -------------------------------------------------------------------
+    func_name = compute_upscaled_indexes.__name__
+    print(f"running: {func_name}")
+
     # Setup input variables
     # -------------------------------------------------------------------
+    if field_upscale is None:
+        field_upscale = "nunivotto5"
+
+    if field_area is None:
+        field_area = "nuareacont"
 
     # Setup output variables
     # -------------------------------------------------------------------
@@ -907,29 +1166,52 @@ def upscale_apcac(output_folder, input_db):
     # folders
     # -----------------------------------
     os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(
-        run_name=compute_index_a.__name__, output_folder=output_folder
-    )
+    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
 
     # files
     # -----------------------------------
-    output_file = Path(f"{output_folder}/apcac.gpkg")
+    output_file = Path(f"{output_folder}/indexes_upscaled_{field_upscale}.gpkg")
 
     # Run processes
     # -------------------------------------------------------------------
 
-    df["weighted_value"] = df["value"] * df["weight"]
-    weighted_avg = (
-        df.groupby("group")[["weighted_value", "weight"]]
-        .sum()
-        .eval("weighted_mean = weighted_value / weight")
-        .reset_index()[["group", "weighted_mean"]]
+    # load data
+    # -----------------------------------
+    gdf = gpd.read_file(input_db, layer=input_layer)
+
+    # upscale info
+    # -----------------------------------
+    df_up = upscale_indexes(gdf=gdf, field_upscale=field_upscale, field_area=field_area)
+
+    # dissolve geometries
+    # -----------------------------------
+    processing.run(
+        "native:dissolve",
+        {
+            "INPUT": f"{input_db}|layername={input_layer}",
+            "FIELD": [field_upscale],
+            "SEPARATE_DISJOINT": False,
+            "OUTPUT": "ogr:dbname='{}' table=\"apcac_{}\" (geom)".format(
+                output_file, field_upscale
+            ),
+        },
     )
 
-    # Wrap up
-    # -------------------------------------------------------------------
+    # load dissolved data
+    # -----------------------------------
+    gdf_up = gpd.read_file(output_file, layer=f"apcac_{field_upscale}")
+    gdf_up = gdf_up[[field_upscale, "geometry"]]
 
-    return None
+    # merge
+    # -----------------------------------
+    gdf_up = pd.merge(left=gdf_up, right=df_up, on=field_upscale, how="left")
+
+    # Export
+    # -------------------------------------------------------------------
+    save_gdf(gdf_up, output_file, layer=f"apcac_{field_upscale}")
+    print(f"run successfull. see for outputs:\n{output_folder}")
+
+    return output_file
 
 
 def compute_apcac(output_folder, input_db, input_layer="apcac_bho5k"):
@@ -1321,6 +1603,63 @@ def classify_apcac(gdf):
     return gdf
 
 
+def upscale_indexes(gdf, field_upscale, field_area):
+    """
+    Upscales various numeric indexes and boolean flags from a finer-resolution GeoDataFrame to a coarser resolution based on an aggregation field.
+
+    Numeric indexes are upscaled using an area-weighted average, and boolean fields are upscaled to be true (1) if any part of the aggregated unit contains a true value.
+
+    :param gdf: GeoDataFrame containing the fine-resolution data, including all index fields, the aggregation field, and the area field.
+    :type gdf: :class:`geopandas.GeoDataFrame`
+    :param field_upscale: The column name in `gdf` to use for grouping and upscaling (e.g., a coarser watershed ID).
+    :type field_upscale: str
+    :param field_area: The column name in `gdf` that represents the area of the features, used for weighted averaging of indexes.
+    :type field_area: str
+    :return: DataFrame containing the upscaled results, with one row per unique value in `field_upscale`, including the area-weighted mean for each index and the aggregated boolean flags.
+    :rtype: :class:`pandas.DataFrame`
+    """
+
+    ls_dfs = []
+
+    # indexes loop for upscaling
+    # -------------------------------------------------------------------
+    for index in FIELDS_INDEXES_INPUTS:
+        gdf[f"weighted_{index}"] = gdf[index] * gdf[field_area]
+        df_upscaled = (
+            gdf.groupby(field_upscale)[[f"weighted_{index}", field_area]]
+            .sum()
+            .eval(f"{index} = weighted_{index} / {field_area}")
+            .reset_index()[[field_upscale, index]]
+        )
+        ls_dfs.append(df_upscaled.copy())
+
+    # area
+    # -------------------------------------------------------------------
+    df_area = gdf.groupby(field_upscale)[field_area].sum().reset_index()
+    # df_area.rename(columns={field_area: }, inplace=True)
+    ls_dfs.append(df_area)
+
+    # booleans loop
+    # -------------------------------------------------------------------
+    bool_fields = ["is_cerrado", "is_zhi"]
+    df_bool = gdf.groupby(field_upscale)[bool_fields].sum()
+    df_bool = (df_bool > 0).astype(int).reset_index()
+    dc = {
+        "is_cerrado_sum": "is_cerrado",
+        "is_zhi_sum": "is_zhi",
+    }
+    # df_bool.rename(columns=dc, inplace=True)
+    ls_dfs.append(df_bool)
+
+    # merger loop
+    # -------------------------------------------------------------------
+    df_output = ls_dfs[0]
+    for df in ls_dfs[1:]:
+        df_output = pd.merge(df_output, df, on=field_upscale, how="left")
+
+    return df_output
+
+
 def groupby(gdf, label, value, rename):
     """
     Groups a GeoDataFrame by a specified label, aggregates a value
@@ -1360,7 +1699,7 @@ def summarise(gdf):
 
     # filter fields
     # -------------------------------------------------------------------
-    gdf = gdf[["id_uph", "is_cerrado", "nuareacont", "cd_apcac"]].copy()
+    gdf = gdf[["is_cerrado", "nuareacont", "cd_apcac"]].copy()
 
     # run biome scale analysis
     # -------------------------------------------------------------------
