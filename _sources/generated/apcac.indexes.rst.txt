@@ -8,8 +8,16 @@
 
    .. autosummary::
    
-      compute_t
+      compute_index_c
+      compute_index_e
+      compute_index_g
+      compute_index_n
+      compute_index_s
+      compute_index_t
+      compute_index_v
       fuzzify
+      get_timestamp
+      make_run_folder
       process_data
       waiter
    

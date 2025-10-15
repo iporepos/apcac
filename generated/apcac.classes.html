@@ -397,8 +397,44 @@ todo docstring</p>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.process_data" title="apcac.classes.process_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_data</span></code></a>(input1, input2, output_folder)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.classify_apcac" title="apcac.classes.classify_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classify_apcac</span></code></a>(gdf)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.compute_apcac" title="apcac.classes.compute_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_apcac</span></code></a>(input_db, output_folder[, layer])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.compute_index_a" title="apcac.classes.compute_index_a"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_a</span></code></a>(input_db, output_folder[, layer])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.compute_index_e" title="apcac.classes.compute_index_e"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_e</span></code></a>(input_db, output_folder[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.fuzzify" title="apcac.classes.fuzzify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fuzzify</span></code></a>(v, v_lo, v_up)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.fuzzify_indexes" title="apcac.classes.fuzzify_indexes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fuzzify_indexes</span></code></a>(input_db, output_folder[, layer])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.fuzzify_linear" title="apcac.classes.fuzzify_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fuzzify_linear</span></code></a>(v[, v_lo, v_up])</p></td>
+<td><p>Fuzzify a NumPy array to [0, 1] ignoring NaNs, preserving them in the result.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.get_timestamp" title="apcac.classes.get_timestamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_timestamp</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.make_run_folder" title="apcac.classes.make_run_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_run_folder</span></code></a>(run_name, folder_outputs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.process_data" title="apcac.classes.process_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_data</span></code></a>(input1, input2, output_folder)</p></td>
 <td><p>Demo for processing data</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.sample_indexes" title="apcac.classes.sample_indexes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_indexes</span></code></a>(input_db, raster_files, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.save_gdf" title="apcac.classes.save_gdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_gdf</span></code></a>(gdf, db, layer)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.upscale_apcac" title="apcac.classes.upscale_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upscale_apcac</span></code></a>(input_db, output_folder)</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.waiter" title="apcac.classes.waiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waiter</span></code></a>()</p></td>
 <td><p></p></td>
@@ -406,6 +442,36 @@ todo docstring</p>
 </tbody>
 </table>
 </div>
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.sample_indexes">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">sample_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raster_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raster_multipliers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#sample_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.sample_indexes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.fuzzify_indexes">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">fuzzify_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#fuzzify_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.fuzzify_indexes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.compute_index_a">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">compute_index_a</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#compute_index_a"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.compute_index_a" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.compute_index_e">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">compute_index_e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slope_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uslek_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#compute_index_e"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.compute_index_e" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.upscale_apcac">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">upscale_apcac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#upscale_apcac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.upscale_apcac" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.compute_apcac">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">compute_apcac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#compute_apcac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.compute_apcac" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="apcac.classes.process_data">
 <span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">process_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#process_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.process_data" title="Link to this definition">#</a></dt>
@@ -424,6 +490,37 @@ todo docstring</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="apcac.classes.waiter">
 <span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">waiter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#waiter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.waiter" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.get_timestamp">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">get_timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#get_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.get_timestamp" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.make_run_folder">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">make_run_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_outputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#make_run_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.make_run_folder" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.fuzzify">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">fuzzify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_lo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_up</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#fuzzify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.fuzzify" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.fuzzify_linear">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">fuzzify_linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_lo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_up</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#fuzzify_linear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.fuzzify_linear" title="Link to this definition">#</a></dt>
+<dd><p>Fuzzify a NumPy array to [0, 1] ignoring NaNs, preserving them in the result.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.save_gdf">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">save_gdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#save_gdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.save_gdf" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.classes.classify_apcac">
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">classify_apcac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#classify_apcac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.classify_apcac" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -478,8 +575,20 @@ todo docstring</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.sample_indexes"><code class="docutils literal notranslate"><span class="pre">sample_indexes()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.fuzzify_indexes"><code class="docutils literal notranslate"><span class="pre">fuzzify_indexes()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_index_a"><code class="docutils literal notranslate"><span class="pre">compute_index_a()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_index_e"><code class="docutils literal notranslate"><span class="pre">compute_index_e()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.upscale_apcac"><code class="docutils literal notranslate"><span class="pre">upscale_apcac()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_apcac"><code class="docutils literal notranslate"><span class="pre">compute_apcac()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.process_data"><code class="docutils literal notranslate"><span class="pre">process_data()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.waiter"><code class="docutils literal notranslate"><span class="pre">waiter()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.get_timestamp"><code class="docutils literal notranslate"><span class="pre">get_timestamp()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.make_run_folder"><code class="docutils literal notranslate"><span class="pre">make_run_folder()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.fuzzify"><code class="docutils literal notranslate"><span class="pre">fuzzify()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.fuzzify_linear"><code class="docutils literal notranslate"><span class="pre">fuzzify_linear()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.save_gdf"><code class="docutils literal notranslate"><span class="pre">save_gdf()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.classify_apcac"><code class="docutils literal notranslate"><span class="pre">classify_apcac()</span></code></a></li>
 </ul>
   </nav></div>
 

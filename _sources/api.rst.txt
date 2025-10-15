@@ -29,18 +29,6 @@ This reference, automatically generated using Sphinx, provides a complete overvi
 .. autosummary::
    :toctree: generated
 
-   apcac.module
-
-
-.. autosummary::
-   :toctree: generated
-
-   apcac.variables
-
-
-.. autosummary::
-   :toctree: generated
-
    apcac.indexes
 
 

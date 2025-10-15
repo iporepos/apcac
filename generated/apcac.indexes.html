@@ -397,10 +397,34 @@ todo docstring</p>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.indexes.compute_t" title="apcac.indexes.compute_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_t</span></code></a>(input_hand, input_twi, output_folder)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.indexes.compute_index_c" title="apcac.indexes.compute_index_c"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_c</span></code></a>(input_ppt, input_pet, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.indexes.compute_index_e" title="apcac.indexes.compute_index_e"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_e</span></code></a>(input_slope, input_k, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.indexes.compute_index_g" title="apcac.indexes.compute_index_g"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_g</span></code></a>(input_q, output_folder)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.indexes.compute_index_n" title="apcac.indexes.compute_index_n"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_n</span></code></a>(input_ppt, input_pet, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.indexes.compute_index_s" title="apcac.indexes.compute_index_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_s</span></code></a>(input_sandp, input_socp, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.indexes.compute_index_t" title="apcac.indexes.compute_index_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_t</span></code></a>(input_hand, input_twi, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.indexes.compute_index_v" title="apcac.indexes.compute_index_v"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_v</span></code></a>(input_n0, input_n1, t0, t1, ...)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#apcac.indexes.fuzzify" title="apcac.indexes.fuzzify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fuzzify</span></code></a>(input_file, output_file, low, hi)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.indexes.get_timestamp" title="apcac.indexes.get_timestamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_timestamp</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.indexes.make_run_folder" title="apcac.indexes.make_run_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_run_folder</span></code></a>(run_name, folder_outputs)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apcac.indexes.process_data" title="apcac.indexes.process_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_data</span></code></a>(input1, input2, output_folder)</p></td>
@@ -413,8 +437,38 @@ todo docstring</p>
 </table>
 </div>
 <dl class="py function">
-<dt class="sig sig-object py" id="apcac.indexes.compute_t">
-<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">compute_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_hand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_twi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hand_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hand_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twi_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#compute_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.compute_t" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="apcac.indexes.compute_index_e">
+<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">compute_index_e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_slope</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#compute_index_e"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.compute_index_e" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.indexes.compute_index_v">
+<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">compute_index_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_n0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_n1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#compute_index_v"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.compute_index_v" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.indexes.compute_index_n">
+<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">compute_index_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_ppt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_pet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#compute_index_n"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.compute_index_n" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.indexes.compute_index_c">
+<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">compute_index_c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_ppt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_pet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#compute_index_c"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.compute_index_c" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.indexes.compute_index_g">
+<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">compute_index_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#compute_index_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.compute_index_g" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.indexes.compute_index_s">
+<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">compute_index_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_sandp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_socp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#compute_index_s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.compute_index_s" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.indexes.compute_index_t">
+<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">compute_index_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_hand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_twi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hand_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hand_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twi_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#compute_index_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.compute_index_t" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -440,6 +494,16 @@ todo docstring</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="apcac.indexes.waiter">
 <span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">waiter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#waiter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.waiter" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.indexes.get_timestamp">
+<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">get_timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#get_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.get_timestamp" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="apcac.indexes.make_run_folder">
+<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">make_run_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_outputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#make_run_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.make_run_folder" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -494,10 +558,18 @@ todo docstring</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_t"><code class="docutils literal notranslate"><span class="pre">compute_t()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_index_e"><code class="docutils literal notranslate"><span class="pre">compute_index_e()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_index_v"><code class="docutils literal notranslate"><span class="pre">compute_index_v()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_index_n"><code class="docutils literal notranslate"><span class="pre">compute_index_n()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_index_c"><code class="docutils literal notranslate"><span class="pre">compute_index_c()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_index_g"><code class="docutils literal notranslate"><span class="pre">compute_index_g()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_index_s"><code class="docutils literal notranslate"><span class="pre">compute_index_s()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_index_t"><code class="docutils literal notranslate"><span class="pre">compute_index_t()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.process_data"><code class="docutils literal notranslate"><span class="pre">process_data()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.fuzzify"><code class="docutils literal notranslate"><span class="pre">fuzzify()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.waiter"><code class="docutils literal notranslate"><span class="pre">waiter()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.get_timestamp"><code class="docutils literal notranslate"><span class="pre">get_timestamp()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.make_run_folder"><code class="docutils literal notranslate"><span class="pre">make_run_folder()</span></code></a></li>
 </ul>
   </nav></div>
 

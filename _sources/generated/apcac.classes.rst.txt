@@ -8,6 +8,18 @@
 
    .. autosummary::
    
+      classify_apcac
+      compute_apcac
+      compute_index_a
+      compute_index_e
+      fuzzify
+      fuzzify_indexes
+      fuzzify_linear
+      get_timestamp
+      make_run_folder
       process_data
+      sample_indexes
+      save_gdf
+      upscale_apcac
       waiter
    
