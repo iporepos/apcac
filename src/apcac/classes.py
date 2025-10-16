@@ -217,7 +217,7 @@ def analysis_apcac(
     input_layer="apcac_bho5k",
     raster_multipliers=None,
     cleanup=True,
-    skip_sampling=False
+    skip_sampling=False,
 ):
     """
     Orchestrates the complete APCAC (Áreas Prioritárias para Conservação de Água) analysis workflow,
@@ -1059,7 +1059,7 @@ def compute_index_e(
         gdf=gdf,
         n_threshold=n_threshold,
         slope_threshold=slope_threshold,
-        uslek_threshold=uslek_threshold
+        uslek_threshold=uslek_threshold,
     )
 
     # Export
@@ -1632,7 +1632,6 @@ def compute_e(gdf, n_threshold=None, slope_threshold=None, uslek_threshold=None)
     if uslek_threshold is None:
         uslek_threshold = USLEK_THRESHOLD
 
-
     # compute boolean conservation risk
     # -----------------------------------
     gdf["is_risk_n"] = np.where(gdf["n"].values <= n_threshold, 1, 0)
@@ -1641,16 +1640,20 @@ def compute_e(gdf, n_threshold=None, slope_threshold=None, uslek_threshold=None)
     # -----------------------------------
     gdf["is_risk_slope"] = np.where(gdf["slope"].values >= slope_threshold, 1, 0)
     # remove well conserved areas
-    gdf["is_risk_slope"] = gdf["is_risk_slope"].values * np.where(gdf["n"].values <= N2, 1, 0)
+    gdf["is_risk_slope"] = gdf["is_risk_slope"].values * np.where(
+        gdf["n"].values <= N2, 1, 0
+    )
 
     # compute boolean slope risk
     # -----------------------------------
     gdf["is_risk_uslek"] = np.where(gdf["uslek"].values >= uslek_threshold, 1, 0)
     # remove well conserved areas
-    gdf["is_risk_uslek"] = gdf["is_risk_uslek"].values * np.where(gdf["n"].values <= N2, 1, 0)
+    gdf["is_risk_uslek"] = gdf["is_risk_uslek"].values * np.where(
+        gdf["n"].values <= N2, 1, 0
+    )
 
-    #print(f"uslek: {uslek_threshold}")
-    #print("risks: {}".format(gdf["is_risk_uslek"].sum()))
+    # print(f"uslek: {uslek_threshold}")
+    # print("risks: {}".format(gdf["is_risk_uslek"].sum()))
 
     # classify risk
     # -----------------------------------
@@ -1658,6 +1661,7 @@ def compute_e(gdf, n_threshold=None, slope_threshold=None, uslek_threshold=None)
     gdf["e"] = np.where(gdf["e"].values > 0, 1, 0)
 
     return gdf
+
 
 def upscale_indexes(gdf, field_upscale, field_area):
     """
