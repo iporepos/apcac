@@ -13,6 +13,7 @@
       classify_apcac
       compute_apcac
       compute_apcac_stats
+      compute_e
       compute_index_a
       compute_index_e
       compute_upscaled_indexes

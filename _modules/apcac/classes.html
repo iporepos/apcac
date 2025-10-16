@@ -501,7 +501,11 @@
 <span class="n">N1</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">V1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
 <span class="n">SLOPE_THRESHOLD</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">USLEK_THRESHOLD</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">USLEK_THRESHOLD</span> <span class="o">=</span> <span class="mf">0.03</span>
+
+<span class="n">A1</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="n">A2</span> <span class="o">=</span> <span class="mi">90</span>
+<span class="n">A3</span> <span class="o">=</span> <span class="mi">98</span>
 
 <span class="n">APCAC_LABELS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;cd_apcac&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -559,6 +563,7 @@
     <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
     <span class="n">raster_multipliers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">skip_sampling</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Orchestrates the complete APCAC (Áreas Prioritárias para Conservação de Água) analysis workflow,</span>
@@ -576,6 +581,8 @@
 <span class="sd">    :type raster_multipliers: dict</span>
 <span class="sd">    :param cleanup: Flag to indicate whether the intermediate, run-specific folders created during the workflow should be deleted. Default value = True</span>
 <span class="sd">    :type cleanup: bool</span>
+<span class="sd">    :param skip_sampling: Flag to indicate whether to skip sampling index in raster maps, assuming values are already sampled. Default value = False</span>
+<span class="sd">    :type skip_sampling: bool</span>
 <span class="sd">    :return: The file path to the final GeoPackage file containing the complete APCAC classification results.</span>
 <span class="sd">    :rtype: str</span>
 
@@ -641,7 +648,8 @@
 <span class="sd">            raster_files=raster_files,</span>
 <span class="sd">            output_folder=output_dir,</span>
 <span class="sd">            raster_multipliers=raster_multipliers ,</span>
-<span class="sd">            cleanup=True</span>
+<span class="sd">            cleanup=True,</span>
+<span class="sd">            skip_sampling=False,</span>
 <span class="sd">        )</span>
 
 
@@ -671,13 +679,16 @@
     <span class="c1"># -------------------------------------------------------------------</span>
 
     <span class="c1"># -----------------------------------</span>
-    <span class="n">f1</span> <span class="o">=</span> <span class="n">sample_indexes</span><span class="p">(</span>
-        <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
-        <span class="n">input_db</span><span class="o">=</span><span class="n">input_db</span><span class="p">,</span>
-        <span class="n">raster_files</span><span class="o">=</span><span class="n">raster_files</span><span class="p">,</span>
-        <span class="n">input_layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">,</span>
-        <span class="n">raster_multipliers</span><span class="o">=</span><span class="n">raster_multipliers</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">skip_sampling</span><span class="p">:</span>
+        <span class="n">f1</span> <span class="o">=</span> <span class="n">input_db</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">f1</span> <span class="o">=</span> <span class="n">sample_indexes</span><span class="p">(</span>
+            <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
+            <span class="n">input_db</span><span class="o">=</span><span class="n">input_db</span><span class="p">,</span>
+            <span class="n">raster_files</span><span class="o">=</span><span class="n">raster_files</span><span class="p">,</span>
+            <span class="n">input_layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">,</span>
+            <span class="n">raster_multipliers</span><span class="o">=</span><span class="n">raster_multipliers</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="c1"># -----------------------------------</span>
     <span class="n">f2</span> <span class="o">=</span> <span class="n">fuzzify_indexes</span><span class="p">(</span>
@@ -697,7 +708,6 @@
         <span class="n">input_db</span><span class="o">=</span><span class="n">f3</span><span class="p">,</span>
         <span class="n">input_layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">,</span>
         <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
-        <span class="n">uslek_threshold</span><span class="o">=</span><span class="mi">4500</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># -----------------------------------</span>
@@ -740,6 +750,9 @@
     <span class="c1"># -----------------------------------</span>
     <span class="k">if</span> <span class="n">cleanup</span><span class="p">:</span>
         <span class="n">ls_removals</span> <span class="o">=</span> <span class="p">[</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">,</span> <span class="n">f4</span><span class="p">,</span> <span class="n">f_apcac</span><span class="p">,</span> <span class="n">f_stats</span><span class="p">,</span> <span class="n">f_latex</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">skip_sampling</span><span class="p">:</span>
+            <span class="n">ls_removals</span> <span class="o">=</span> <span class="n">ls_removals</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">ls_removals</span><span class="p">:</span>
             <span class="n">d</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
@@ -879,7 +892,6 @@
         <span class="n">input_db</span><span class="o">=</span><span class="n">f3</span><span class="p">,</span>
         <span class="n">input_layer</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;apcac_</span><span class="si">{</span><span class="n">field_upscale</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
-        <span class="n">uslek_threshold</span><span class="o">=</span><span class="mi">4500</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># -----------------------------------</span>
@@ -1383,18 +1395,6 @@
     <span class="n">func_name</span> <span class="o">=</span> <span class="n">compute_index_e</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running: </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Setup input variables</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-
-    <span class="k">if</span> <span class="n">n_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">n_threshold</span> <span class="o">=</span> <span class="n">N1</span>
-
-    <span class="k">if</span> <span class="n">slope_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">slope_threshold</span> <span class="o">=</span> <span class="n">SLOPE_THRESHOLD</span>
-
-    <span class="k">if</span> <span class="n">uslek_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">uslek_threshold</span> <span class="o">=</span> <span class="n">USLEK_THRESHOLD</span>
-
     <span class="c1"># Setup output variables</span>
     <span class="c1"># -------------------------------------------------------------------</span>
 
@@ -1407,9 +1407,6 @@
     <span class="c1"># -----------------------------------</span>
     <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
 
-    <span class="c1"># variables</span>
-    <span class="c1"># -----------------------------------</span>
-
     <span class="c1"># Run processes</span>
     <span class="c1"># -------------------------------------------------------------------</span>
 
@@ -1417,17 +1414,14 @@
     <span class="c1"># -----------------------------------</span>
     <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
 
-    <span class="c1"># compute boolean risk factors</span>
+    <span class="c1"># classify</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">n_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">slope_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;uslek&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">uslek_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="c1"># classify risk</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="c1"># gdf[&quot;e&quot;] = gdf[&quot;is_risk_n&quot;] * gdf[&quot;is_risk_slope&quot;] * gdf[&quot;is_risk_uslek&quot;]</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">compute_e</span><span class="p">(</span>
+        <span class="n">gdf</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span>
+        <span class="n">n_threshold</span><span class="o">=</span><span class="n">n_threshold</span><span class="p">,</span>
+        <span class="n">slope_threshold</span><span class="o">=</span><span class="n">slope_threshold</span><span class="p">,</span>
+        <span class="n">uslek_threshold</span><span class="o">=</span><span class="n">uslek_threshold</span>
+    <span class="p">)</span>
 
     <span class="c1"># Export</span>
     <span class="c1"># -------------------------------------------------------------------</span>
@@ -1933,9 +1927,9 @@
     <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">thresholds</span> <span class="o">=</span> <span class="p">[</span>
         <span class="mi">0</span><span class="p">,</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">90</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">A1</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">A2</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">A3</span><span class="p">),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">]</span>
@@ -1981,6 +1975,71 @@
 
     <span class="k">return</span> <span class="n">gdf</span></div>
 
+
+
+<div class="viewcode-block" id="compute_e">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.compute_e">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_e</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">n_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slope_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">uslek_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the erosion risk &#39;e&#39; based on multiple environmental</span>
+<span class="sd">    thresholds and adds the result to the GeoDataFrame.</span>
+
+<span class="sd">    :param gdf: GeoDataFrame containing the environmental factors ``n``, ``slope``, and ``uslek``.</span>
+<span class="sd">    :type gdf: :class:`geopandas.GeoDataFrame`</span>
+<span class="sd">    :param n_threshold: [optional] The threshold value for the ``n`` factor (e.g., vegetation cover). Defaults to a predefined global constant ``N1``.</span>
+<span class="sd">    :type n_threshold: float or None</span>
+<span class="sd">    :param slope_threshold: [optional] The minimum slope value considered risky. Defaults to a predefined global constant ``SLOPE_THRESHOLD``.</span>
+<span class="sd">    :type slope_threshold: float or None</span>
+<span class="sd">    :param uslek_threshold: [optional] The minimum USLE-K factor value considered risky. Defaults to a predefined global constant ``USLEK_THRESHOLD``.</span>
+<span class="sd">    :type uslek_threshold: float or None</span>
+<span class="sd">    :return: The input GeoDataFrame with new boolean columns (``is_risk_n``, ``is_risk_slope``, ``is_risk_uslek``) and the final combined erosion risk column (``e``).</span>
+<span class="sd">    :rtype: :class:`geopandas.GeoDataFrame`</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    The erosion risk ``e`` is classified as 1 (risk) if the ``n`` factor</span>
+<span class="sd">    is below its threshold AND either the &#39;slope&#39; or &#39;uslek&#39; factors are above</span>
+<span class="sd">    their respective thresholds. Otherwise, ``e`` is 0 (no risk).</span>
+<span class="sd">    The process first calculates intermediate boolean risk columns for each factor.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># get thresholds</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="k">if</span> <span class="n">n_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_threshold</span> <span class="o">=</span> <span class="n">N1</span>
+
+    <span class="k">if</span> <span class="n">slope_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">slope_threshold</span> <span class="o">=</span> <span class="n">SLOPE_THRESHOLD</span>
+
+    <span class="k">if</span> <span class="n">uslek_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">uslek_threshold</span> <span class="o">=</span> <span class="n">USLEK_THRESHOLD</span>
+
+
+    <span class="c1"># compute boolean conservation risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">n_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># compute boolean slope risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">slope_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># remove well conserved areas</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># compute boolean slope risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;uslek&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">uslek_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># remove well conserved areas</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1">#print(f&quot;uslek: {uslek_threshold}&quot;)</span>
+    <span class="c1">#print(&quot;risks: {}&quot;.format(gdf[&quot;is_risk_uslek&quot;].sum()))</span>
+
+    <span class="c1"># classify risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gdf</span></div>
 
 
 <div class="viewcode-block" id="upscale_indexes">
