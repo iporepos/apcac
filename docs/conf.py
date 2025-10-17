@@ -131,3 +131,8 @@ External (requires installation):
 """
 html_theme = "pydata_sphinx_theme"  # <-- [CHECK THIS] it might be not installed. use built-in 'classic' in case
 html_static_path = ["_static"]
+
+html_theme_options = {
+    "github_url": "https://github.com/iporepos/apcac",
+    "navbar_end": ["theme-switcher", "navbar-icon-links"],
+}
