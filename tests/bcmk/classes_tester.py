@@ -43,6 +43,7 @@ IU_SPEC = iu.spec_from_file_location("module", FILE_MODULE)
 MODULE = iu.module_from_spec(IU_SPEC)
 IU_SPEC.loader.exec_module(MODULE)
 
+
 def test_analysis_apcac():
     # define the paths to input and output folders
     # ----------------------------------------
@@ -72,7 +73,7 @@ def test_analysis_apcac():
         "t": 1000,
         "s": 100,
         "slope": 100,
-        "c": 100
+        "c": 100,
         # change and add more if needed
     }
 
@@ -88,11 +89,11 @@ def test_analysis_apcac():
         skip_sampling=False,
     )
 
-
     # todo Assertions
     # ----------------------------------------
 
     return None
+
 
 def main():
     print("hello")
@@ -103,4 +104,3 @@ def main():
 
 
 main()
-
