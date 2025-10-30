@@ -129,13 +129,6 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="index.html">
-    Home
-  </a>
-</li>
-
-
-<li class="nav-item ">
   <a class="nav-link nav-internal" href="about.html">
     About
   </a>
@@ -251,13 +244,6 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="index.html">
-    Home
-  </a>
-</li>
-
-
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="about.html">
     About
@@ -384,15 +370,19 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="user-guide">
-<span id="usage"></span><h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading">#</a></h1>
+  <div class="admonition warning" id="usage">
+<p class="admonition-title">Warning</p>
+<p>This section is under development.</p>
+</div>
+<section id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading">#</a></h1>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p>For those who want to contribute, see <a class="reference internal" href="development.html#development"><span class="std std-ref">Development</span></a></p>
 </div>
 <p>This guide explains how to use the scripts in this repository to perform <strong>APCAC</strong> classification on polygons using vector and raster data. The scripts are designed to run within <strong>QGIS</strong> via the Python Script Tool, supporting both full workflow execution and independent function calls for custom analyses.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>This repository is intended to run under the QGIS Python environment.</p>
 </div>
 <section id="installation">
@@ -406,8 +396,8 @@
 </ol>
 <p>These are the only external dependencies required to run the scripts.</p>
 </section>
-<section id="workflow-overview">
-<h2>Workflow Overview<a class="headerlink" href="#workflow-overview" title="Link to this heading">#</a></h2>
+<section id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Link to this heading">#</a></h2>
 <p>The repository is structured as a <strong>function-based workflow</strong>, allowing:</p>
 <ul class="simple">
 <li><p>Full APCAC analysis from raster sampling to classification and reporting.</p></li>
@@ -415,12 +405,84 @@
 <li><p>Automatic management of timestamped output folders for reproducible runs and organized outputs.</p></li>
 <li><p>Easy integration into QGIS Python tools using <code class="docutils literal notranslate"><span class="pre">importlib</span></code>.</p></li>
 </ul>
-<p>Scripts operate on raster and vector data, with each catchment receiving a full set of computed attributes. Outputs can be upscaled to coarser maps or used for further GIS analysis.</p>
+<p>Scripts operate on raster and vector data, with each catchment receiving
+a full set of computed attributes. Outputs can be upscaled to
+coarser maps or used for further GIS analysis.</p>
 </section>
-<section id="running-the-scripts">
-<h2>Running the Scripts<a class="headerlink" href="#running-the-scripts" title="Link to this heading">#</a></h2>
-<p>Scripts are executed via the <strong>Python Script Tool</strong> in QGIS using the <strong>importlib</strong> workflow:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">iu</span>
+<section id="output-attributes">
+<h2>Output Attributes<a class="headerlink" href="#output-attributes" title="Link to this heading">#</a></h2>
+<p>The ultimate output of this process is the map of APCAC sampled at polygons, like small catchments or any other scale
+of interest. The polygon layer is stored in a <strong>geopackage</strong> with the following core attributes:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>cd_apcac</p></td>
+<td><p>text</p></td>
+<td><p>APCAC code</p></td>
+</tr>
+<tr class="row-odd"><td><p>id_apcac</p></td>
+<td><p>int</p></td>
+<td><p>APCAC id</p></td>
+</tr>
+<tr class="row-even"><td><p>a</p></td>
+<td><p>float</p></td>
+<td><p>hydrological importance index</p></td>
+</tr>
+<tr class="row-odd"><td><p>n</p></td>
+<td><p>float</p></td>
+<td><p>conservation index</p></td>
+</tr>
+<tr class="row-even"><td><p>t</p></td>
+<td><p>float</p></td>
+<td><p>topography index</p></td>
+</tr>
+<tr class="row-odd"><td><p>s</p></td>
+<td><p>float</p></td>
+<td><p>pedological index (soils)</p></td>
+</tr>
+<tr class="row-even"><td><p>g</p></td>
+<td><p>float</p></td>
+<td><p>geological index</p></td>
+</tr>
+<tr class="row-odd"><td><p>c</p></td>
+<td><p>float</p></td>
+<td><p>climatological index</p></td>
+</tr>
+<tr class="row-even"><td><p>v</p></td>
+<td><p>float</p></td>
+<td><p>long term conservation change rate (percent)</p></td>
+</tr>
+<tr class="row-odd"><td><p>slope</p></td>
+<td><p>float</p></td>
+<td><p>slope in degrees</p></td>
+</tr>
+<tr class="row-even"><td><p>uslek</p></td>
+<td><p>float</p></td>
+<td><p>soil erosivity (USLE equation)</p></td>
+</tr>
+<tr class="row-odd"><td><p>e</p></td>
+<td><p>float</p></td>
+<td><p>soil degradation index</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="scripts">
+<h2>Scripts<a class="headerlink" href="#scripts" title="Link to this heading">#</a></h2>
+<p>Scripts are executed via the <strong>Python Script Tool</strong> in QGIS using the <strong>importlib</strong> workflow.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>More scripts examples are available at the <a class="reference internal" href="development.html#development"><span class="std std-ref">API</span></a></p>
+</div>
+<p>The following example shows how to use the <code class="docutils literal notranslate"><span class="pre">analysis_apcac()</span></code> tool:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># WARNING : run this under a QGIS Python Environment</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">iu</span>
 
 <span class="c1"># define the paths to this module</span>
 <span class="n">the_module</span> <span class="o">=</span> <span class="s2">&quot;path/to/classes.py&quot;</span>
@@ -475,11 +537,6 @@
 <li><p>Raster maps form the base for calculations, and <strong>zonal statistics</strong> are applied to catchments for final aggregation.</p></li>
 <li><p>No additional external dependencies are required beyond <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">pandas</span></code>, and <code class="docutils literal notranslate"><span class="pre">geopandas</span></code>.</p></li>
 </ul>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p>Full examples of scripts and detailed API usage are provided in the
-<a class="reference internal" href="api.html#api"><span class="std std-ref">API documentation</span></a>.</p>
-</div>
 </section>
 </section>
 
@@ -531,8 +588,9 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-overview">Workflow Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-scripts">Running the Scripts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow">Workflow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output-attributes">Output Attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scripts">Scripts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
 </ul>
   </nav></div>

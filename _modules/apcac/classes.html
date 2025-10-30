@@ -126,13 +126,6 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../index.html">
-    Home
-  </a>
-</li>
-
-
-<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../about.html">
     About
   </a>
@@ -246,13 +239,6 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../index.html">
-    Home
-  </a>
-</li>
-
-
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../about.html">
     About
@@ -472,6 +458,9 @@
 <span class="sd">        cleanup=True</span>
 <span class="sd">    )</span>
 
+
+<span class="sd">Documentation</span>
+<span class="sd">--------------</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># IMPORTS</span>
@@ -701,7 +690,7 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
@@ -723,7 +712,7 @@
         <span class="p">)</span>
 
     <span class="c1"># -----------------------------------</span>
-    <span class="n">f2</span> <span class="o">=</span> <span class="n">fuzzify_indexes</span><span class="p">(</span>
+    <span class="n">f2</span> <span class="o">=</span> <span class="n">_fuzzify_indexes</span><span class="p">(</span>
         <span class="n">input_db</span><span class="o">=</span><span class="n">f1</span><span class="p">,</span>
         <span class="n">input_layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">,</span>
         <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
@@ -800,9 +789,9 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">analysis_apcac_upscaled</span><span class="p">(</span>
     <span class="n">input_db</span><span class="p">,</span>
     <span class="n">output_folder</span><span class="p">,</span>
-    <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
-    <span class="n">field_upscale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">field_area</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">input_layer</span><span class="p">,</span>
+    <span class="n">field_upscale</span><span class="p">,</span>
+    <span class="n">field_area</span><span class="p">,</span>
     <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -815,11 +804,11 @@
 <span class="sd">    :type input_db: str</span>
 <span class="sd">    :param output_folder: Path to the main directory where the final and temporary results will be organized.</span>
 <span class="sd">    :type output_folder: str</span>
-<span class="sd">    :param input_layer: Name of the vector layer within the input database (fine-resolution) to be processed. Default value = &quot;apcac_bho5k&quot;</span>
+<span class="sd">    :param input_layer: Name of the vector layer within the input database (fine-resolution) to be processed.</span>
 <span class="sd">    :type input_layer: str</span>
-<span class="sd">    :param field_upscale: [optional] The column name in the input data to use for grouping/dissolving (the ID of the coarser unit). Default value = &quot;nunivotto5&quot;</span>
+<span class="sd">    :param field_upscale: The column name in the input data to use for grouping/dissolving (the ID of the coarser unit).</span>
 <span class="sd">    :type field_upscale: str</span>
-<span class="sd">    :param field_area: [optional] The column name representing the area of the features, used for weighted averaging. Default value = None</span>
+<span class="sd">    :param field_area: The column name representing the area of the features, used for weighted averaging.</span>
 <span class="sd">    :type field_area: str</span>
 <span class="sd">    :param cleanup: Flag to indicate whether the intermediate, run-specific folders created during the workflow should be deleted. Default value = True</span>
 <span class="sd">    :type cleanup: bool</span>
@@ -866,7 +855,8 @@
 <span class="sd">            input_db=input_db,</span>
 <span class="sd">            output_folder=output_dir,</span>
 <span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
-<span class="sd">            field_upscale=&quot;nunivotto4&quot;</span>
+<span class="sd">            field_upscale=&quot;nunivotto4&quot;,</span>
+<span class="sd">            field_area=&quot;nuareacont&quot;</span>
 <span class="sd">        )</span>
 
 
@@ -888,7 +878,7 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
@@ -907,7 +897,7 @@
     <span class="p">)</span>
 
     <span class="c1"># -----------------------------------</span>
-    <span class="n">f2</span> <span class="o">=</span> <span class="n">fuzzify_indexes</span><span class="p">(</span>
+    <span class="n">f2</span> <span class="o">=</span> <span class="n">_fuzzify_indexes</span><span class="p">(</span>
         <span class="n">input_db</span><span class="o">=</span><span class="n">f1</span><span class="p">,</span>
         <span class="n">input_layer</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;apcac_</span><span class="si">{</span><span class="n">field_upscale</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span>
@@ -1085,7 +1075,7 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
@@ -1141,114 +1131,7 @@
     <span class="c1"># save</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">output_file</span></div>
-
-
-
-<div class="viewcode-block" id="fuzzify_indexes">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.fuzzify_indexes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fuzzify_indexes</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Applies a fuzzification function to a predefined list of index columns</span>
-<span class="sd">    in a GeoDataFrame, scaling their values between 0 and 1.</span>
-
-<span class="sd">    :param output_folder: Path to the directory where temporary and final output files will be stored.</span>
-<span class="sd">    :type output_folder: str</span>
-<span class="sd">    :param input_db: Path to the GeoPackage or database file containing the input vector layer.</span>
-<span class="sd">    :type input_db: str</span>
-<span class="sd">    :param input_layer: Name of the vector layer within the input database to be processed. Default value = &quot;apcac_bho5k&quot;</span>
-<span class="sd">    :type input_layer: str</span>
-<span class="sd">    :return: The file path to the final GeoPackage file, which contains the input layer with the new fuzzified index columns (e.g., ``t_f``, ``s_f``).</span>
-<span class="sd">    :rtype: str</span>
-
-<span class="sd">    **Notes**</span>
-
-<span class="sd">    The fuzzification is typically a linear scaling based on the minimum</span>
-<span class="sd">    and maximum values observed in each column.</span>
-
-<span class="sd">    **Script example**</span>
-
-<span class="sd">    .. code-block:: python</span>
-
-<span class="sd">        import importlib.util as iu</span>
-
-<span class="sd">        # define the paths to this module</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
-
-<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
-<span class="sd">        module = iu.module_from_spec(spec)</span>
-<span class="sd">        spec.loader.exec_module(module)</span>
-
-<span class="sd">        # define the paths to input and output folders</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
-<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
-
-<span class="sd">        # define the path to input database</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        input_db = f&quot;{input_dir}/path/to/data.gpkg&quot;</span>
-
-
-<span class="sd">        # call the function</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        output_file = module.fuzzify_indexes(</span>
-<span class="sd">            input_db=input_db,</span>
-<span class="sd">            output_folder=output_dir,</span>
-<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
-<span class="sd">        )</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># Startup</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">func_name</span> <span class="o">=</span> <span class="n">fuzzify_indexes</span><span class="o">.</span><span class="vm">__name__</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running: </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Setup input variables</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">ls_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;slope&quot;</span><span class="p">,</span> <span class="s2">&quot;uslek&quot;</span><span class="p">]</span>
-
-    <span class="c1"># Setup output variables</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-
-    <span class="c1"># folders</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
-
-    <span class="c1"># files</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
-
-    <span class="c1"># variables</span>
-    <span class="c1"># -----------------------------------</span>
-
-    <span class="c1"># Run processes</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-
-    <span class="c1"># load data</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
-
-    <span class="c1"># fuzzify fields</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">ls_fields</span><span class="p">:</span>
-        <span class="n">field_lo</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-        <span class="n">field_up</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-        <span class="n">field_name_fuzzy</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">_f&quot;</span>
-        <span class="n">gdf</span><span class="p">[</span><span class="n">field_name_fuzzy</span><span class="p">]</span> <span class="o">=</span> <span class="n">fuzzify</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">field_lo</span><span class="p">,</span> <span class="n">field_up</span><span class="p">)</span>
-
-    <span class="c1"># Export</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-
-    <span class="c1"># save</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
+    <span class="n">_save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -1320,7 +1203,7 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
@@ -1344,14 +1227,14 @@
     <span class="c1"># -----------------------------------</span>
     <span class="n">a_lo</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a_raw&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
     <span class="n">a_up</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a_raw&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fuzzify</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a_raw&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">a_lo</span><span class="p">,</span> <span class="n">a_up</span><span class="p">)</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_fuzzify</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a_raw&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">a_lo</span><span class="p">,</span> <span class="n">a_up</span><span class="p">)</span>
 
     <span class="c1"># Export</span>
     <span class="c1"># -------------------------------------------------------------------</span>
 
     <span class="c1"># save</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
+    <span class="n">_save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">output_file</span></div>
@@ -1433,7 +1316,7 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
@@ -1448,7 +1331,7 @@
 
     <span class="c1"># classify</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">compute_e</span><span class="p">(</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">_compute_e</span><span class="p">(</span>
         <span class="n">gdf</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span>
         <span class="n">n_threshold</span><span class="o">=</span><span class="n">n_threshold</span><span class="p">,</span>
         <span class="n">slope_threshold</span><span class="o">=</span><span class="n">slope_threshold</span><span class="p">,</span>
@@ -1460,7 +1343,7 @@
 
     <span class="c1"># save</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
+    <span class="n">_save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">output_file</span></div>
@@ -1556,7 +1439,7 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
@@ -1571,7 +1454,9 @@
 
     <span class="c1"># upscale info</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">df_up</span> <span class="o">=</span> <span class="n">upscale_indexes</span><span class="p">(</span><span class="n">gdf</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span> <span class="n">field_upscale</span><span class="o">=</span><span class="n">field_upscale</span><span class="p">,</span> <span class="n">field_area</span><span class="o">=</span><span class="n">field_area</span><span class="p">)</span>
+    <span class="n">df_up</span> <span class="o">=</span> <span class="n">_upscale_indexes</span><span class="p">(</span>
+        <span class="n">gdf</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span> <span class="n">field_upscale</span><span class="o">=</span><span class="n">field_upscale</span><span class="p">,</span> <span class="n">field_area</span><span class="o">=</span><span class="n">field_area</span>
+    <span class="p">)</span>
 
     <span class="c1"># dissolve geometries</span>
     <span class="c1"># -----------------------------------</span>
@@ -1598,7 +1483,7 @@
 
     <span class="c1"># Export</span>
     <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf_up</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;apcac_</span><span class="si">{</span><span class="n">field_upscale</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_save_gdf</span><span class="p">(</span><span class="n">gdf_up</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;apcac_</span><span class="si">{</span><span class="n">field_upscale</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">output_file</span></div>
@@ -1674,7 +1559,7 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
@@ -1689,14 +1574,14 @@
 
     <span class="c1"># compute apcac</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">classify_apcac</span><span class="p">(</span><span class="n">gdf</span><span class="p">)</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">_classify_apcac</span><span class="p">(</span><span class="n">gdf</span><span class="p">)</span>
 
     <span class="c1"># Export</span>
     <span class="c1"># -------------------------------------------------------------------</span>
 
     <span class="c1"># save</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
+    <span class="n">_save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">output_file</span></div>
@@ -1773,7 +1658,7 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
@@ -1788,7 +1673,7 @@
 
     <span class="c1"># compute apcac stats</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">summarise</span><span class="p">(</span><span class="n">gdf</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_summarise</span><span class="p">(</span><span class="n">gdf</span><span class="p">)</span>
 
     <span class="c1"># Export</span>
     <span class="c1"># -------------------------------------------------------------------</span>
@@ -1864,7 +1749,7 @@
     <span class="c1"># folders</span>
     <span class="c1"># -----------------------------------</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
 
     <span class="c1"># files</span>
     <span class="c1"># -----------------------------------</span>
@@ -1879,7 +1764,7 @@
 
     <span class="c1"># convert to LaTeX table</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">s_table</span> <span class="o">=</span> <span class="n">summarise_latex</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">s_table</span> <span class="o">=</span> <span class="n">_summarise_latex</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
     <span class="c1"># Export</span>
     <span class="c1"># -------------------------------------------------------------------</span>
@@ -1902,9 +1787,7 @@
 <span class="c1"># =======================================================================</span>
 
 
-<div class="viewcode-block" id="save_gdf">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.save_gdf">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">layer</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">layer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Saves a GeoDataFrame to a GeoPackage file, ensuring the</span>
 <span class="sd">    ``geometry`` column is the last column.</span>
@@ -1931,13 +1814,10 @@
     <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">my_list</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &gt;&gt; saving...&quot;</span><span class="p">)</span>
     <span class="n">gdf</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">&quot;GPKG&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="kc">None</span></div>
+    <span class="k">return</span> <span class="kc">None</span>
 
 
-
-<div class="viewcode-block" id="classify_apcac">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.classify_apcac">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">classify_apcac</span><span class="p">(</span><span class="n">gdf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_classify_apcac</span><span class="p">(</span><span class="n">gdf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Classifies catchments based on natural/anthropic,</span>
 <span class="sd">    hydrology, and risk factors using a three-level system (APCAC).</span>
@@ -2005,13 +1885,10 @@
         <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;id_apcac_risk&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
     <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">gdf</span></div>
+    <span class="k">return</span> <span class="n">gdf</span>
 
 
-
-<div class="viewcode-block" id="compute_e">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.compute_e">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_e</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">n_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slope_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">uslek_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_e</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">n_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slope_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">uslek_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes the erosion risk &#39;e&#39; based on multiple environmental</span>
 <span class="sd">    thresholds and adds the result to the GeoDataFrame.</span>
@@ -2074,15 +1951,13 @@
     <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span>
     <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">gdf</span></div>
+    <span class="k">return</span> <span class="n">gdf</span>
 
 
-
-<div class="viewcode-block" id="upscale_indexes">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.upscale_indexes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">upscale_indexes</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">field_upscale</span><span class="p">,</span> <span class="n">field_area</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_upscale_indexes</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">field_upscale</span><span class="p">,</span> <span class="n">field_area</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Upscales various numeric indexes and boolean flags from a finer-resolution GeoDataFrame to a coarser resolution based on an aggregation field.</span>
+<span class="sd">    Upscales various numeric indexes and boolean flags from a finer-resolution</span>
+<span class="sd">    GeoDataFrame to a coarser resolution based on an aggregation field.</span>
 
 <span class="sd">    Numeric indexes are upscaled using an area-weighted average, and boolean fields are upscaled to be true (1) if any part of the aggregated unit contains a true value.</span>
 
@@ -2134,13 +2009,114 @@
     <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">ls_dfs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
         <span class="n">df_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_output</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">field_upscale</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">df_output</span></div>
+    <span class="k">return</span> <span class="n">df_output</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_fuzzify_indexes</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies a fuzzification function to a predefined list of index columns</span>
+<span class="sd">    in a GeoDataFrame, scaling their values between 0 and 1.</span>
 
-<div class="viewcode-block" id="groupby">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.groupby">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">groupby</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">rename</span><span class="p">):</span>
+<span class="sd">    :param output_folder: Path to the directory where temporary and final output files will be stored.</span>
+<span class="sd">    :type output_folder: str</span>
+<span class="sd">    :param input_db: Path to the GeoPackage or database file containing the input vector layer.</span>
+<span class="sd">    :type input_db: str</span>
+<span class="sd">    :param input_layer: Name of the vector layer within the input database to be processed. Default value = &quot;apcac_bho5k&quot;</span>
+<span class="sd">    :type input_layer: str</span>
+<span class="sd">    :return: The file path to the final GeoPackage file, which contains the input layer with the new fuzzified index columns (e.g., ``t_f``, ``s_f``).</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    The fuzzification is typically a linear scaling based on the minimum</span>
+<span class="sd">    and maximum values observed in each column.</span>
+
+<span class="sd">    **Script example**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import importlib.util as iu</span>
+
+<span class="sd">        # define the paths to this module</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
+
+<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
+<span class="sd">        module = iu.module_from_spec(spec)</span>
+<span class="sd">        spec.loader.exec_module(module)</span>
+
+<span class="sd">        # define the paths to input and output folders</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
+<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
+
+<span class="sd">        # define the path to input database</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        input_db = f&quot;{input_dir}/path/to/data.gpkg&quot;</span>
+
+
+<span class="sd">        # call the function</span>
+<span class="sd">        # ----------------------------------------</span>
+<span class="sd">        output_file = module.fuzzify_indexes(</span>
+<span class="sd">            input_db=input_db,</span>
+<span class="sd">            output_folder=output_dir,</span>
+<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
+<span class="sd">        )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Startup</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="n">_fuzzify_indexes</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running: </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Setup input variables</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">ls_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;slope&quot;</span><span class="p">,</span> <span class="s2">&quot;uslek&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Setup output variables</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># folders</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
+
+    <span class="c1"># files</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
+
+    <span class="c1"># variables</span>
+    <span class="c1"># -----------------------------------</span>
+
+    <span class="c1"># Run processes</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># load data</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
+
+    <span class="c1"># fuzzify fields</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">ls_fields</span><span class="p">:</span>
+        <span class="n">field_lo</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">field_up</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">field_name_fuzzy</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">_f&quot;</span>
+        <span class="n">gdf</span><span class="p">[</span><span class="n">field_name_fuzzy</span><span class="p">]</span> <span class="o">=</span> <span class="n">_fuzzify</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">field_lo</span><span class="p">,</span> <span class="n">field_up</span><span class="p">)</span>
+
+    <span class="c1"># Export</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># save</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">_save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output_file</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_groupby</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">rename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Groups a GeoDataFrame by a specified label, aggregates a value</span>
 <span class="sd">    column by summing, and calculates the percentage of the total for the summed value.</span>
@@ -2161,13 +2137,10 @@
     <span class="n">gdf_ups</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rename</span><span class="si">}</span><span class="s2">_p&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">gdf_ups</span><span class="p">[</span><span class="n">rename</span><span class="p">]</span> <span class="o">/</span> <span class="n">gdf_ups</span><span class="p">[</span><span class="n">rename</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="n">gdf_ups</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rename</span><span class="si">}</span><span class="s2">_p&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf_ups</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rename</span><span class="si">}</span><span class="s2">_p&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">gdf_ups</span><span class="p">[</span><span class="n">rename</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf_ups</span><span class="p">[</span><span class="n">rename</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">gdf_ups</span></div>
+    <span class="k">return</span> <span class="n">gdf_ups</span>
 
 
-
-<div class="viewcode-block" id="summarise">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.summarise">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">summarise</span><span class="p">(</span><span class="n">gdf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_summarise</span><span class="p">(</span><span class="n">gdf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Summarizes catchment data by calculating the total area and percentage</span>
 <span class="sd">    of area for each APCAC classification, both for a specific biome (Cerrado)</span>
@@ -2187,7 +2160,7 @@
     <span class="c1"># run biome scale analysis</span>
     <span class="c1"># -------------------------------------------------------------------</span>
     <span class="n">gdf_main_cerrado</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;is_cerrado == 1&quot;</span><span class="p">)</span>
-    <span class="n">gdf_grouped_bio</span> <span class="o">=</span> <span class="n">groupby</span><span class="p">(</span>
+    <span class="n">gdf_grouped_bio</span> <span class="o">=</span> <span class="n">_groupby</span><span class="p">(</span>
         <span class="n">gdf</span><span class="o">=</span><span class="n">gdf_main_cerrado</span><span class="p">,</span>
         <span class="n">label</span><span class="o">=</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">,</span>
         <span class="n">value</span><span class="o">=</span><span class="s2">&quot;nuareacont&quot;</span><span class="p">,</span>
@@ -2196,7 +2169,7 @@
 
     <span class="c1"># run full scale analysis</span>
     <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">gdf_grouped_zhi</span> <span class="o">=</span> <span class="n">groupby</span><span class="p">(</span>
+    <span class="n">gdf_grouped_zhi</span> <span class="o">=</span> <span class="n">_groupby</span><span class="p">(</span>
         <span class="n">gdf</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;nuareacont&quot;</span><span class="p">,</span> <span class="n">rename</span><span class="o">=</span><span class="s2">&quot;zhi_area_km2&quot;</span>
     <span class="p">)</span>
 
@@ -2209,13 +2182,10 @@
     <span class="n">gdf_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">gdf_labels</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">gdf_output</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
     <span class="n">gdf_output</span> <span class="o">=</span> <span class="n">gdf_output</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">gdf_output</span></div>
+    <span class="k">return</span> <span class="n">gdf_output</span>
 
 
-
-<div class="viewcode-block" id="summarise_latex">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.summarise_latex">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">summarise_latex</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_summarise_latex</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates a full LaTeX table environment, including caption and formatting,</span>
 <span class="sd">    from a summary DataFrame of APCAC classifications.</span>
@@ -2348,25 +2318,19 @@
     <span class="c1"># Remove indentation from the triple-quoted string</span>
     <span class="n">latex_table</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">latex_table</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">latex_table</span></div>
-
+    <span class="k">return</span> <span class="n">latex_table</span>
 
 
 <span class="c1"># FUNCTIONS -- Utils</span>
 <span class="c1"># =======================================================================</span>
 
 
-<div class="viewcode-block" id="get_timestamp">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.get_timestamp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_timestamp</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_timestamp</span><span class="p">():</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H%M%S&quot;</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H%M%S&quot;</span><span class="p">))</span>
 
 
-
-<div class="viewcode-block" id="make_run_folder">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.make_run_folder">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">make_run_folder</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">run_name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_run_folder</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">run_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a unique, time-stamped run folder within a specified output directory.</span>
 
@@ -2384,7 +2348,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">ts</span> <span class="o">=</span> <span class="n">get_timestamp</span><span class="p">()</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">_get_timestamp</span><span class="p">()</span>
         <span class="n">folder_run</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_folder</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">folder_run</span><span class="p">):</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -2392,13 +2356,10 @@
             <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder_run</span><span class="p">)</span>
             <span class="k">break</span>
 
-    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">folder_run</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">folder_run</span><span class="p">)</span>
 
 
-
-<div class="viewcode-block" id="fuzzify">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.fuzzify">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fuzzify</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="p">,</span> <span class="n">v_up</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_fuzzify</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="p">,</span> <span class="n">v_up</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fuzzifies an array using a trapezoidal membership function, limiting values outside the bounds.</span>
 
@@ -2418,18 +2379,15 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># apply function</span>
-    <span class="n">v_f</span> <span class="o">=</span> <span class="n">fuzzify_linear</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="p">,</span> <span class="n">v_up</span><span class="p">)</span>
+    <span class="n">v_f</span> <span class="o">=</span> <span class="n">_fuzzify_linear</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="p">,</span> <span class="n">v_up</span><span class="p">)</span>
     <span class="c1"># get bounds</span>
     <span class="n">v_lo_bool</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span> <span class="o">&lt;</span> <span class="n">v_lo</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">v_up_bool</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span> <span class="o">&gt;</span> <span class="n">v_up</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="c1"># return boolean product</span>
-    <span class="k">return</span> <span class="n">v_f</span> <span class="o">*</span> <span class="n">v_lo_bool</span> <span class="o">*</span> <span class="n">v_up_bool</span></div>
+    <span class="k">return</span> <span class="n">v_f</span> <span class="o">*</span> <span class="n">v_lo_bool</span> <span class="o">*</span> <span class="n">v_up_bool</span>
 
 
-
-<div class="viewcode-block" id="fuzzify_linear">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.fuzzify_linear">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fuzzify_linear</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">v_up</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_fuzzify_linear</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">v_up</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Briefly fuzzifies a linear array using min-max scaling.</span>
 
@@ -2459,8 +2417,7 @@
         <span class="c1"># If all valid values are equal, return 1.0 where not NaN</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">v_lo</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">v_up</span> <span class="o">-</span> <span class="n">v_lo</span><span class="p">)</span></div>
-
+    <span class="k">return</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">v_lo</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">v_up</span> <span class="o">-</span> <span class="n">v_lo</span><span class="p">)</span>
 
 
 <span class="c1"># ... {develop}</span>

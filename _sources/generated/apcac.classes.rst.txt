@@ -10,23 +10,11 @@
    
       analysis_apcac
       analysis_apcac_upscaled
-      classify_apcac
       compute_apcac
       compute_apcac_stats
-      compute_e
       compute_index_a
       compute_index_e
       compute_upscaled_indexes
-      fuzzify
-      fuzzify_indexes
-      fuzzify_linear
       get_latex_table
-      get_timestamp
-      groupby
-      make_run_folder
       sample_indexes
-      save_gdf
-      summarise
-      summarise_latex
-      upscale_indexes
    

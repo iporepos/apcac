@@ -128,13 +128,6 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="index.html">
-    Home
-  </a>
-</li>
-
-
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="#">
     About
@@ -251,13 +244,6 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="index.html">
-    Home
-  </a>
-</li>
-
-
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="#">
     About
@@ -384,14 +370,35 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="about">
-<span id="id1"></span><h1>About<a class="headerlink" href="#about" title="Link to this heading">#</a></h1>
+  <div class="admonition warning" id="about">
+<p class="admonition-title">Warning</p>
+<p>This section is under development.</p>
+</div>
+<section id="id1">
+<h1>About<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
 <p>The <strong>APCAC</strong> (Áreas Prioritárias para Conservação de Água, or <em>Priority Areas for Water Conservation</em>) method is being developed as part of a large-scale effort for water and ecological conservation in the <strong>Cerrado biome</strong>, a critical region in central Brazil.</p>
-<p>The Cerrado contains the headwaters of most major Brazilian rivers, including the <strong>Rio São Francisco</strong>, which supplies water to the densely populated northeast, as well as rivers feeding southern dams and power systems. Its hydrological influence even extends toward the Amazon basin. At the same time, the region faces intense pressures from <strong>deforestation, agricultural expansion, and irrigation systems</strong>, making strategic water management essential for Brazil.</p>
-<p>APCAC uses <strong>GIS at multiple scales</strong>, down to <strong>30-meter resolution</strong>, to classify catchments based on <strong>hydrological importance</strong>, which measures the relative infiltration potential of each catchment. Valleys, plateaus, slopes, soil, geology, and climate variables are considered to determine how much water a catchment can retain. Prioritization also accounts for the <strong>current land use</strong>, distinguishing predominantly natural from predominantly anthropic catchments, and considers <strong>risk factors</strong> such as recent entropization, erosion, and degradation proxies (e.g., slope, erodibility).</p>
-<p>The method applies these analyses to <strong>Brazil’s most detailed catchment dataset (BHO5K)</strong>, which includes up to 200,000 features. Each catchment receives a full suite of attributes, which can then be <strong>upscaled to coarser maps</strong> for broader analyses. Raster maps form the base, with <strong>zonal statistics applied to catchments</strong>, ensuring consistent, reproducible, and scalable prioritization.</p>
-<section id="resources">
-<span id="id2"></span><h2>Resources<a class="headerlink" href="#resources" title="Link to this heading">#</a></h2>
+<section id="the-cerrado-biome">
+<span id="cerrado"></span><h2>The Cerrado Biome<a class="headerlink" href="#the-cerrado-biome" title="Link to this heading">#</a></h2>
+<p>The Cerrado is a biome that contains the headwaters of most major Brazilian rivers, including the <strong>Rio São Francisco</strong>, which supplies water to the densely populated northeast, as well as rivers feeding southern dams and power systems. Its hydrological influence even extends toward the Amazon basin.</p>
+<p>At the same time, the region faces intense pressures from <strong>deforestation, agricultural expansion, and irrigation systems</strong>, making strategic water management essential for Brazil.</p>
+</section>
+<section id="hydrological-importance">
+<span id="hydrology"></span><h2>Hydrological Importance<a class="headerlink" href="#hydrological-importance" title="Link to this heading">#</a></h2>
+<p>The APCAC method uses <strong>GIS at multiple scales</strong>, down to <strong>30-meter resolution</strong>, to classify catchments based on <strong>hydrological importance</strong>, which measures the relative infiltration potential of each catchment.</p>
+<p>Valleys, plateaus, slopes, soil, geology, and climate variables are considered to determine how much water a catchment can retain. Prioritization also accounts for the <strong>current land use</strong>, distinguishing predominantly natural from predominantly anthropic catchments, and considers <strong>risk factors</strong> such as recent entropization, erosion, and degradation proxies (e.g., slope, erodibility).</p>
+</section>
+<section id="classification-scale">
+<span id="classification"></span><h2>Classification scale<a class="headerlink" href="#classification-scale" title="Link to this heading">#</a></h2>
+<p>The method applies these analyses to <strong>Brazil’s most detailed catchment dataset (BHO5K)</strong>, which includes up to 200,000 features.</p>
+<p>Each catchment receives a full suite of <strong>attributes</strong>, which can then be <strong>upscaled to coarser maps</strong> for broader analyses.</p>
+<p>Raster maps form the base for this analysis, with <strong>zonal statistics applied to catchments</strong>, ensuring consistent, reproducible, and scalable prioritization.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>Check out how to use this repository tools on the <a class="reference internal" href="usage.html#usage"><span class="std std-ref">User Guide</span></a></p>
+</div>
+</section>
+<section id="more-resources">
+<span id="resources"></span><h2>More Resources<a class="headerlink" href="#more-resources" title="Link to this heading">#</a></h2>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla mollis tincidunt erat eget iaculis. Mauris gravida ex quam, in porttitor lacus lobortis vitae. In a lacinia nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi et tempor sem. Nullam quam dolor, venenatis eget magna ut, accumsan mollis erat.</p>
 </section>
 </section>
@@ -443,7 +450,10 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources">Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-cerrado-biome">The Cerrado Biome</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hydrological-importance">Hydrological Importance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-scale">Classification scale</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-resources">More Resources</a></li>
 </ul>
   </nav></div>
 

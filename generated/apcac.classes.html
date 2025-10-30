@@ -48,8 +48,8 @@
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Development" href="../development.html" />
-    <link rel="prev" title="apcac.indexes" href="apcac.indexes.html" />
+    <link rel="next" title="apcac.indexes" href="apcac.indexes.html" />
+    <link rel="prev" title="API" href="../api.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -128,13 +128,6 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../index.html">
-    Home
-  </a>
-</li>
-
-
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../about.html">
     About
@@ -252,13 +245,6 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../index.html">
-    Home
-  </a>
-</li>
-
-
-<li class="nav-item ">
   <a class="nav-link nav-internal" href="../about.html">
     About
   </a>
@@ -328,14 +314,11 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="apcac.html">apcac</a></li>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">apcac.classes</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="apcac.indexes.html">apcac.indexes</a></li>
-</ul>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">apcac.classes</a></li>
 </ul>
 </div>
 </nav></div>
@@ -486,26 +469,23 @@ customized analyses.</p>
 </pre></div>
 </div>
 </section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
+</section>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.analysis_apcac" title="apcac.classes.analysis_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analysis_apcac</span></code></a>(input_db, raster_files, ...)</p></td>
 <td><p>Orchestrates the complete APCAC (Áreas Prioritárias para Conservação de Água) analysis workflow, from sampling raster indexes to generating the final classification GeoPackage, summary CSV, and LaTeX table.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.analysis_apcac_upscaled" title="apcac.classes.analysis_apcac_upscaled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analysis_apcac_upscaled</span></code></a>(input_db, output_folder)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.analysis_apcac_upscaled" title="apcac.classes.analysis_apcac_upscaled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analysis_apcac_upscaled</span></code></a>(input_db, ...[, cleanup])</p></td>
 <td><p>Orchestrates the complete APCAC analysis workflow at an upscaled (aggregated) spatial unit, performing area-weighted aggregation of indexes before calculating the final APCAC classification.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.classify_apcac" title="apcac.classes.classify_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classify_apcac</span></code></a>(gdf)</p></td>
-<td><p>Classifies catchments based on natural/anthropic, hydrology, and risk factors using a three-level system (APCAC).</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.compute_apcac" title="apcac.classes.compute_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_apcac</span></code></a>(output_folder, input_db[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.compute_apcac" title="apcac.classes.compute_apcac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_apcac</span></code></a>(output_folder, input_db[, ...])</p></td>
 <td><p>Calculates the final APCAC (Áreas Prioritárias para Conservação de Água) classification codes and IDs for the input catchment GeoDataFrame.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.compute_apcac_stats" title="apcac.classes.compute_apcac_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_apcac_stats</span></code></a>(output_folder, input_db)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.compute_apcac_stats" title="apcac.classes.compute_apcac_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_apcac_stats</span></code></a>(output_folder, input_db)</p></td>
 <td><p>Computes and exports a summary of APCAC classification statistics, including total area and percentages for the Biome (Cerrado) and the Hydrological Influence Zone (ZHI).</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.compute_e" title="apcac.classes.compute_e"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_e</span></code></a>(gdf[, n_threshold, ...])</p></td>
-<td><p>Computes the erosion risk 'e' based on multiple environmental thresholds and adds the result to the GeoDataFrame.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.compute_index_a" title="apcac.classes.compute_index_a"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_index_a</span></code></a>(output_folder, input_db[, ...])</p></td>
 <td><p>Computes the raw and fuzzified <code class="docutils literal notranslate"><span class="pre">a</span></code> (hydrology importance) index as a multiplicative combination of the fuzzified <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">s</span></code>, <code class="docutils literal notranslate"><span class="pre">g</span></code>, and <code class="docutils literal notranslate"><span class="pre">c</span></code> indexes.</p></td>
@@ -516,41 +496,11 @@ customized analyses.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.compute_upscaled_indexes" title="apcac.classes.compute_upscaled_indexes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_upscaled_indexes</span></code></a>(output_folder, input_db)</p></td>
 <td><p>Computes area-weighted upscaled (aggregated) values for various indexes and boolean flags from a fine-resolution GeoDataFrame to a coarser spatial unit defined by a grouping field, and saves the results as a new GeoPackage layer.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.fuzzify" title="apcac.classes.fuzzify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fuzzify</span></code></a>(v, v_lo, v_up)</p></td>
-<td><p>Fuzzifies an array using a trapezoidal membership function, limiting values outside the bounds.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.fuzzify_indexes" title="apcac.classes.fuzzify_indexes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fuzzify_indexes</span></code></a>(output_folder, input_db[, ...])</p></td>
-<td><p>Applies a fuzzification function to a predefined list of index columns in a GeoDataFrame, scaling their values between 0 and 1.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.fuzzify_linear" title="apcac.classes.fuzzify_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fuzzify_linear</span></code></a>(v[, v_lo, v_up])</p></td>
-<td><p>Briefly fuzzifies a linear array using min-max scaling.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.get_latex_table" title="apcac.classes.get_latex_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_latex_table</span></code></a>(output_folder, input_csv)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.get_latex_table" title="apcac.classes.get_latex_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_latex_table</span></code></a>(output_folder, input_csv)</p></td>
 <td><p>Reads a CSV file containing APCAC summary statistics, converts the data into a fully formatted LaTeX table using <cite>summarise_latex</cite>, and saves the resulting LaTeX code to a .tex file.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.get_timestamp" title="apcac.classes.get_timestamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_timestamp</span></code></a>()</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.groupby" title="apcac.classes.groupby"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groupby</span></code></a>(gdf, label, value, rename)</p></td>
-<td><p>Groups a GeoDataFrame by a specified label, aggregates a value column by summing, and calculates the percentage of the total for the summed value.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.make_run_folder" title="apcac.classes.make_run_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_run_folder</span></code></a>(output_folder, run_name)</p></td>
-<td><p>Creates a unique, time-stamped run folder within a specified output directory.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.sample_indexes" title="apcac.classes.sample_indexes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_indexes</span></code></a>(output_folder, input_db, ...)</p></td>
 <td><p>Samples mean values from multiple raster files over a vector layer (e.g., catchments) and merges the results into a GeoDataFrame.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.save_gdf" title="apcac.classes.save_gdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_gdf</span></code></a>(gdf, db, layer)</p></td>
-<td><p>Saves a GeoDataFrame to a GeoPackage file, ensuring the <code class="docutils literal notranslate"><span class="pre">geometry</span></code> column is the last column.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.summarise" title="apcac.classes.summarise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summarise</span></code></a>(gdf)</p></td>
-<td><p>Summarizes catchment data by calculating the total area and percentage of area for each APCAC classification, both for a specific biome (Cerrado) and for the full dataset.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.classes.summarise_latex" title="apcac.classes.summarise_latex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summarise_latex</span></code></a>(df)</p></td>
-<td><p>Generates a full LaTeX table environment, including caption and formatting, from a summary DataFrame of APCAC classifications.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.classes.upscale_indexes" title="apcac.classes.upscale_indexes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upscale_indexes</span></code></a>(gdf, field_upscale, field_area)</p></td>
-<td><p>Upscales various numeric indexes and boolean flags from a finer-resolution GeoDataFrame to a coarser resolution based on an aggregation field.</p></td>
 </tr>
 </tbody>
 </table>
@@ -645,7 +595,7 @@ classification, computing summary statistics, and finally generating the LaTeX t
 
 <dl class="py function">
 <dt class="sig sig-object py" id="apcac.classes.analysis_apcac_upscaled">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">analysis_apcac_upscaled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_upscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#analysis_apcac_upscaled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.analysis_apcac_upscaled" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">analysis_apcac_upscaled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_layer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_upscale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_area</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#analysis_apcac_upscaled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.analysis_apcac_upscaled" title="Link to this definition">#</a></dt>
 <dd><p>Orchestrates the complete APCAC analysis workflow at an upscaled (aggregated)
 spatial unit, performing area-weighted aggregation of indexes
 before calculating the final APCAC classification.</p>
@@ -654,9 +604,9 @@ before calculating the final APCAC classification.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>input_db</strong> (<em>str</em>) – Path to the GeoPackage or database file containing the <strong>fine-resolution</strong> input vector layer.</p></li>
 <li><p><strong>output_folder</strong> (<em>str</em>) – Path to the main directory where the final and temporary results will be organized.</p></li>
-<li><p><strong>input_layer</strong> (<em>str</em>) – Name of the vector layer within the input database (fine-resolution) to be processed. Default value = “apcac_bho5k”</p></li>
-<li><p><strong>field_upscale</strong> (<em>str</em>) – [optional] The column name in the input data to use for grouping/dissolving (the ID of the coarser unit). Default value = “nunivotto5”</p></li>
-<li><p><strong>field_area</strong> (<em>str</em>) – [optional] The column name representing the area of the features, used for weighted averaging. Default value = None</p></li>
+<li><p><strong>input_layer</strong> (<em>str</em>) – Name of the vector layer within the input database (fine-resolution) to be processed.</p></li>
+<li><p><strong>field_upscale</strong> (<em>str</em>) – The column name in the input data to use for grouping/dissolving (the ID of the coarser unit).</p></li>
+<li><p><strong>field_area</strong> (<em>str</em>) – The column name representing the area of the features, used for weighted averaging.</p></li>
 <li><p><strong>cleanup</strong> (<em>bool</em>) – Flag to indicate whether the intermediate, run-specific folders created during the workflow should be deleted. Default value = True</p></li>
 </ul>
 </dd>
@@ -702,7 +652,8 @@ and finally generating the LaTeX table.</p>
     <span class="n">input_db</span><span class="o">=</span><span class="n">input_db</span><span class="p">,</span>
     <span class="n">output_folder</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
     <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
-    <span class="n">field_upscale</span><span class="o">=</span><span class="s2">&quot;nunivotto4&quot;</span>
+    <span class="n">field_upscale</span><span class="o">=</span><span class="s2">&quot;nunivotto4&quot;</span><span class="p">,</span>
+    <span class="n">field_area</span><span class="o">=</span><span class="s2">&quot;nuareacont&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -783,61 +734,6 @@ to calculate the mean of each raster within the polygons of the input vector lay
     <span class="n">raster_files</span><span class="o">=</span><span class="n">raster_files</span><span class="p">,</span>
     <span class="n">output_folder</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
     <span class="n">raster_multipliers</span><span class="o">=</span><span class="n">raster_multipliers</span><span class="p">,</span>
-    <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.fuzzify_indexes">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">fuzzify_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#fuzzify_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.fuzzify_indexes" title="Link to this definition">#</a></dt>
-<dd><p>Applies a fuzzification function to a predefined list of index columns
-in a GeoDataFrame, scaling their values between 0 and 1.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>output_folder</strong> (<em>str</em>) – Path to the directory where temporary and final output files will be stored.</p></li>
-<li><p><strong>input_db</strong> (<em>str</em>) – Path to the GeoPackage or database file containing the input vector layer.</p></li>
-<li><p><strong>input_layer</strong> (<em>str</em>) – Name of the vector layer within the input database to be processed. Default value = “apcac_bho5k”</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The file path to the final GeoPackage file, which contains the input layer with the new fuzzified index columns (e.g., <code class="docutils literal notranslate"><span class="pre">t_f</span></code>, <code class="docutils literal notranslate"><span class="pre">s_f</span></code>).</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-<p><strong>Notes</strong></p>
-<p>The fuzzification is typically a linear scaling based on the minimum
-and maximum values observed in each column.</p>
-<p><strong>Script example</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">iu</span>
-
-<span class="c1"># define the paths to this module</span>
-<span class="c1"># ----------------------------------------</span>
-<span class="n">the_module</span> <span class="o">=</span> <span class="s2">&quot;path/to/classes.py&quot;</span>
-
-<span class="n">spec</span> <span class="o">=</span> <span class="n">iu</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="n">the_module</span><span class="p">)</span>
-<span class="n">module</span> <span class="o">=</span> <span class="n">iu</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
-<span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
-
-<span class="c1"># define the paths to input and output folders</span>
-<span class="c1"># ----------------------------------------</span>
-<span class="n">input_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/input_folder&quot;</span>
-<span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/output_folder&quot;</span>
-
-<span class="c1"># define the path to input database</span>
-<span class="c1"># ----------------------------------------</span>
-<span class="n">input_db</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/path/to/data.gpkg&quot;</span>
-
-
-<span class="c1"># call the function</span>
-<span class="c1"># ----------------------------------------</span>
-<span class="n">output_file</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">fuzzify_indexes</span><span class="p">(</span>
-    <span class="n">input_db</span><span class="o">=</span><span class="n">input_db</span><span class="p">,</span>
-    <span class="n">output_folder</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
     <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
@@ -1174,237 +1070,6 @@ and saves the resulting LaTeX code to a .tex file.</p>
 </div>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.save_gdf">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">save_gdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#save_gdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.save_gdf" title="Link to this definition">#</a></dt>
-<dd><p>Saves a GeoDataFrame to a GeoPackage file, ensuring the
-<code class="docutils literal notranslate"><span class="pre">geometry</span></code> column is the last column.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>gdf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code>) – The GeoDataFrame to be saved.</p></li>
-<li><p><strong>db</strong> (str or <code class="xref py py-class docutils literal notranslate"><span class="pre">pathlib.Path</span></code>) – The file path for the output GeoPackage database.</p></li>
-<li><p><strong>layer</strong> (<em>str</em>) – The name of the layer (table) to create within the GeoPackage.</p></li>
-</ul>
-</dd>
-</dl>
-<p><strong>Notes</strong></p>
-<p>The function first reorders the GeoDataFrame columns to
-place the <code class="docutils literal notranslate"><span class="pre">geometry</span></code>  column at the end, which is a common
-convention or requirement for some geospatial operations,
-and then writes the data to the specified GeoPackage file.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.classify_apcac">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">classify_apcac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#classify_apcac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.classify_apcac" title="Link to this definition">#</a></dt>
-<dd><p>Classifies catchments based on natural/anthropic,
-hydrology, and risk factors using a three-level system (APCAC).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>gdf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code>) – GeoDataFrame containing catchment data with <code class="docutils literal notranslate"><span class="pre">n</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>, and <code class="docutils literal notranslate"><span class="pre">e</span></code> columns for classification.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>GeoDataFrame with added classification columns: <code class="docutils literal notranslate"><span class="pre">cd_apcac_n</span></code>, <code class="docutils literal notranslate"><span class="pre">id_apcac_n</span></code>, <code class="docutils literal notranslate"><span class="pre">cd_apcac_a</span></code>, <code class="docutils literal notranslate"><span class="pre">id_apcac_a</span></code>, <code class="docutils literal notranslate"><span class="pre">cd_apcac_risk</span></code>, <code class="docutils literal notranslate"><span class="pre">id_apcac_risk</span></code>, <code class="docutils literal notranslate"><span class="pre">cd_apcac</span></code>, and <code class="docutils literal notranslate"><span class="pre">id_apcac</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.compute_e">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">compute_e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slope_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uslek_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#compute_e"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.compute_e" title="Link to this definition">#</a></dt>
-<dd><p>Computes the erosion risk ‘e’ based on multiple environmental
-thresholds and adds the result to the GeoDataFrame.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>gdf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code>) – GeoDataFrame containing the environmental factors <code class="docutils literal notranslate"><span class="pre">n</span></code>, <code class="docutils literal notranslate"><span class="pre">slope</span></code>, and <code class="docutils literal notranslate"><span class="pre">uslek</span></code>.</p></li>
-<li><p><strong>n_threshold</strong> (<em>float</em><em> or </em><em>None</em>) – [optional] The threshold value for the <code class="docutils literal notranslate"><span class="pre">n</span></code> factor (e.g., vegetation cover). Defaults to a predefined global constant <code class="docutils literal notranslate"><span class="pre">N1</span></code>.</p></li>
-<li><p><strong>slope_threshold</strong> (<em>float</em><em> or </em><em>None</em>) – [optional] The minimum slope value considered risky. Defaults to a predefined global constant <code class="docutils literal notranslate"><span class="pre">SLOPE_THRESHOLD</span></code>.</p></li>
-<li><p><strong>uslek_threshold</strong> (<em>float</em><em> or </em><em>None</em>) – [optional] The minimum USLE-K factor value considered risky. Defaults to a predefined global constant <code class="docutils literal notranslate"><span class="pre">USLEK_THRESHOLD</span></code>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The input GeoDataFrame with new boolean columns (<code class="docutils literal notranslate"><span class="pre">is_risk_n</span></code>, <code class="docutils literal notranslate"><span class="pre">is_risk_slope</span></code>, <code class="docutils literal notranslate"><span class="pre">is_risk_uslek</span></code>) and the final combined erosion risk column (<code class="docutils literal notranslate"><span class="pre">e</span></code>).</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code></p>
-</dd>
-</dl>
-<p><strong>Notes</strong></p>
-<p>The erosion risk <code class="docutils literal notranslate"><span class="pre">e</span></code> is classified as 1 (risk) if the <code class="docutils literal notranslate"><span class="pre">n</span></code> factor
-is below its threshold AND either the ‘slope’ or ‘uslek’ factors are above
-their respective thresholds. Otherwise, <code class="docutils literal notranslate"><span class="pre">e</span></code> is 0 (no risk).
-The process first calculates intermediate boolean risk columns for each factor.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.upscale_indexes">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">upscale_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_upscale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_area</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#upscale_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.upscale_indexes" title="Link to this definition">#</a></dt>
-<dd><p>Upscales various numeric indexes and boolean flags from a finer-resolution GeoDataFrame to a coarser resolution based on an aggregation field.</p>
-<p>Numeric indexes are upscaled using an area-weighted average, and boolean fields are upscaled to be true (1) if any part of the aggregated unit contains a true value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>gdf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code>) – GeoDataFrame containing the fine-resolution data, including all index fields, the aggregation field, and the area field.</p></li>
-<li><p><strong>field_upscale</strong> (<em>str</em>) – The column name in <cite>gdf</cite> to use for grouping and upscaling (e.g., a coarser watershed ID).</p></li>
-<li><p><strong>field_area</strong> (<em>str</em>) – The column name in <cite>gdf</cite> that represents the area of the features, used for weighted averaging of indexes.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>DataFrame containing the upscaled results, with one row per unique value in <cite>field_upscale</cite>, including the area-weighted mean for each index and the aggregated boolean flags.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.groupby">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">groupby</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#groupby"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.groupby" title="Link to this definition">#</a></dt>
-<dd><p>Groups a GeoDataFrame by a specified label, aggregates a value
-column by summing, and calculates the percentage of the total for the summed value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>gdf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code>) – GeoDataFrame to be processed.</p></li>
-<li><p><strong>label</strong> (<em>str</em>) – Column name to use for grouping (the index of the resulting DataFrame).</p></li>
-<li><p><strong>value</strong> (<em>str</em>) – Column name to be summed within each group.</p></li>
-<li><p><strong>rename</strong> (<em>str</em>) – Base name for the new columns created for the summed value and its percentage.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>DataFrame with the grouped label, the sum of the value column (renamed), and the percentage of the total sum (renamed with <code class="docutils literal notranslate"><span class="pre">_p</span></code> suffix).</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.summarise">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">summarise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#summarise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.summarise" title="Link to this definition">#</a></dt>
-<dd><p>Summarizes catchment data by calculating the total area and percentage
-of area for each APCAC classification, both for a specific biome (Cerrado)
-and for the full dataset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>gdf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code>) – GeoDataFrame containing catchment data with required columns <code class="docutils literal notranslate"><span class="pre">id_uph</span></code>, <code class="docutils literal notranslate"><span class="pre">is_cerrado</span></code>, <code class="docutils literal notranslate"><span class="pre">nuareacont</span></code>, and <code class="docutils literal notranslate"><span class="pre">cd_apcac</span></code>.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>DataFrame with APCAC labels, the total area (in km²) and percentage of area for each classification within the Cerrado biome, and the total area and percentage for the full extent.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.summarise_latex">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">summarise_latex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#summarise_latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.summarise_latex" title="Link to this definition">#</a></dt>
-<dd><p>Generates a full LaTeX table environment, including caption and formatting,
-from a summary DataFrame of APCAC classifications.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>) – DataFrame containing APCAC summary results, including <code class="docutils literal notranslate"><span class="pre">cd_apcac</span></code>, <code class="docutils literal notranslate"><span class="pre">lb_apcac</span></code>, <code class="docutils literal notranslate"><span class="pre">bio_area_km2</span></code>, <code class="docutils literal notranslate"><span class="pre">bio_area_km2_p</span></code>, <code class="docutils literal notranslate"><span class="pre">zhi_area_km2</span></code>, and <code class="docutils literal notranslate"><span class="pre">zhi_area_km2_p</span></code> columns.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A string containing the complete LaTeX code for the formatted table.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-<p><strong>Notes</strong></p>
-<p>The table organizes data by <code class="docutils literal notranslate"><span class="pre">Importância</span> <span class="pre">Hidrológica</span></code> (Hydrological Importance)
-with subtotals and includes <code class="docutils literal notranslate"><span class="pre">Risco</span></code> (Risk) and <code class="docutils literal notranslate"><span class="pre">Ocupação</span></code> (Occupation), showing
-area (km²) and percentage for both the Biome (Cerrado) and the Hydrological Influence Zone (ZHI).</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.get_timestamp">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">get_timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#get_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.get_timestamp" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.make_run_folder">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">make_run_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#make_run_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.make_run_folder" title="Link to this definition">#</a></dt>
-<dd><p>Creates a unique, time-stamped run folder within a specified output directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>output_folder</strong> (str or <code class="xref py py-class docutils literal notranslate"><span class="pre">pathlib.Path</span></code>) – The parent directory where the new run folder will be created.</p></li>
-<li><p><strong>run_name</strong> (<em>str</em>) – The base name for the new folder. A timestamp will be appended to it.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The absolute path to the newly created run folder.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-<p><strong>Notes</strong></p>
-<p>It appends a unique timestamp to the run name and ensures the
-folder doesn’t already exist before creating it.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.fuzzify">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">fuzzify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_lo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_up</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#fuzzify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.fuzzify" title="Link to this definition">#</a></dt>
-<dd><p>Fuzzifies an array using a trapezoidal membership function, limiting values outside the bounds.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>v</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>) – The input array of values to fuzzify.</p></li>
-<li><p><strong>v_lo</strong> (<em>float</em>) – The lower bound for the trapezoidal function’s base. Values below this will have a membership of 0.</p></li>
-<li><p><strong>v_up</strong> (<em>float</em>) – The upper bound for the trapezoidal function’s base. Values above this will have a membership of 0.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The fuzzified array, with membership degrees between 0 and 1.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p>
-</dd>
-</dl>
-<p><strong>Notes</strong></p>
-<dl class="simple">
-<dt>This function first applies linear scaling (min-max normalization)</dt><dd><p>to the values and then sets the membership degree to 0 for any value strictly outside the given bounds.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.classes.fuzzify_linear">
-<span class="sig-prename descclassname"><span class="pre">apcac.classes.</span></span><span class="sig-name descname"><span class="pre">fuzzify_linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_lo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_up</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/classes.html#fuzzify_linear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.classes.fuzzify_linear" title="Link to this definition">#</a></dt>
-<dd><p>Briefly fuzzifies a linear array using min-max scaling.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>v</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>) – The input array of values to fuzzify.</p></li>
-<li><p><strong>v_lo</strong> (<em>float</em><em> or </em><em>None</em>) – [optional] The lower bound for scaling (0.0). If None, the minimum non-NaN value of <cite>v</cite> is used.</p></li>
-<li><p><strong>v_up</strong> (<em>float</em><em> or </em><em>None</em>) – [optional] The upper bound for scaling (1.0). If None, the maximum non-NaN value of <cite>v</cite> is used.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The fuzzified array, scaled between 0 and 1.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p>
-</dd>
-</dl>
-<p><strong>Notes</strong></p>
-<p>The array is scaled between 0 and 1 using the provided lower
-and upper bounds. If both bounds are equal, 1.0 is returned for non-NaN values.</p>
-</dd></dl>
-
 </section>
 
 
@@ -1418,20 +1083,20 @@ and upper bounds. If both bounds are equal, 1.0 is returned for non-NaN values.<
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="apcac.indexes.html"
+       href="../api.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">apcac.indexes</p>
+        <p class="prev-next-title">API</p>
       </div>
     </a>
     <a class="right-next"
-       href="../development.html"
+       href="apcac.indexes.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Development</p>
+        <p class="prev-next-title">apcac.indexes</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1457,27 +1122,16 @@ and upper bounds. If both bounds are equal, 1.0 is returned for non-NaN values.<
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#script-example">Script Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.analysis_apcac"><code class="docutils literal notranslate"><span class="pre">analysis_apcac()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.analysis_apcac_upscaled"><code class="docutils literal notranslate"><span class="pre">analysis_apcac_upscaled()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.sample_indexes"><code class="docutils literal notranslate"><span class="pre">sample_indexes()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.fuzzify_indexes"><code class="docutils literal notranslate"><span class="pre">fuzzify_indexes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_index_a"><code class="docutils literal notranslate"><span class="pre">compute_index_a()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_index_e"><code class="docutils literal notranslate"><span class="pre">compute_index_e()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_upscaled_indexes"><code class="docutils literal notranslate"><span class="pre">compute_upscaled_indexes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_apcac"><code class="docutils literal notranslate"><span class="pre">compute_apcac()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_apcac_stats"><code class="docutils literal notranslate"><span class="pre">compute_apcac_stats()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.get_latex_table"><code class="docutils literal notranslate"><span class="pre">get_latex_table()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.save_gdf"><code class="docutils literal notranslate"><span class="pre">save_gdf()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.classify_apcac"><code class="docutils literal notranslate"><span class="pre">classify_apcac()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.compute_e"><code class="docutils literal notranslate"><span class="pre">compute_e()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.upscale_indexes"><code class="docutils literal notranslate"><span class="pre">upscale_indexes()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.groupby"><code class="docutils literal notranslate"><span class="pre">groupby()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.summarise"><code class="docutils literal notranslate"><span class="pre">summarise()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.summarise_latex"><code class="docutils literal notranslate"><span class="pre">summarise_latex()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.get_timestamp"><code class="docutils literal notranslate"><span class="pre">get_timestamp()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.make_run_folder"><code class="docutils literal notranslate"><span class="pre">make_run_folder()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.fuzzify"><code class="docutils literal notranslate"><span class="pre">fuzzify()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.fuzzify_linear"><code class="docutils literal notranslate"><span class="pre">fuzzify_linear()</span></code></a></li>
 </ul>
   </nav></div>
 
