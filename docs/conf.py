@@ -94,8 +94,8 @@ exclude_members = ["__dict__", "__weakref__", "__module__", "__str__"]
 autodoc_default_options = {
     "members": True,
     "undoc-members": False,
-    "private-members": True,
-    "special-members": True,
+    "private-members": False,
+    "special-members": False,
     "show-inheritance": True,
     "exclude-members": ",".join(exclude_members),
 }

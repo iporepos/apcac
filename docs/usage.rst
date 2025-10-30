@@ -1,5 +1,7 @@
 .. _usage:
 
+.. include:: ./includes/warning_dev.rst
+
 User Guide
 #######################################################################
 
@@ -10,7 +12,7 @@ User Guide
 
 This guide explains how to use the scripts in this repository to perform **APCAC** classification on polygons using vector and raster data. The scripts are designed to run within **QGIS** via the Python Script Tool, supporting both full workflow execution and independent function calls for custom analyses.
 
-.. warning::
+.. note::
 
     This repository is intended to run under the QGIS Python environment.
 
@@ -25,7 +27,7 @@ Installation
 
 These are the only external dependencies required to run the scripts.
 
-Workflow Overview
+Workflow
 -----------------
 
 The repository is structured as a **function-based workflow**, allowing:
@@ -35,15 +37,38 @@ The repository is structured as a **function-based workflow**, allowing:
 * Automatic management of timestamped output folders for reproducible runs and organized outputs.
 * Easy integration into QGIS Python tools using ``importlib``.
 
-Scripts operate on raster and vector data, with each catchment receiving a full set of computed attributes. Outputs can be upscaled to coarser maps or used for further GIS analysis.
+Scripts operate on raster and vector data, with each catchment receiving
+a full set of computed attributes. Outputs can be upscaled to
+coarser maps or used for further GIS analysis.
 
-Running the Scripts
+Output Attributes
 -------------------
 
-Scripts are executed via the **Python Script Tool** in QGIS using the **importlib** workflow:
+The ultimate output of this process is the map of APCAC sampled at polygons, like small catchments or any other scale
+of interest. The polygon layer is stored in a **geopackage** with the following core attributes:
+
+.. csv-table::
+   :file: ./data/fields.csv
+   :header-rows: 1
+   :widths: auto
+   :delim: ;
+
+
+Scripts
+-------------------
+
+Scripts are executed via the **Python Script Tool** in QGIS using the **importlib** workflow.
+
+.. seealso::
+
+    More scripts examples are available at the :ref:`API <development>`
+
+
+The following example shows how to use the ``analysis_apcac()`` tool:
 
 .. code-block:: python
 
+    # WARNING : run this under a QGIS Python Environment
     import importlib.util as iu
 
     # define the paths to this module
@@ -90,15 +115,10 @@ Scripts are executed via the **Python Script Tool** in QGIS using the **importli
     )
 
 Notes
------
+---------
 
 * Users can call individual functions for **custom analyses** instead of running the full workflow.
 * All outputs are organized in **timestamped folders** for reproducibility.
 * Raster maps form the base for calculations, and **zonal statistics** are applied to catchments for final aggregation.
 * No additional external dependencies are required beyond ``numpy``, ``pandas``, and ``geopandas``.
-
-.. seealso::
-
-   Full examples of scripts and detailed API usage are provided in the
-   :ref:`API documentation <api>`.
 

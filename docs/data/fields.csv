@@ -1,0 +1,13 @@
+Attribute;Type;Description
+cd_apcac;text;APCAC code
+id_apcac;int;APCAC id
+a;float;hydrological importance index
+n;float;conservation index
+t;float;topography index
+s;float;pedological index (soils)
+g;float;geological index
+c;float;climatological index
+v;float;long term conservation change rate (percent)
+slope;float;slope in degrees
+uslek;float;soil erosivity (USLE equation)
+e;float;soil degradation index

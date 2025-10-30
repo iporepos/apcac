@@ -97,6 +97,9 @@ The following script runs a full ``APCAC`` analysis:
     )
 
 
+Documentation
+--------------
+
 """
 # IMPORTS
 # ***********************************************************************
@@ -323,7 +326,7 @@ def analysis_apcac(
     # folders
     # -----------------------------------
     os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
+    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
 
     # files
     # -----------------------------------
@@ -345,7 +348,7 @@ def analysis_apcac(
         )
 
     # -----------------------------------
-    f2 = fuzzify_indexes(
+    f2 = _fuzzify_indexes(
         input_db=f1,
         input_layer=input_layer,
         output_folder=output_folder,
@@ -419,9 +422,9 @@ def analysis_apcac(
 def analysis_apcac_upscaled(
     input_db,
     output_folder,
-    input_layer="apcac_bho5k",
-    field_upscale=None,
-    field_area=None,
+    input_layer,
+    field_upscale,
+    field_area,
     cleanup=True,
 ):
     """
@@ -434,11 +437,11 @@ def analysis_apcac_upscaled(
     :type input_db: str
     :param output_folder: Path to the main directory where the final and temporary results will be organized.
     :type output_folder: str
-    :param input_layer: Name of the vector layer within the input database (fine-resolution) to be processed. Default value = "apcac_bho5k"
+    :param input_layer: Name of the vector layer within the input database (fine-resolution) to be processed.
     :type input_layer: str
-    :param field_upscale: [optional] The column name in the input data to use for grouping/dissolving (the ID of the coarser unit). Default value = "nunivotto5"
+    :param field_upscale: The column name in the input data to use for grouping/dissolving (the ID of the coarser unit).
     :type field_upscale: str
-    :param field_area: [optional] The column name representing the area of the features, used for weighted averaging. Default value = None
+    :param field_area: The column name representing the area of the features, used for weighted averaging.
     :type field_area: str
     :param cleanup: Flag to indicate whether the intermediate, run-specific folders created during the workflow should be deleted. Default value = True
     :type cleanup: bool
@@ -485,7 +488,8 @@ def analysis_apcac_upscaled(
             input_db=input_db,
             output_folder=output_dir,
             input_layer="apcac_bho5k",
-            field_upscale="nunivotto4"
+            field_upscale="nunivotto4",
+            field_area="nuareacont"
         )
 
 
@@ -507,7 +511,7 @@ def analysis_apcac_upscaled(
     # folders
     # -----------------------------------
     os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
+    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
 
     # files
     # -----------------------------------
@@ -526,7 +530,7 @@ def analysis_apcac_upscaled(
     )
 
     # -----------------------------------
-    f2 = fuzzify_indexes(
+    f2 = _fuzzify_indexes(
         input_db=f1,
         input_layer=f"apcac_{field_upscale}",
         output_folder=output_folder,
@@ -701,7 +705,7 @@ def sample_indexes(
     # folders
     # -----------------------------------
     os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
+    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
 
     # files
     # -----------------------------------
@@ -757,111 +761,7 @@ def sample_indexes(
     # save
     # -----------------------------------
     os.remove(output_file)
-    save_gdf(gdf, db=output_file, layer=input_layer)
-
-    print(f"run successfull. see for outputs:\n{output_folder}")
-
-    return output_file
-
-
-def fuzzify_indexes(output_folder, input_db, input_layer="apcac_bho5k"):
-    """
-    Applies a fuzzification function to a predefined list of index columns
-    in a GeoDataFrame, scaling their values between 0 and 1.
-
-    :param output_folder: Path to the directory where temporary and final output files will be stored.
-    :type output_folder: str
-    :param input_db: Path to the GeoPackage or database file containing the input vector layer.
-    :type input_db: str
-    :param input_layer: Name of the vector layer within the input database to be processed. Default value = "apcac_bho5k"
-    :type input_layer: str
-    :return: The file path to the final GeoPackage file, which contains the input layer with the new fuzzified index columns (e.g., ``t_f``, ``s_f``).
-    :rtype: str
-
-    **Notes**
-
-    The fuzzification is typically a linear scaling based on the minimum
-    and maximum values observed in each column.
-
-    **Script example**
-
-    .. code-block:: python
-
-        import importlib.util as iu
-
-        # define the paths to this module
-        # ----------------------------------------
-        the_module = "path/to/classes.py"
-
-        spec = iu.spec_from_file_location("module", the_module)
-        module = iu.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
-        # define the paths to input and output folders
-        # ----------------------------------------
-        input_dir = "path/to/input_folder"
-        output_dir = "path/to/output_folder"
-
-        # define the path to input database
-        # ----------------------------------------
-        input_db = f"{input_dir}/path/to/data.gpkg"
-
-
-        # call the function
-        # ----------------------------------------
-        output_file = module.fuzzify_indexes(
-            input_db=input_db,
-            output_folder=output_dir,
-            input_layer="apcac_bho5k",
-        )
-
-    """
-
-    # Startup
-    # -------------------------------------------------------------------
-    func_name = fuzzify_indexes.__name__
-    print(f"running: {func_name}")
-
-    # Setup input variables
-    # -------------------------------------------------------------------
-    ls_fields = ["t", "s", "g", "c", "n", "v", "slope", "uslek"]
-
-    # Setup output variables
-    # -------------------------------------------------------------------
-
-    # folders
-    # -----------------------------------
-    os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
-
-    # files
-    # -----------------------------------
-    output_file = Path(f"{output_folder}/apcac.gpkg")
-
-    # variables
-    # -----------------------------------
-
-    # Run processes
-    # -------------------------------------------------------------------
-
-    # load data
-    # -----------------------------------
-    gdf = gpd.read_file(input_db, layer=input_layer)
-
-    # fuzzify fields
-    # -----------------------------------
-    for field in ls_fields:
-        field_lo = gdf[field].min()
-        field_up = gdf[field].max()
-        field_name_fuzzy = f"{field}_f"
-        gdf[field_name_fuzzy] = fuzzify(gdf[field].values, field_lo, field_up)
-
-    # Export
-    # -------------------------------------------------------------------
-
-    # save
-    # -----------------------------------
-    save_gdf(gdf, db=output_file, layer=input_layer)
+    _save_gdf(gdf, db=output_file, layer=input_layer)
 
     print(f"run successfull. see for outputs:\n{output_folder}")
 
@@ -930,7 +830,7 @@ def compute_index_a(output_folder, input_db, input_layer="apcac_bho5k"):
     # folders
     # -----------------------------------
     os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
+    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
 
     # files
     # -----------------------------------
@@ -954,14 +854,14 @@ def compute_index_a(output_folder, input_db, input_layer="apcac_bho5k"):
     # -----------------------------------
     a_lo = gdf["a_raw"].min()
     a_up = gdf["a_raw"].max()
-    gdf["a"] = fuzzify(gdf["a_raw"].values, a_lo, a_up)
+    gdf["a"] = _fuzzify(gdf["a_raw"].values, a_lo, a_up)
 
     # Export
     # -------------------------------------------------------------------
 
     # save
     # -----------------------------------
-    save_gdf(gdf, db=output_file, layer=input_layer)
+    _save_gdf(gdf, db=output_file, layer=input_layer)
     print(f"run successfull. see for outputs:\n{output_folder}")
 
     return output_file
@@ -1040,7 +940,7 @@ def compute_index_e(
     # folders
     # -----------------------------------
     os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
+    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
 
     # files
     # -----------------------------------
@@ -1055,7 +955,7 @@ def compute_index_e(
 
     # classify
     # -----------------------------------
-    gdf = compute_e(
+    gdf = _compute_e(
         gdf=gdf,
         n_threshold=n_threshold,
         slope_threshold=slope_threshold,
@@ -1067,7 +967,7 @@ def compute_index_e(
 
     # save
     # -----------------------------------
-    save_gdf(gdf, db=output_file, layer=input_layer)
+    _save_gdf(gdf, db=output_file, layer=input_layer)
     print(f"run successfull. see for outputs:\n{output_folder}")
 
     return output_file
@@ -1160,7 +1060,7 @@ def compute_upscaled_indexes(
     # folders
     # -----------------------------------
     os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
+    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
 
     # files
     # -----------------------------------
@@ -1175,7 +1075,9 @@ def compute_upscaled_indexes(
 
     # upscale info
     # -----------------------------------
-    df_up = upscale_indexes(gdf=gdf, field_upscale=field_upscale, field_area=field_area)
+    df_up = _upscale_indexes(
+        gdf=gdf, field_upscale=field_upscale, field_area=field_area
+    )
 
     # dissolve geometries
     # -----------------------------------
@@ -1202,7 +1104,7 @@ def compute_upscaled_indexes(
 
     # Export
     # -------------------------------------------------------------------
-    save_gdf(gdf_up, output_file, layer=f"apcac_{field_upscale}")
+    _save_gdf(gdf_up, output_file, layer=f"apcac_{field_upscale}")
     print(f"run successfull. see for outputs:\n{output_folder}")
 
     return output_file
@@ -1275,7 +1177,7 @@ def compute_apcac(output_folder, input_db, input_layer="apcac_bho5k"):
     # folders
     # -----------------------------------
     os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
+    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
 
     # files
     # -----------------------------------
@@ -1290,14 +1192,14 @@ def compute_apcac(output_folder, input_db, input_layer="apcac_bho5k"):
 
     # compute apcac
     # -----------------------------------
-    gdf = classify_apcac(gdf)
+    gdf = _classify_apcac(gdf)
 
     # Export
     # -------------------------------------------------------------------
 
     # save
     # -----------------------------------
-    save_gdf(gdf, db=output_file, layer=input_layer)
+    _save_gdf(gdf, db=output_file, layer=input_layer)
     print(f"run successfull. see for outputs:\n{output_folder}")
 
     return output_file
@@ -1371,7 +1273,7 @@ def compute_apcac_stats(output_folder, input_db, input_layer="apcac_bho5k"):
     # folders
     # -----------------------------------
     os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
+    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
 
     # files
     # -----------------------------------
@@ -1386,7 +1288,7 @@ def compute_apcac_stats(output_folder, input_db, input_layer="apcac_bho5k"):
 
     # compute apcac stats
     # -----------------------------------
-    df = summarise(gdf)
+    df = _summarise(gdf)
 
     # Export
     # -------------------------------------------------------------------
@@ -1459,7 +1361,7 @@ def get_latex_table(output_folder, input_csv):
     # folders
     # -----------------------------------
     os.makedirs(output_folder, exist_ok=True)
-    output_folder = make_run_folder(run_name=func_name, output_folder=output_folder)
+    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
 
     # files
     # -----------------------------------
@@ -1474,7 +1376,7 @@ def get_latex_table(output_folder, input_csv):
 
     # convert to LaTeX table
     # -----------------------------------
-    s_table = summarise_latex(df)
+    s_table = _summarise_latex(df)
 
     # Export
     # -------------------------------------------------------------------
@@ -1496,7 +1398,7 @@ def get_latex_table(output_folder, input_csv):
 # =======================================================================
 
 
-def save_gdf(gdf, db, layer):
+def _save_gdf(gdf, db, layer):
     """
     Saves a GeoDataFrame to a GeoPackage file, ensuring the
     ``geometry`` column is the last column.
@@ -1526,7 +1428,7 @@ def save_gdf(gdf, db, layer):
     return None
 
 
-def classify_apcac(gdf):
+def _classify_apcac(gdf):
     """
     Classifies catchments based on natural/anthropic,
     hydrology, and risk factors using a three-level system (APCAC).
@@ -1597,7 +1499,7 @@ def classify_apcac(gdf):
     return gdf
 
 
-def compute_e(gdf, n_threshold=None, slope_threshold=None, uslek_threshold=None):
+def _compute_e(gdf, n_threshold=None, slope_threshold=None, uslek_threshold=None):
     """
     Computes the erosion risk 'e' based on multiple environmental
     thresholds and adds the result to the GeoDataFrame.
@@ -1663,9 +1565,10 @@ def compute_e(gdf, n_threshold=None, slope_threshold=None, uslek_threshold=None)
     return gdf
 
 
-def upscale_indexes(gdf, field_upscale, field_area):
+def _upscale_indexes(gdf, field_upscale, field_area):
     """
-    Upscales various numeric indexes and boolean flags from a finer-resolution GeoDataFrame to a coarser resolution based on an aggregation field.
+    Upscales various numeric indexes and boolean flags from a finer-resolution
+    GeoDataFrame to a coarser resolution based on an aggregation field.
 
     Numeric indexes are upscaled using an area-weighted average, and boolean fields are upscaled to be true (1) if any part of the aggregated unit contains a true value.
 
@@ -1720,7 +1623,111 @@ def upscale_indexes(gdf, field_upscale, field_area):
     return df_output
 
 
-def groupby(gdf, label, value, rename):
+def _fuzzify_indexes(output_folder, input_db, input_layer="apcac_bho5k"):
+    """
+    Applies a fuzzification function to a predefined list of index columns
+    in a GeoDataFrame, scaling their values between 0 and 1.
+
+    :param output_folder: Path to the directory where temporary and final output files will be stored.
+    :type output_folder: str
+    :param input_db: Path to the GeoPackage or database file containing the input vector layer.
+    :type input_db: str
+    :param input_layer: Name of the vector layer within the input database to be processed. Default value = "apcac_bho5k"
+    :type input_layer: str
+    :return: The file path to the final GeoPackage file, which contains the input layer with the new fuzzified index columns (e.g., ``t_f``, ``s_f``).
+    :rtype: str
+
+    **Notes**
+
+    The fuzzification is typically a linear scaling based on the minimum
+    and maximum values observed in each column.
+
+    **Script example**
+
+    .. code-block:: python
+
+        import importlib.util as iu
+
+        # define the paths to this module
+        # ----------------------------------------
+        the_module = "path/to/classes.py"
+
+        spec = iu.spec_from_file_location("module", the_module)
+        module = iu.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        # define the paths to input and output folders
+        # ----------------------------------------
+        input_dir = "path/to/input_folder"
+        output_dir = "path/to/output_folder"
+
+        # define the path to input database
+        # ----------------------------------------
+        input_db = f"{input_dir}/path/to/data.gpkg"
+
+
+        # call the function
+        # ----------------------------------------
+        output_file = module.fuzzify_indexes(
+            input_db=input_db,
+            output_folder=output_dir,
+            input_layer="apcac_bho5k",
+        )
+
+    """
+
+    # Startup
+    # -------------------------------------------------------------------
+    func_name = _fuzzify_indexes.__name__
+    print(f"running: {func_name}")
+
+    # Setup input variables
+    # -------------------------------------------------------------------
+    ls_fields = ["t", "s", "g", "c", "n", "v", "slope", "uslek"]
+
+    # Setup output variables
+    # -------------------------------------------------------------------
+
+    # folders
+    # -----------------------------------
+    os.makedirs(output_folder, exist_ok=True)
+    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
+
+    # files
+    # -----------------------------------
+    output_file = Path(f"{output_folder}/apcac.gpkg")
+
+    # variables
+    # -----------------------------------
+
+    # Run processes
+    # -------------------------------------------------------------------
+
+    # load data
+    # -----------------------------------
+    gdf = gpd.read_file(input_db, layer=input_layer)
+
+    # fuzzify fields
+    # -----------------------------------
+    for field in ls_fields:
+        field_lo = gdf[field].min()
+        field_up = gdf[field].max()
+        field_name_fuzzy = f"{field}_f"
+        gdf[field_name_fuzzy] = _fuzzify(gdf[field].values, field_lo, field_up)
+
+    # Export
+    # -------------------------------------------------------------------
+
+    # save
+    # -----------------------------------
+    _save_gdf(gdf, db=output_file, layer=input_layer)
+
+    print(f"run successfull. see for outputs:\n{output_folder}")
+
+    return output_file
+
+
+def _groupby(gdf, label, value, rename):
     """
     Groups a GeoDataFrame by a specified label, aggregates a value
     column by summing, and calculates the percentage of the total for the summed value.
@@ -1744,7 +1751,7 @@ def groupby(gdf, label, value, rename):
     return gdf_ups
 
 
-def summarise(gdf):
+def _summarise(gdf):
     """
     Summarizes catchment data by calculating the total area and percentage
     of area for each APCAC classification, both for a specific biome (Cerrado)
@@ -1764,7 +1771,7 @@ def summarise(gdf):
     # run biome scale analysis
     # -------------------------------------------------------------------
     gdf_main_cerrado = gdf.query("is_cerrado == 1")
-    gdf_grouped_bio = groupby(
+    gdf_grouped_bio = _groupby(
         gdf=gdf_main_cerrado,
         label="cd_apcac",
         value="nuareacont",
@@ -1773,7 +1780,7 @@ def summarise(gdf):
 
     # run full scale analysis
     # -------------------------------------------------------------------
-    gdf_grouped_zhi = groupby(
+    gdf_grouped_zhi = _groupby(
         gdf=gdf, label="cd_apcac", value="nuareacont", rename="zhi_area_km2"
     )
 
@@ -1789,7 +1796,7 @@ def summarise(gdf):
     return gdf_output
 
 
-def summarise_latex(df):
+def _summarise_latex(df):
     """
     Generates a full LaTeX table environment, including caption and formatting,
     from a summary DataFrame of APCAC classifications.
@@ -1929,12 +1936,12 @@ definida como o conjunto de bacias hidrográficas que intersectam o Cerrado.
 # =======================================================================
 
 
-def get_timestamp():
+def _get_timestamp():
     now = datetime.datetime.now()
     return str(now.strftime("%Y-%m-%dT%H%M%S"))
 
 
-def make_run_folder(output_folder, run_name):
+def _make_run_folder(output_folder, run_name):
     """
     Creates a unique, time-stamped run folder within a specified output directory.
 
@@ -1952,7 +1959,7 @@ def make_run_folder(output_folder, run_name):
 
     """
     while True:
-        ts = get_timestamp()
+        ts = _get_timestamp()
         folder_run = Path(output_folder) / f"{run_name}_{ts}"
         if os.path.exists(folder_run):
             time.sleep(1)
@@ -1963,7 +1970,7 @@ def make_run_folder(output_folder, run_name):
     return os.path.abspath(folder_run)
 
 
-def fuzzify(v, v_lo, v_up):
+def _fuzzify(v, v_lo, v_up):
     """
     Fuzzifies an array using a trapezoidal membership function, limiting values outside the bounds.
 
@@ -1983,7 +1990,7 @@ def fuzzify(v, v_lo, v_up):
 
     """
     # apply function
-    v_f = fuzzify_linear(v, v_lo, v_up)
+    v_f = _fuzzify_linear(v, v_lo, v_up)
     # get bounds
     v_lo_bool = np.where(v < v_lo, 0, 1)
     v_up_bool = np.where(v > v_up, 0, 1)
@@ -1991,7 +1998,7 @@ def fuzzify(v, v_lo, v_up):
     return v_f * v_lo_bool * v_up_bool
 
 
-def fuzzify_linear(v, v_lo=None, v_up=None):
+def _fuzzify_linear(v, v_lo=None, v_up=None):
     """
     Briefly fuzzifies a linear array using min-max scaling.
 
