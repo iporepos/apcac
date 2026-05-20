@@ -1,8 +1,8 @@
 {
-    "about": 0.02,
-    "api": 0.008,
-    "development": 0.039,
-    "generated/apcac.classes": 0.24,
+    "about": 0.019,
+    "api": 0.007,
+    "development": 0.035,
+    "generated/apcac.classes": 0.18,
     "generated/apcac.indexes": 0.04,
     "includes/ipsum": 0.001,
     "includes/logo": 0.002,
