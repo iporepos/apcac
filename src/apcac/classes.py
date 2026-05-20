@@ -1458,9 +1458,6 @@ def _classify_apcac(gdf):
     # Bin values
     gdf["cd_apcac_a"] = pd.cut(gdf["a"], bins=thresholds, labels=labels, right=False)
 
-
-
-
     # ecosystem risks
     # -------------------------------------------------------------------
 
@@ -1470,7 +1467,6 @@ def _classify_apcac(gdf):
 
     # risk in natural catchments
     gdf_n["cd_apcac_risk"] = np.where(gdf_n["v"] <= V1, "R", "")
-
 
     # risk in anthropic catchments
     # -------------------------------------------------------------------
@@ -1496,7 +1492,6 @@ def _classify_apcac(gdf):
 
     # concat
     gdf = pd.concat([gdf_r, gdf_rna, gdf_rnn]).reset_index(drop=True)
-
 
     # wrap up
     # -------------------------------------------------------------------
