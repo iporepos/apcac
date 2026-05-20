@@ -1193,13 +1193,13 @@ def compute_apcac(output_folder, input_db, input_layer="apcac_bho5k"):
     # compute apcac
     # -----------------------------------
     gdf = _classify_apcac(gdf)
-
     # Export
     # -------------------------------------------------------------------
 
     # save
     # -----------------------------------
     _save_gdf(gdf, db=output_file, layer=input_layer)
+
     print(f"run successfull. see for outputs:\n{output_folder}")
 
     return output_file
@@ -1433,19 +1433,17 @@ def _classify_apcac(gdf):
     Classifies catchments based on natural/anthropic,
     hydrology, and risk factors using a three-level system (APCAC).
 
-    :param gdf: GeoDataFrame containing catchment data with ``n``, ``a``, ``v``, and ``e`` columns for classification.
+    :param gdf: GeoDataFrame containing catchment data with ``n``, ``a``, ``c``, ``v``, and ``e`` columns for classification.
     :type gdf: :class:`geopandas.GeoDataFrame`
     :return: GeoDataFrame with added classification columns: ``cd_apcac_n``, ``id_apcac_n``, ``cd_apcac_a``, ``id_apcac_a``, ``cd_apcac_risk``, ``id_apcac_risk``, ``cd_apcac``, and ``id_apcac``.
     :rtype: :class:`geopandas.GeoDataFrame`
     """
-
-    # level 1 -- natural or anthropic
+    print("hello world!")
+    # natural or anthropic
     # -------------------------------------------------------------------
     gdf["cd_apcac_n"] = np.where(gdf["n"] >= N2, "I", "II")
-    gdf["id_apcac_n"] = np.where(gdf["n"] >= N2, 100, 200)
-    gdf["id_apcac_n"] = gdf["id_apcac_n"].astype(int)
 
-    # level 2 --- hydrology
+    # hydrology
     # -------------------------------------------------------------------
     gdf["a"] = gdf["a"].fillna(0)
     thresholds = [
@@ -1456,45 +1454,68 @@ def _classify_apcac(gdf):
         np.inf,
     ]
     labels = ["X", "C", "B", "A"]
-    labels_id = [40, 30, 20, 10]
+
     # Bin values
     gdf["cd_apcac_a"] = pd.cut(gdf["a"], bins=thresholds, labels=labels, right=False)
-    gdf["id_apcac_a"] = pd.cut(gdf["a"], bins=thresholds, labels=labels_id, right=False)
-    gdf["id_apcac_a"] = gdf["id_apcac_a"].astype(int)
+
+
+
+
+    # ecosystem risks
+    # -------------------------------------------------------------------
 
     # split
     gdf_n = gdf.query("cd_apcac_n == 'I'").copy()
     gdf_a = gdf.query("cd_apcac_n == 'II'").copy()
 
-    # level 3 --- special cases
-    # -------------------------------------------------------------------
     # risk in natural catchments
-    gdf_n["cd_apcac_risk"] = np.where(gdf_n["v"] <= V1, "R", "N")
-    gdf_n["id_apcac_risk"] = np.where(gdf_n["v"] <= V1, 2, 1)
-    gdf_n["id_apcac_risk"] = gdf_n["id_apcac_risk"].astype(int)
+    gdf_n["cd_apcac_risk"] = np.where(gdf_n["v"] <= V1, "R", "")
+
 
     # risk in anthropic catchments
     # -------------------------------------------------------------------
-    gdf_a["cd_apcac_risk"] = np.where(gdf_a["e"] > 0, "R", "N")
-    gdf_a["id_apcac_risk"] = np.where(gdf_a["e"] > 0, 2, 1)
-
-    # wrap up
-    # -------------------------------------------------------------------
+    gdf_a["cd_apcac_risk"] = np.where(gdf_a["e"] > 0, "R", "")
 
     # concat
     gdf = pd.concat([gdf_n, gdf_a]).reset_index(drop=True)
+
+    # climate risks
+    # -------------------------------------------------------------------
+
+    # split
+    gdf_r = gdf.query("cd_apcac_risk == 'R'").copy()
+    gdf_rn = gdf.query("cd_apcac_risk != 'R'").copy()
+
+    gdf_r["cd_apcac_c"] = ""
+
+    gdf_rna = gdf_rn.query("cd_apcac_n == 'II'").copy()
+    gdf_rnn = gdf_rn.query("cd_apcac_n != 'II'").copy()
+
+    gdf_rnn["cd_apcac_c"] = ""
+    gdf_rna["cd_apcac_c"] = np.where(gdf_rna["c"] <= 0, "C", "")
+
+    # concat
+    gdf = pd.concat([gdf_r, gdf_rna, gdf_rnn]).reset_index(drop=True)
+
+
+    # wrap up
+    # -------------------------------------------------------------------
 
     # concat columns
     gdf["cd_apcac"] = (
         gdf["cd_apcac_n"].astype(str)
         + gdf["cd_apcac_a"].astype(str)
         + gdf["cd_apcac_risk"].astype(str)
+        + gdf["cd_apcac_c"].astype(str)
     )
-    gdf["id_apcac"] = (
-        gdf["id_apcac_n"].values
-        + gdf["id_apcac_a"].values
-        + gdf["id_apcac_risk"].values
-    )
+
+    # if regular X and C: overwrite classe to XC
+    # split
+    gdf_x = gdf.query("cd_apcac_a == 'X'").copy()
+    gdf_xn = gdf.query("cd_apcac_a != 'X'").copy()
+
+    gdf_x["cd_apcac"] = np.where(gdf_x["c"] <= 0, "XC", gdf_x["cd_apcac"].values)
+    gdf = pd.concat([gdf_x, gdf_xn]).reset_index(drop=True)
 
     return gdf
 
