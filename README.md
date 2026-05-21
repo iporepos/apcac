@@ -11,28 +11,38 @@
 
 # APCAC
 
-This repository aims to organize the processing workflow for the classification of  
+This repository organizes the processing workflow for the classification of
 APCAC – *Priority Areas for Water Conservation* in the Cerrado biome in Brazil.
+It is intended for researchers and environmental analysts working with geospatial
+data in the QGIS environment.
 
 > [!NOTE]
 > Check out the [documentation website](https://iporepos.github.io/apcac/) for more details.
 
-# Installation
+## Installation
 
-The Python modules maintained here are developed for the [QGIS 3](https://qgis.org/download/) environment.  
-QGIS 3 should be installed in advanced mode, so that the following Python libraries are included:
+The Python modules maintained here are developed for the [QGIS 3](https://qgis.org/download/) environment.
+Install QGIS 3 in **advanced mode** so that the following Python libraries are included:
 
-- numpy  
-- pandas  
+- numpy
+- pandas
 - geopandas
 
+> [!TIP]
+> See the [QGIS installation guide](https://qgis.org/resources/installation-guide/) for instructions on
+> installing QGIS with the advanced (OSGeo4W) installer, which bundles the required Python libraries.
 
-# Running routines
+Once QGIS is installed, clone this repository:
 
-The routines are developed as Python functions.  
-These functions must be executed through the QGIS Python Script tool,  
+```bash
+git clone https://github.com/iporepos/apcac.git
+```
+
+## Running routines
+
+The routines are developed as Python functions.
+These functions must be executed through the QGIS Python Script tool,
 using scripts with the following structure:
-
 
 ```python
 # use the importlib library
@@ -52,12 +62,7 @@ module.process_data(
 )
 ```
 
-> [!NOTE]
-> Check out the [documentation website](https://iporepos.github.io/apcac/) for more details.
-
----
-
-# Repo layout
+## Repo layout
 
 
 ```txt
@@ -73,11 +78,16 @@ apcac/
 │    └── apcac/                   # source code root
 │         ├── indexes.py          # module for handling indexes maps
 │         ├── classes.py          # module for handling APCAC classification
-│         └── data/               # run-time data
+│         └── data/               # run-time reference data (e.g. biome boundaries, lookup tables)
 │
 ├── tests/                        # testing code folder
 └── docs/                         # documentation folder
-
-         
-
 ```
+
+## Contributing
+
+Contributions are welcome. Please open an issue to discuss proposed changes before submitting a pull request.
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
