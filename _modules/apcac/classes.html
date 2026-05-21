@@ -478,9 +478,6 @@
 <span class="sd">    )</span>
 
 
-<span class="sd">Documentation</span>
-<span class="sd">--------------</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># IMPORTS</span>
 <span class="c1"># ***********************************************************************</span>
@@ -514,6 +511,7 @@
 <span class="c1"># ***********************************************************************</span>
 <span class="c1"># define constants in uppercase</span>
 
+<span class="c1"># Fields carried through from the source BHO layer into every output</span>
 <span class="n">FIELDS_BASE</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;idbacia&quot;</span><span class="p">,</span>
     <span class="s2">&quot;cotrecho&quot;</span><span class="p">,</span>
@@ -535,14 +533,22 @@
     <span class="s2">&quot;is_zhi&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
+<span class="c1"># Raster index keys expected to be present after sampling</span>
 <span class="n">FIELDS_INDEXES_INPUTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;slope&quot;</span><span class="p">,</span> <span class="s2">&quot;uslek&quot;</span><span class="p">]</span>
 
+<span class="c1"># n threshold above which a catchment is classified as predominantly natural (%)</span>
 <span class="n">N2</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="c1"># n threshold below which a catchment is considered to have conservation risk (%)</span>
 <span class="n">N1</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="c1"># v threshold at or below which a natural catchment carries anthropic pressure risk</span>
 <span class="n">V1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+<span class="c1"># slope threshold (degrees) above which erosion risk is flagged</span>
 <span class="n">SLOPE_THRESHOLD</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="c1"># USLE-K erodibility threshold above which erosion risk is flagged</span>
 <span class="n">USLEK_THRESHOLD</span> <span class="o">=</span> <span class="mf">0.03</span>
 
+<span class="c1"># Percentile breakpoints for the hydrology importance index (a)</span>
+<span class="c1"># A1/A2/A3 define the boundaries between classes X, C, B, and A</span>
 <span class="n">A1</span> <span class="o">=</span> <span class="mi">60</span>
 <span class="n">A2</span> <span class="o">=</span> <span class="mi">90</span>
 <span class="n">A3</span> <span class="o">=</span> <span class="mi">98</span>
@@ -1280,7 +1286,8 @@
 <span class="sd">    :param input_db: Path to the GeoPackage or database file containing the input vector layer.</span>
 <span class="sd">    :type input_db: str</span>
 <span class="sd">    :param input_layer: Name of the vector layer within the input database to be processed. Default value = &quot;apcac_bho5k&quot;</span>
-<span class="sd">    :type n_threshold: [optional] The maximum ``n`` value (vegetation index) considered to indicate risk. Default value = N1</span>
+<span class="sd">    :type input_layer: str</span>
+<span class="sd">    :param n_threshold: [optional] The maximum ``n`` value (vegetation index) considered to indicate risk. Default value = N1</span>
 <span class="sd">    :type n_threshold: float</span>
 <span class="sd">    :param slope_threshold: [optional] The minimum ``slope`` value considered to indicate risk. Default value = SLOPE_THRESHOLD</span>
 <span class="sd">    :type slope_threshold: float</span>
@@ -1846,7 +1853,6 @@
 <span class="sd">    :return: GeoDataFrame with added classification columns: ``cd_apcac_n``, ``id_apcac_n``, ``cd_apcac_a``, ``id_apcac_a``, ``cd_apcac_risk``, ``id_apcac_risk``, ``cd_apcac``, and ``id_apcac``.</span>
 <span class="sd">    :rtype: :class:`geopandas.GeoDataFrame`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hello world!&quot;</span><span class="p">)</span>
     <span class="c1"># natural or anthropic</span>
     <span class="c1"># -------------------------------------------------------------------</span>
     <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;II&quot;</span><span class="p">)</span>
@@ -2023,7 +2029,6 @@
     <span class="c1"># area</span>
     <span class="c1"># -------------------------------------------------------------------</span>
     <span class="n">df_area</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">field_upscale</span><span class="p">)[</span><span class="n">field_area</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="c1"># df_area.rename(columns={field_area: }, inplace=True)</span>
     <span class="n">ls_dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_area</span><span class="p">)</span>
 
     <span class="c1"># booleans loop</span>
@@ -2031,11 +2036,6 @@
     <span class="n">bool_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;is_cerrado&quot;</span><span class="p">,</span> <span class="s2">&quot;is_zhi&quot;</span><span class="p">]</span>
     <span class="n">df_bool</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">field_upscale</span><span class="p">)[</span><span class="n">bool_fields</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="n">df_bool</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_bool</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="n">dc</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;is_cerrado_sum&quot;</span><span class="p">:</span> <span class="s2">&quot;is_cerrado&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;is_zhi_sum&quot;</span><span class="p">:</span> <span class="s2">&quot;is_zhi&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="c1"># df_bool.rename(columns=dc, inplace=True)</span>
     <span class="n">ls_dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_bool</span><span class="p">)</span>
 
     <span class="c1"># merger loop</span>
@@ -2063,40 +2063,9 @@
 
 <span class="sd">    **Notes**</span>
 
-<span class="sd">    The fuzzification is typically a linear scaling based on the minimum</span>
-<span class="sd">    and maximum values observed in each column.</span>
-
-<span class="sd">    **Script example**</span>
-
-<span class="sd">    .. code-block:: python</span>
-
-<span class="sd">        import importlib.util as iu</span>
-
-<span class="sd">        # define the paths to this module</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
-
-<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
-<span class="sd">        module = iu.module_from_spec(spec)</span>
-<span class="sd">        spec.loader.exec_module(module)</span>
-
-<span class="sd">        # define the paths to input and output folders</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
-<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
-
-<span class="sd">        # define the path to input database</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        input_db = f&quot;{input_dir}/path/to/data.gpkg&quot;</span>
-
-
-<span class="sd">        # call the function</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        output_file = module.fuzzify_indexes(</span>
-<span class="sd">            input_db=input_db,</span>
-<span class="sd">            output_folder=output_dir,</span>
-<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
-<span class="sd">        )</span>
+<span class="sd">    The fuzzification is a linear min-max scaling based on the minimum</span>
+<span class="sd">    and maximum values observed in each column. This is an internal function</span>
+<span class="sd">    called automatically by the workflow orchestrators.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2361,6 +2330,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_timestamp</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the current date and time as a compact ISO-style string (``YYYY-MM-DDTHHMMSS``).&quot;&quot;&quot;</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H%M%S&quot;</span><span class="p">))</span>
 
@@ -2424,7 +2394,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_fuzzify_linear</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v_lo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">v_up</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Briefly fuzzifies a linear array using min-max scaling.</span>
+<span class="sd">    Linearly fuzzifies an array using min-max scaling.</span>
 
 
 <span class="sd">    :param v: The input array of values to fuzzify.</span>

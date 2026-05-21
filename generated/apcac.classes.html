@@ -494,9 +494,6 @@ customized analyses.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
@@ -829,7 +826,8 @@ conditions: low <code class="docutils literal notranslate"><span class="pre">n</
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>output_folder</strong> (<em>str</em>) – Path to the directory where temporary and final output files will be stored.</p></li>
 <li><p><strong>input_db</strong> (<em>str</em>) – Path to the GeoPackage or database file containing the input vector layer.</p></li>
-<li><p><strong>input_layer</strong> – Name of the vector layer within the input database to be processed. Default value = “apcac_bho5k”</p></li>
+<li><p><strong>input_layer</strong> (<em>str</em>) – Name of the vector layer within the input database to be processed. Default value = “apcac_bho5k”</p></li>
+<li><p><strong>n_threshold</strong> (<em>float</em>) – [optional] The maximum <code class="docutils literal notranslate"><span class="pre">n</span></code> value (vegetation index) considered to indicate risk. Default value = N1</p></li>
 <li><p><strong>slope_threshold</strong> (<em>float</em>) – [optional] The minimum <code class="docutils literal notranslate"><span class="pre">slope</span></code> value considered to indicate risk. Default value = SLOPE_THRESHOLD</p></li>
 <li><p><strong>uslek_threshold</strong> (<em>float</em>) – [optional] The minimum <code class="docutils literal notranslate"><span class="pre">uslek</span></code> value (soil erodibility) considered to indicate risk. Default value = USLEK_THRESHOLD</p></li>
 </ul>
@@ -1148,7 +1146,6 @@ and saves the resulting LaTeX code to a .tex file.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#script-example">Script Example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.analysis_apcac"><code class="docutils literal notranslate"><span class="pre">analysis_apcac()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.analysis_apcac_upscaled"><code class="docutils literal notranslate"><span class="pre">analysis_apcac_upscaled()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.classes.sample_indexes"><code class="docutils literal notranslate"><span class="pre">sample_indexes()</span></code></a></li>
