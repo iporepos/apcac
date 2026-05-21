@@ -97,9 +97,6 @@ The following script runs a full ``APCAC`` analysis:
     )
 
 
-Documentation
---------------
-
 """
 # IMPORTS
 # ***********************************************************************
@@ -133,6 +130,7 @@ import processing
 # ***********************************************************************
 # define constants in uppercase
 
+# Fields carried through from the source BHO layer into every output
 FIELDS_BASE = [
     "idbacia",
     "cotrecho",
@@ -154,14 +152,22 @@ FIELDS_BASE = [
     "is_zhi",
 ]
 
+# Raster index keys expected to be present after sampling
 FIELDS_INDEXES_INPUTS = ["t", "s", "g", "c", "n", "v", "slope", "uslek"]
 
+# n threshold above which a catchment is classified as predominantly natural (%)
 N2 = 60
+# n threshold below which a catchment is considered to have conservation risk (%)
 N1 = 10
+# v threshold at or below which a natural catchment carries anthropic pressure risk
 V1 = -2
+# slope threshold (degrees) above which erosion risk is flagged
 SLOPE_THRESHOLD = 5
+# USLE-K erodibility threshold above which erosion risk is flagged
 USLEK_THRESHOLD = 0.03
 
+# Percentile breakpoints for the hydrology importance index (a)
+# A1/A2/A3 define the boundaries between classes X, C, B, and A
 A1 = 60
 A2 = 90
 A3 = 98
@@ -885,7 +891,8 @@ def compute_index_e(
     :param input_db: Path to the GeoPackage or database file containing the input vector layer.
     :type input_db: str
     :param input_layer: Name of the vector layer within the input database to be processed. Default value = "apcac_bho5k"
-    :type n_threshold: [optional] The maximum ``n`` value (vegetation index) considered to indicate risk. Default value = N1
+    :type input_layer: str
+    :param n_threshold: [optional] The maximum ``n`` value (vegetation index) considered to indicate risk. Default value = N1
     :type n_threshold: float
     :param slope_threshold: [optional] The minimum ``slope`` value considered to indicate risk. Default value = SLOPE_THRESHOLD
     :type slope_threshold: float
@@ -1438,7 +1445,6 @@ def _classify_apcac(gdf):
     :return: GeoDataFrame with added classification columns: ``cd_apcac_n``, ``id_apcac_n``, ``cd_apcac_a``, ``id_apcac_a``, ``cd_apcac_risk``, ``id_apcac_risk``, ``cd_apcac``, and ``id_apcac``.
     :rtype: :class:`geopandas.GeoDataFrame`
     """
-    print("hello world!")
     # natural or anthropic
     # -------------------------------------------------------------------
     gdf["cd_apcac_n"] = np.where(gdf["n"] >= N2, "I", "II")
@@ -1615,7 +1621,6 @@ def _upscale_indexes(gdf, field_upscale, field_area):
     # area
     # -------------------------------------------------------------------
     df_area = gdf.groupby(field_upscale)[field_area].sum().reset_index()
-    # df_area.rename(columns={field_area: }, inplace=True)
     ls_dfs.append(df_area)
 
     # booleans loop
@@ -1623,11 +1628,6 @@ def _upscale_indexes(gdf, field_upscale, field_area):
     bool_fields = ["is_cerrado", "is_zhi"]
     df_bool = gdf.groupby(field_upscale)[bool_fields].sum()
     df_bool = (df_bool > 0).astype(int).reset_index()
-    dc = {
-        "is_cerrado_sum": "is_cerrado",
-        "is_zhi_sum": "is_zhi",
-    }
-    # df_bool.rename(columns=dc, inplace=True)
     ls_dfs.append(df_bool)
 
     # merger loop
@@ -1655,40 +1655,9 @@ def _fuzzify_indexes(output_folder, input_db, input_layer="apcac_bho5k"):
 
     **Notes**
 
-    The fuzzification is typically a linear scaling based on the minimum
-    and maximum values observed in each column.
-
-    **Script example**
-
-    .. code-block:: python
-
-        import importlib.util as iu
-
-        # define the paths to this module
-        # ----------------------------------------
-        the_module = "path/to/classes.py"
-
-        spec = iu.spec_from_file_location("module", the_module)
-        module = iu.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
-        # define the paths to input and output folders
-        # ----------------------------------------
-        input_dir = "path/to/input_folder"
-        output_dir = "path/to/output_folder"
-
-        # define the path to input database
-        # ----------------------------------------
-        input_db = f"{input_dir}/path/to/data.gpkg"
-
-
-        # call the function
-        # ----------------------------------------
-        output_file = module.fuzzify_indexes(
-            input_db=input_db,
-            output_folder=output_dir,
-            input_layer="apcac_bho5k",
-        )
+    The fuzzification is a linear min-max scaling based on the minimum
+    and maximum values observed in each column. This is an internal function
+    called automatically by the workflow orchestrators.
 
     """
 
@@ -1953,6 +1922,7 @@ definida como o conjunto de bacias hidrográficas que intersectam o Cerrado.
 
 
 def _get_timestamp():
+    """Returns the current date and time as a compact ISO-style string (``YYYY-MM-DDTHHMMSS``)."""
     now = datetime.datetime.now()
     return str(now.strftime("%Y-%m-%dT%H%M%S"))
 
@@ -2016,7 +1986,7 @@ def _fuzzify(v, v_lo, v_up):
 
 def _fuzzify_linear(v, v_lo=None, v_up=None):
     """
-    Briefly fuzzifies a linear array using min-max scaling.
+    Linearly fuzzifies an array using min-max scaling.
 
 
     :param v: The input array of values to fuzzify.
