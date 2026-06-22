@@ -17,7 +17,7 @@
       compute_index_v
       fuzzify
       get_timestamp
-      make_run_folder
       process_data
+      sample_indexes
       waiter
    

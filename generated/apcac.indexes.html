@@ -27,17 +27,17 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=a95f357e85573c9b56d5"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
     <script src="../_static/documentation_options.js?v=d45e8c67"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
@@ -464,11 +464,11 @@ todo docstring</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apcac.indexes.get_timestamp" title="apcac.indexes.get_timestamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_timestamp</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apcac.indexes.make_run_folder" title="apcac.indexes.make_run_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_run_folder</span></code></a>(run_name, folder_outputs)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.indexes.process_data" title="apcac.indexes.process_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_data</span></code></a>(input1, input2, output_folder)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#apcac.indexes.process_data" title="apcac.indexes.process_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_data</span></code></a>(input1, input2, output_folder)</p></td>
 <td><p>Demo for processing data</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#apcac.indexes.sample_indexes" title="apcac.indexes.sample_indexes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_indexes</span></code></a>(output_folder, input_db, ...)</p></td>
+<td><p>Samples mean values from multiple raster files over a vector layer (e.g., catchments) and merges the results into a GeoDataFrame.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#apcac.indexes.waiter" title="apcac.indexes.waiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waiter</span></code></a>()</p></td>
 <td><p></p></td>
@@ -513,6 +513,87 @@ todo docstring</p>
 <dd></dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="apcac.indexes.sample_indexes">
+<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">sample_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raster_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'apcac_bho5k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raster_multipliers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#sample_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.sample_indexes" title="Link to this definition">#</a></dt>
+<dd><p>Samples mean values from multiple raster files over a vector layer
+(e.g., catchments) and merges the results into a GeoDataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_folder</strong> (<em>str</em>) – Path to the directory where temporary and final output files will be stored.</p></li>
+<li><p><strong>input_db</strong> (<em>str</em>) – Path to the GeoPackage or database file containing the input vector layer.</p></li>
+<li><p><strong>raster_files</strong> (<em>dict</em>) – Dictionary where keys are the desired column names (index names) and values are the full paths to the corresponding raster files.</p></li>
+<li><p><strong>input_layer</strong> (<em>str</em>) – Name of the vector layer within the input database to use for zonal statistics. Default value = “apcac_bho5k”</p></li>
+<li><p><strong>raster_multipliers</strong> (<em>dict</em>) – [optional] Dictionary where keys are the index names (from <code class="docutils literal notranslate"><span class="pre">raster_files</span></code>) and values are factors by which the sampled mean values should be divided (e.g., to convert units).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The file path to the final GeoPackage file containing the input layer with the new sampled index columns.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p><strong>Notes</strong></p>
+<p>The process uses QGIS’s native zonal statistics algorithm (<code class="docutils literal notranslate"><span class="pre">native:zonalstatisticsfb</span></code>)
+to calculate the mean of each raster within the polygons of the input vector layer.</p>
+<p><strong>Script example</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">iu</span>
+
+<span class="c1"># define the paths to this module</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">the_module</span> <span class="o">=</span> <span class="s2">&quot;path/to/classes.py&quot;</span>
+
+<span class="n">spec</span> <span class="o">=</span> <span class="n">iu</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="n">the_module</span><span class="p">)</span>
+<span class="n">module</span> <span class="o">=</span> <span class="n">iu</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+<span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+
+<span class="c1"># define the paths to input and output folders</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">input_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/input_folder&quot;</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;path/to/output_folder&quot;</span>
+
+<span class="c1"># define the path to input database</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">input_db</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/path/to/data.gpkg&quot;</span>
+
+<span class="c1"># define the paths to input rasters</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">raster_files</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># change this paths</span>
+    <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/path/to/raster_t.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/path/to/raster_s.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;g&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/path/to/raster_g.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/path/to/raster_c.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/path/to/raster_n.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;v&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/path/to/raster_v.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;slope&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/path/to/raster_slope.tif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;uslek&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">/path/to/raster_uslek.tif&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># define which index has multipliers (the value is divided)</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">raster_multipliers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s2">&quot;slope&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="c1"># change and add more if needed</span>
+<span class="p">}</span>
+
+<span class="c1"># call the function</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="n">module</span><span class="o">.</span><span class="n">sample_indexes</span><span class="p">(</span>
+    <span class="n">input_db</span><span class="o">=</span><span class="n">input_db</span><span class="p">,</span>
+    <span class="n">raster_files</span><span class="o">=</span><span class="n">raster_files</span><span class="p">,</span>
+    <span class="n">output_folder</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+    <span class="n">raster_multipliers</span><span class="o">=</span><span class="n">raster_multipliers</span><span class="p">,</span>
+    <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="apcac.indexes.process_data">
 <span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">process_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#process_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.process_data" title="Link to this definition">#</a></dt>
 <dd><p>Demo for processing data</p>
@@ -540,11 +621,6 @@ todo docstring</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="apcac.indexes.get_timestamp">
 <span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">get_timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#get_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.get_timestamp" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="apcac.indexes.make_run_folder">
-<span class="sig-prename descclassname"><span class="pre">apcac.indexes.</span></span><span class="sig-name descname"><span class="pre">make_run_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_outputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apcac/indexes.html#make_run_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apcac.indexes.make_run_folder" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -606,11 +682,11 @@ todo docstring</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_index_g"><code class="docutils literal notranslate"><span class="pre">compute_index_g()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_index_s"><code class="docutils literal notranslate"><span class="pre">compute_index_s()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.compute_index_t"><code class="docutils literal notranslate"><span class="pre">compute_index_t()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.sample_indexes"><code class="docutils literal notranslate"><span class="pre">sample_indexes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.process_data"><code class="docutils literal notranslate"><span class="pre">process_data()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.fuzzify"><code class="docutils literal notranslate"><span class="pre">fuzzify()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.waiter"><code class="docutils literal notranslate"><span class="pre">waiter()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.get_timestamp"><code class="docutils literal notranslate"><span class="pre">get_timestamp()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apcac.indexes.make_run_folder"><code class="docutils literal notranslate"><span class="pre">make_run_folder()</span></code></a></li>
 </ul>
   </nav></div>
 
@@ -636,8 +712,8 @@ todo docstring</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -671,7 +747,7 @@ todo docstring</p>
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.19.0.
 </p></div>
       
     </div>

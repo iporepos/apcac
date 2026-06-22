@@ -10,11 +10,13 @@
    
       analysis_apcac
       analysis_apcac_upscaled
+      classify_apcac
       compute_apcac
       compute_apcac_stats
+      compute_e
+      compute_e2
       compute_index_a
       compute_index_e
       compute_upscaled_indexes
       get_latex_table
-      sample_indexes
    

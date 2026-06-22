@@ -26,17 +26,17 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=a95f357e85573c9b56d5"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
     <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -479,6 +479,7 @@
 
 
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="c1"># IMPORTS</span>
 <span class="c1"># ***********************************************************************</span>
 <span class="c1"># import modules from other libs</span>
@@ -488,7 +489,9 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">datetime</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">dropwhile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tkinter.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">RAISED</span>
 
 <span class="c1"># ... {develop}</span>
 
@@ -497,7 +500,6 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">processing</span>
 
 <span class="c1"># ... {develop}</span>
 
@@ -534,7 +536,7 @@
 <span class="p">]</span>
 
 <span class="c1"># Raster index keys expected to be present after sampling</span>
-<span class="n">FIELDS_INDEXES_INPUTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;slope&quot;</span><span class="p">,</span> <span class="s2">&quot;uslek&quot;</span><span class="p">]</span>
+<span class="n">FIELDS_INDEXES_INPUTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;slope&quot;</span><span class="p">,</span> <span class="s2">&quot;uslek&quot;</span><span class="p">,</span> <span class="s2">&quot;erosion&quot;</span><span class="p">]</span>
 
 <span class="c1"># n threshold above which a catchment is classified as predominantly natural (%)</span>
 <span class="n">N2</span> <span class="o">=</span> <span class="mi">60</span>
@@ -546,12 +548,14 @@
 <span class="n">SLOPE_THRESHOLD</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="c1"># USLE-K erodibility threshold above which erosion risk is flagged</span>
 <span class="n">USLEK_THRESHOLD</span> <span class="o">=</span> <span class="mf">0.03</span>
+<span class="c1"># Erosion factor threshold above which erosion risk is flagged</span>
+<span class="n">EROSION_THRESHOLD</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># considering a scale from 1 to 5</span>
 
 <span class="c1"># Percentile breakpoints for the hydrology importance index (a)</span>
 <span class="c1"># A1/A2/A3 define the boundaries between classes X, C, B, and A</span>
 <span class="n">A1</span> <span class="o">=</span> <span class="mi">60</span>
 <span class="n">A2</span> <span class="o">=</span> <span class="mi">90</span>
-<span class="n">A3</span> <span class="o">=</span> <span class="mi">98</span>
+<span class="n">A3</span> <span class="o">=</span> <span class="mi">95</span>
 
 <span class="n">APCAC_LABELS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;cd_apcac&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -995,175 +999,6 @@
 <span class="c1"># =======================================================================</span>
 
 
-<div class="viewcode-block" id="sample_indexes">
-<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.sample_indexes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sample_indexes</span><span class="p">(</span>
-    <span class="n">output_folder</span><span class="p">,</span>
-    <span class="n">input_db</span><span class="p">,</span>
-    <span class="n">raster_files</span><span class="p">,</span>
-    <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span>
-    <span class="n">raster_multipliers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Samples mean values from multiple raster files over a vector layer</span>
-<span class="sd">    (e.g., catchments) and merges the results into a GeoDataFrame.</span>
-
-<span class="sd">    :param output_folder: Path to the directory where temporary and final output files will be stored.</span>
-<span class="sd">    :type output_folder: str</span>
-<span class="sd">    :param input_db: Path to the GeoPackage or database file containing the input vector layer.</span>
-<span class="sd">    :type input_db: str</span>
-<span class="sd">    :param raster_files: Dictionary where keys are the desired column names (index names) and values are the full paths to the corresponding raster files.</span>
-<span class="sd">    :type raster_files: dict</span>
-<span class="sd">    :param input_layer: Name of the vector layer within the input database to use for zonal statistics. Default value = &quot;apcac_bho5k&quot;</span>
-<span class="sd">    :type input_layer: str</span>
-<span class="sd">    :param raster_multipliers: [optional] Dictionary where keys are the index names (from ``raster_files``) and values are factors by which the sampled mean values should be divided (e.g., to convert units).</span>
-<span class="sd">    :type raster_multipliers: dict</span>
-<span class="sd">    :return: The file path to the final GeoPackage file containing the input layer with the new sampled index columns.</span>
-<span class="sd">    :rtype: str</span>
-
-<span class="sd">    **Notes**</span>
-
-<span class="sd">    The process uses QGIS&#39;s native zonal statistics algorithm (``native:zonalstatisticsfb``)</span>
-<span class="sd">    to calculate the mean of each raster within the polygons of the input vector layer.</span>
-
-
-<span class="sd">    **Script example**</span>
-
-<span class="sd">    .. code-block:: python</span>
-
-<span class="sd">        import importlib.util as iu</span>
-
-<span class="sd">        # define the paths to this module</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        the_module = &quot;path/to/classes.py&quot;</span>
-
-<span class="sd">        spec = iu.spec_from_file_location(&quot;module&quot;, the_module)</span>
-<span class="sd">        module = iu.module_from_spec(spec)</span>
-<span class="sd">        spec.loader.exec_module(module)</span>
-
-<span class="sd">        # define the paths to input and output folders</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        input_dir = &quot;path/to/input_folder&quot;</span>
-<span class="sd">        output_dir = &quot;path/to/output_folder&quot;</span>
-
-<span class="sd">        # define the path to input database</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        input_db = f&quot;{input_dir}/path/to/data.gpkg&quot;</span>
-
-<span class="sd">        # define the paths to input rasters</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        raster_files = {</span>
-<span class="sd">            # change this paths</span>
-<span class="sd">            &quot;t&quot;: f&quot;{input_dir}/path/to/raster_t.tif&quot;,</span>
-<span class="sd">            &quot;s&quot;: f&quot;{input_dir}/path/to/raster_s.tif&quot;,</span>
-<span class="sd">            &quot;g&quot;: f&quot;{input_dir}/path/to/raster_g.tif&quot;,</span>
-<span class="sd">            &quot;c&quot;: f&quot;{input_dir}/path/to/raster_c.tif&quot;,</span>
-<span class="sd">            &quot;n&quot;: f&quot;{input_dir}/path/to/raster_n.tif&quot;,</span>
-<span class="sd">            &quot;v&quot;: f&quot;{input_dir}/path/to/raster_v.tif&quot;,</span>
-<span class="sd">            &quot;slope&quot;: f&quot;{input_dir}/path/to/raster_slope.tif&quot;,</span>
-<span class="sd">            &quot;uslek&quot;: f&quot;{input_dir}/path/to/raster_uslek.tif&quot;,</span>
-<span class="sd">        }</span>
-
-<span class="sd">        # define which index has multipliers (the value is divided)</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        raster_multipliers = {</span>
-<span class="sd">            &quot;t&quot;: 1000,</span>
-<span class="sd">            &quot;s&quot;: 100,</span>
-<span class="sd">            &quot;slope&quot;: 100,</span>
-<span class="sd">            # change and add more if needed</span>
-<span class="sd">        }</span>
-
-<span class="sd">        # call the function</span>
-<span class="sd">        # ----------------------------------------</span>
-<span class="sd">        module.sample_indexes(</span>
-<span class="sd">            input_db=input_db,</span>
-<span class="sd">            raster_files=raster_files,</span>
-<span class="sd">            output_folder=output_dir,</span>
-<span class="sd">            raster_multipliers=raster_multipliers,</span>
-<span class="sd">            input_layer=&quot;apcac_bho5k&quot;,</span>
-<span class="sd">        )</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># Startup</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">func_name</span> <span class="o">=</span> <span class="n">sample_indexes</span><span class="o">.</span><span class="vm">__name__</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running: </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Setup input variables</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">ls_input_indexes</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="c1"># Setup output variables</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-
-    <span class="c1"># folders</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">_make_run_folder</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">)</span>
-
-    <span class="c1"># files</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">/apcac.gpkg&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Run processes</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-
-    <span class="c1"># sampling loop</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">raster_files</span><span class="p">:</span>
-        <span class="n">index_name</span> <span class="o">=</span> <span class="n">index</span><span class="p">[:]</span>
-        <span class="n">index_file</span> <span class="o">=</span> <span class="n">raster_files</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt;&gt; sampling </span><span class="si">{</span><span class="n">index_name</span><span class="si">}</span><span class="s2"> from </span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">index_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="n">processing</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-            <span class="s2">&quot;native:zonalstatisticsfb&quot;</span><span class="p">,</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;INPUT&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">|layername=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="p">),</span>
-                <span class="s2">&quot;INPUT_RASTER&quot;</span><span class="p">:</span> <span class="n">index_file</span><span class="p">,</span>
-                <span class="s2">&quot;RASTER_BAND&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="s2">&quot;COLUMN_PREFIX&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">index_name</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;STATISTICS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                <span class="s2">&quot;OUTPUT&quot;</span><span class="p">:</span> <span class="s2">&quot;ogr:dbname=&#39;</span><span class="si">{}</span><span class="s2">&#39; table=</span><span class="se">\&quot;</span><span class="si">{}</span><span class="se">\&quot;</span><span class="s2"> (geom)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">output_file</span><span class="p">,</span> <span class="n">index_name</span>
-                <span class="p">),</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
-        <span class="n">ls_input_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index_name</span><span class="p">)</span>
-
-    <span class="c1"># load data</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">input_db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">FIELDS_BASE</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="c1"># organization loop</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">ls_input_indexes</span><span class="p">:</span>
-        <span class="n">gdf_index</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
-        <span class="n">gdf_index</span> <span class="o">=</span> <span class="n">gdf_index</span><span class="p">[[</span><span class="s2">&quot;cobacia&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">_mean&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">gdf_index</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">_mean&quot;</span><span class="p">:</span> <span class="n">index</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">gdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">gdf_index</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;cobacia&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
-
-    <span class="c1"># handle optional multipliers</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="k">if</span> <span class="n">raster_multipliers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">raster_multipliers</span><span class="p">:</span>
-            <span class="n">gdf</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">/</span> <span class="n">raster_multipliers</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-
-    <span class="c1"># Export</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-
-    <span class="c1"># save</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
-    <span class="n">_save_gdf</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">input_layer</span><span class="p">)</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run successfull. see for outputs:</span><span class="se">\n</span><span class="si">{</span><span class="n">output_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">output_file</span></div>
-
-
-
 <div class="viewcode-block" id="compute_index_a">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.compute_index_a">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_index_a</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
@@ -1275,6 +1110,8 @@
     <span class="n">n_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">slope_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">uslek_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">erosion_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_e2</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes the binary ``e`` (erosion/degradation risk) index, classifying areas</span>
@@ -1293,6 +1130,8 @@
 <span class="sd">    :type slope_threshold: float</span>
 <span class="sd">    :param uslek_threshold: [optional] The minimum ``uslek`` value (soil erodibility) considered to indicate risk. Default value = USLEK_THRESHOLD</span>
 <span class="sd">    :type uslek_threshold: float</span>
+<span class="sd">    :param erosion_threshold: [optional] The minimum ``erosion`` value (user defined) considered to indicate risk. Default value = EROSION_THRESHOLD</span>
+<span class="sd">    :type erosion_threshold: float</span>
 <span class="sd">    :return: The file path to the final GeoPackage file, which contains the input layer with the new boolean risk columns (``is_risk_n``, ``is_risk_slope``, ``is_risk_uslek``) and the final ``e`` index.</span>
 <span class="sd">    :rtype: str</span>
 
@@ -1357,12 +1196,17 @@
 
     <span class="c1"># classify</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">_compute_e</span><span class="p">(</span>
-        <span class="n">gdf</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span>
-        <span class="n">n_threshold</span><span class="o">=</span><span class="n">n_threshold</span><span class="p">,</span>
-        <span class="n">slope_threshold</span><span class="o">=</span><span class="n">slope_threshold</span><span class="p">,</span>
-        <span class="n">uslek_threshold</span><span class="o">=</span><span class="n">uslek_threshold</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_e2</span><span class="p">:</span>
+        <span class="n">gdf</span> <span class="o">=</span> <span class="n">compute_e2</span><span class="p">(</span>
+            <span class="n">gdf</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span> <span class="n">n_threshold</span><span class="o">=</span><span class="n">n_threshold</span><span class="p">,</span> <span class="n">erosion_threshold</span><span class="o">=</span><span class="n">erosion_threshold</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">gdf</span> <span class="o">=</span> <span class="n">compute_e</span><span class="p">(</span>
+            <span class="n">gdf</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span>
+            <span class="n">n_threshold</span><span class="o">=</span><span class="n">n_threshold</span><span class="p">,</span>
+            <span class="n">slope_threshold</span><span class="o">=</span><span class="n">slope_threshold</span><span class="p">,</span>
+            <span class="n">uslek_threshold</span><span class="o">=</span><span class="n">uslek_threshold</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="c1"># Export</span>
     <span class="c1"># -------------------------------------------------------------------</span>
@@ -1518,7 +1362,7 @@
 
 <div class="viewcode-block" id="compute_apcac">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.compute_apcac">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_apcac</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_apcac</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_db</span><span class="p">,</span> <span class="n">input_layer</span><span class="o">=</span><span class="s2">&quot;apcac_bho5k&quot;</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the final APCAC (Áreas Prioritárias para Conservação de Água)</span>
 <span class="sd">    classification codes and IDs for the input catchment GeoDataFrame.</span>
@@ -1600,7 +1444,26 @@
 
     <span class="c1"># compute apcac</span>
     <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">_classify_apcac</span><span class="p">(</span><span class="n">gdf</span><span class="p">)</span>
+
+    <span class="c1"># full size sample</span>
+    <span class="k">if</span> <span class="n">subset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">gdf</span> <span class="o">=</span> <span class="n">classify_apcac</span><span class="p">(</span><span class="n">gdf</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># block-samples</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">if</span> <span class="n">subset</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="n">ls_gdfs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">ls_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="n">subset</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ls_ids</span><span class="p">:</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subset</span><span class="si">}</span><span class="s2"> == </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">gdf_q</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="c1"># now classify in the subset</span>
+                <span class="n">gdf_q</span> <span class="o">=</span> <span class="n">classify_apcac</span><span class="p">(</span><span class="n">gdf_q</span><span class="p">)</span>
+                <span class="n">ls_gdfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdf_q</span><span class="p">)</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">ls_gdfs</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span>
+
     <span class="c1"># Export</span>
     <span class="c1"># -------------------------------------------------------------------</span>
 
@@ -1714,6 +1577,217 @@
 
 
 
+<div class="viewcode-block" id="classify_apcac">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.classify_apcac">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_apcac</span><span class="p">(</span><span class="n">gdf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classifies catchments based on natural/anthropic,</span>
+<span class="sd">    hydrology, and risk factors using a three-level system (APCAC).</span>
+
+<span class="sd">    :param gdf: GeoDataFrame containing catchment data with ``n``, ``a``, ``c``, ``v``, and ``e`` columns for classification.</span>
+<span class="sd">    :type gdf: :class:`geopandas.GeoDataFrame`</span>
+<span class="sd">    :return: GeoDataFrame with added classification columns: ``cd_apcac_n``, ``id_apcac_n``, ``cd_apcac_a``, ``id_apcac_a``, ``cd_apcac_risk``, ``id_apcac_risk``, ``cd_apcac``, and ``id_apcac``.</span>
+<span class="sd">    :rtype: :class:`geopandas.GeoDataFrame`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># natural or anthropic</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;II&quot;</span><span class="p">)</span>
+
+    <span class="c1"># hydrology</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">thresholds</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="mi">0</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">A1</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">A2</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">A3</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Bin values</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">thresholds</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># ecosystem risks</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># split</span>
+    <span class="n">gdf_n</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_n == &#39;I&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">gdf_a</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_n == &#39;II&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># risk in natural catchments</span>
+    <span class="n">gdf_n</span><span class="p">[</span><span class="s2">&quot;cd_apcac_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_n</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">V1</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># risk in anthropic catchments</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+    <span class="n">gdf_a</span><span class="p">[</span><span class="s2">&quot;cd_apcac_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_a</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># concat</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gdf_n</span><span class="p">,</span> <span class="n">gdf_a</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># climate risks</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># split</span>
+    <span class="n">gdf_r</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_risk == &#39;R&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">gdf_rn</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_risk != &#39;R&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">gdf_r</span><span class="p">[</span><span class="s2">&quot;cd_apcac_c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="n">gdf_rna</span> <span class="o">=</span> <span class="n">gdf_rn</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_n == &#39;II&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">gdf_rnn</span> <span class="o">=</span> <span class="n">gdf_rn</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_n != &#39;II&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">gdf_rnn</span><span class="p">[</span><span class="s2">&quot;cd_apcac_c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">gdf_rna</span><span class="p">[</span><span class="s2">&quot;cd_apcac_c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_rna</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># concat</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gdf_r</span><span class="p">,</span> <span class="n">gdf_rna</span><span class="p">,</span> <span class="n">gdf_rnn</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># wrap up</span>
+    <span class="c1"># -------------------------------------------------------------------</span>
+
+    <span class="c1"># concat columns</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_risk&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_c&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># if regular X and C: overwrite classe to XC</span>
+    <span class="c1"># split</span>
+    <span class="n">gdf_x</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_a == &#39;X&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">gdf_xn</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_a != &#39;X&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">gdf_x</span><span class="p">[</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_x</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;XC&quot;</span><span class="p">,</span> <span class="n">gdf_x</span><span class="p">[</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gdf_x</span><span class="p">,</span> <span class="n">gdf_xn</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gdf</span></div>
+
+
+
+<div class="viewcode-block" id="compute_e">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.compute_e">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_e</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">n_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slope_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">uslek_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the erosion risk &#39;e&#39; based on multiple environmental</span>
+<span class="sd">    thresholds and adds the result to the GeoDataFrame.</span>
+
+<span class="sd">    :param gdf: GeoDataFrame containing the environmental factors ``n``, ``slope``, and ``uslek``.</span>
+<span class="sd">    :type gdf: :class:`geopandas.GeoDataFrame`</span>
+<span class="sd">    :param n_threshold: [optional] The threshold value for the ``n`` factor (e.g., vegetation cover). Defaults to a predefined global constant ``N1``.</span>
+<span class="sd">    :type n_threshold: float or None</span>
+<span class="sd">    :param slope_threshold: [optional] The minimum slope value considered risky. Defaults to a predefined global constant ``SLOPE_THRESHOLD``.</span>
+<span class="sd">    :type slope_threshold: float or None</span>
+<span class="sd">    :param uslek_threshold: [optional] The minimum USLE-K factor value considered risky. Defaults to a predefined global constant ``USLEK_THRESHOLD``.</span>
+<span class="sd">    :type uslek_threshold: float or None</span>
+<span class="sd">    :return: The input GeoDataFrame with new boolean columns (``is_risk_n``, ``is_risk_slope``, ``is_risk_uslek``) and the final combined erosion risk column (``e``).</span>
+<span class="sd">    :rtype: :class:`geopandas.GeoDataFrame`</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    The erosion risk ``e`` is classified as 1 (risk) if the ``n`` factor</span>
+<span class="sd">    is below its threshold AND either the &#39;slope&#39; or &#39;uslek&#39; factors are above</span>
+<span class="sd">    their respective thresholds. Otherwise, ``e`` is 0 (no risk).</span>
+<span class="sd">    The process first calculates intermediate boolean risk columns for each factor.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># get thresholds</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="k">if</span> <span class="n">n_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_threshold</span> <span class="o">=</span> <span class="n">N1</span>
+
+    <span class="k">if</span> <span class="n">slope_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">slope_threshold</span> <span class="o">=</span> <span class="n">SLOPE_THRESHOLD</span>
+
+    <span class="k">if</span> <span class="n">uslek_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">uslek_threshold</span> <span class="o">=</span> <span class="n">USLEK_THRESHOLD</span>
+
+    <span class="c1"># compute boolean conservation risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">n_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># compute boolean slope risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">slope_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># remove well conserved areas</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="p">)</span>
+
+    <span class="c1"># compute boolean slope risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;uslek&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">uslek_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># remove well conserved areas</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="p">)</span>
+
+    <span class="c1"># print(f&quot;uslek: {uslek_threshold}&quot;)</span>
+    <span class="c1"># print(&quot;risks: {}&quot;.format(gdf[&quot;is_risk_uslek&quot;].sum()))</span>
+
+    <span class="c1"># classify risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gdf</span></div>
+
+
+
+<div class="viewcode-block" id="compute_e2">
+<a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.compute_e2">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_e2</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">n_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">erosion_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the erosion risk &#39;e&#39; based on two environmental</span>
+<span class="sd">    thresholds and adds the result to the GeoDataFrame.</span>
+
+<span class="sd">    :param gdf: GeoDataFrame containing the environmental factors ``n``, and ``erosion``.</span>
+<span class="sd">    :type gdf: :class:`geopandas.GeoDataFrame`</span>
+<span class="sd">    :param n_threshold: [optional] The threshold value for the ``n`` factor (e.g., vegetation cover). Defaults to a predefined global constant ``N1``.</span>
+<span class="sd">    :type n_threshold: float or None</span>
+<span class="sd">    :param erosion_threshold: [optional] The minimum erosion factor value considered risky. Defaults to a predefined global constant ``EROSION_THRESHOLD``.</span>
+<span class="sd">    :type erosion_threshold: float or None</span>
+<span class="sd">    :return: The input GeoDataFrame with new boolean columns (``is_risk_n``, ``is_risk_slope``, ``is_risk_uslek``) and the final combined erosion risk column (``e``).</span>
+<span class="sd">    :rtype: :class:`geopandas.GeoDataFrame`</span>
+
+<span class="sd">    **Notes**</span>
+
+<span class="sd">    The erosion risk ``e`` is classified as 1 (risk) if the ``n`` factor</span>
+<span class="sd">    is below its threshold AND either the &#39;erosion&#39; factor is above</span>
+<span class="sd">    its respective threshold. Otherwise, ``e`` is 0 (no risk).</span>
+<span class="sd">    The process first calculates intermediate boolean risk columns for each factor.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># get thresholds</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="k">if</span> <span class="n">n_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_threshold</span> <span class="o">=</span> <span class="n">N1</span>
+
+    <span class="k">if</span> <span class="n">erosion_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">erosion_threshold</span> <span class="o">=</span> <span class="n">EROSION_THRESHOLD</span>
+
+    <span class="c1"># compute boolean conservation risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">n_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># compute boolean erosion risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_erosion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;erosion&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">erosion_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># remove well conserved areas</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_erosion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_erosion&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="p">)</span>
+
+    <span class="c1"># classify risk</span>
+    <span class="c1"># -----------------------------------</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_erosion&quot;</span><span class="p">]</span>
+    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gdf</span></div>
+
+
+
 <div class="viewcode-block" id="get_latex_table">
 <a class="viewcode-back" href="../../generated/apcac.classes.html#apcac.classes.get_latex_table">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_latex_table</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">input_csv</span><span class="p">):</span>
@@ -1806,9 +1880,6 @@
 
 
 
-<span class="c1"># ... {develop}</span>
-
-
 <span class="c1"># FUNCTIONS -- Module-level</span>
 <span class="c1"># =======================================================================</span>
 
@@ -1841,158 +1912,6 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &gt;&gt; saving...&quot;</span><span class="p">)</span>
     <span class="n">gdf</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">&quot;GPKG&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_classify_apcac</span><span class="p">(</span><span class="n">gdf</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Classifies catchments based on natural/anthropic,</span>
-<span class="sd">    hydrology, and risk factors using a three-level system (APCAC).</span>
-
-<span class="sd">    :param gdf: GeoDataFrame containing catchment data with ``n``, ``a``, ``c``, ``v``, and ``e`` columns for classification.</span>
-<span class="sd">    :type gdf: :class:`geopandas.GeoDataFrame`</span>
-<span class="sd">    :return: GeoDataFrame with added classification columns: ``cd_apcac_n``, ``id_apcac_n``, ``cd_apcac_a``, ``id_apcac_a``, ``cd_apcac_risk``, ``id_apcac_risk``, ``cd_apcac``, and ``id_apcac``.</span>
-<span class="sd">    :rtype: :class:`geopandas.GeoDataFrame`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># natural or anthropic</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;II&quot;</span><span class="p">)</span>
-
-    <span class="c1"># hydrology</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">thresholds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="mi">0</span><span class="p">,</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">A1</span><span class="p">),</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">A2</span><span class="p">),</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">A3</span><span class="p">),</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
-    <span class="p">]</span>
-    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">]</span>
-
-    <span class="c1"># Bin values</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">thresholds</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-    <span class="c1"># ecosystem risks</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-
-    <span class="c1"># split</span>
-    <span class="n">gdf_n</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_n == &#39;I&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">gdf_a</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_n == &#39;II&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="c1"># risk in natural catchments</span>
-    <span class="n">gdf_n</span><span class="p">[</span><span class="s2">&quot;cd_apcac_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_n</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">V1</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-    <span class="c1"># risk in anthropic catchments</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-    <span class="n">gdf_a</span><span class="p">[</span><span class="s2">&quot;cd_apcac_risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_a</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-    <span class="c1"># concat</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gdf_n</span><span class="p">,</span> <span class="n">gdf_a</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="c1"># climate risks</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-
-    <span class="c1"># split</span>
-    <span class="n">gdf_r</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_risk == &#39;R&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">gdf_rn</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_risk != &#39;R&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="n">gdf_r</span><span class="p">[</span><span class="s2">&quot;cd_apcac_c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-
-    <span class="n">gdf_rna</span> <span class="o">=</span> <span class="n">gdf_rn</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_n == &#39;II&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">gdf_rnn</span> <span class="o">=</span> <span class="n">gdf_rn</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_n != &#39;II&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="n">gdf_rnn</span><span class="p">[</span><span class="s2">&quot;cd_apcac_c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">gdf_rna</span><span class="p">[</span><span class="s2">&quot;cd_apcac_c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_rna</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-    <span class="c1"># concat</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gdf_r</span><span class="p">,</span> <span class="n">gdf_rna</span><span class="p">,</span> <span class="n">gdf_rnn</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="c1"># wrap up</span>
-    <span class="c1"># -------------------------------------------------------------------</span>
-
-    <span class="c1"># concat columns</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-        <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-        <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_risk&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-        <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;cd_apcac_c&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-    <span class="p">)</span>
-
-    <span class="c1"># if regular X and C: overwrite classe to XC</span>
-    <span class="c1"># split</span>
-    <span class="n">gdf_x</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_a == &#39;X&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">gdf_xn</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;cd_apcac_a != &#39;X&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="n">gdf_x</span><span class="p">[</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf_x</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;XC&quot;</span><span class="p">,</span> <span class="n">gdf_x</span><span class="p">[</span><span class="s2">&quot;cd_apcac&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gdf_x</span><span class="p">,</span> <span class="n">gdf_xn</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">gdf</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_compute_e</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">n_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slope_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">uslek_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes the erosion risk &#39;e&#39; based on multiple environmental</span>
-<span class="sd">    thresholds and adds the result to the GeoDataFrame.</span>
-
-<span class="sd">    :param gdf: GeoDataFrame containing the environmental factors ``n``, ``slope``, and ``uslek``.</span>
-<span class="sd">    :type gdf: :class:`geopandas.GeoDataFrame`</span>
-<span class="sd">    :param n_threshold: [optional] The threshold value for the ``n`` factor (e.g., vegetation cover). Defaults to a predefined global constant ``N1``.</span>
-<span class="sd">    :type n_threshold: float or None</span>
-<span class="sd">    :param slope_threshold: [optional] The minimum slope value considered risky. Defaults to a predefined global constant ``SLOPE_THRESHOLD``.</span>
-<span class="sd">    :type slope_threshold: float or None</span>
-<span class="sd">    :param uslek_threshold: [optional] The minimum USLE-K factor value considered risky. Defaults to a predefined global constant ``USLEK_THRESHOLD``.</span>
-<span class="sd">    :type uslek_threshold: float or None</span>
-<span class="sd">    :return: The input GeoDataFrame with new boolean columns (``is_risk_n``, ``is_risk_slope``, ``is_risk_uslek``) and the final combined erosion risk column (``e``).</span>
-<span class="sd">    :rtype: :class:`geopandas.GeoDataFrame`</span>
-
-<span class="sd">    **Notes**</span>
-
-<span class="sd">    The erosion risk ``e`` is classified as 1 (risk) if the ``n`` factor</span>
-<span class="sd">    is below its threshold AND either the &#39;slope&#39; or &#39;uslek&#39; factors are above</span>
-<span class="sd">    their respective thresholds. Otherwise, ``e`` is 0 (no risk).</span>
-<span class="sd">    The process first calculates intermediate boolean risk columns for each factor.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># get thresholds</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="k">if</span> <span class="n">n_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">n_threshold</span> <span class="o">=</span> <span class="n">N1</span>
-
-    <span class="k">if</span> <span class="n">slope_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">slope_threshold</span> <span class="o">=</span> <span class="n">SLOPE_THRESHOLD</span>
-
-    <span class="k">if</span> <span class="n">uslek_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">uslek_threshold</span> <span class="o">=</span> <span class="n">USLEK_THRESHOLD</span>
-
-    <span class="c1"># compute boolean conservation risk</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">n_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="c1"># compute boolean slope risk</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">slope_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="c1"># remove well conserved areas</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-        <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
-    <span class="p">)</span>
-
-    <span class="c1"># compute boolean slope risk</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;uslek&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="n">uslek_threshold</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="c1"># remove well conserved areas</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-        <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="n">N2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
-    <span class="p">)</span>
-
-    <span class="c1"># print(f&quot;uslek: {uslek_threshold}&quot;)</span>
-    <span class="c1"># print(&quot;risks: {}&quot;.format(gdf[&quot;is_risk_uslek&quot;].sum()))</span>
-
-    <span class="c1"># classify risk</span>
-    <span class="c1"># -----------------------------------</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_n&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_slope&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;is_risk_uslek&quot;</span><span class="p">]</span>
-    <span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">gdf</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_upscale_indexes</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">field_upscale</span><span class="p">,</span> <span class="n">field_area</span><span class="p">):</span>
@@ -2463,8 +2382,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -2498,7 +2417,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.19.0.
 </p></div>
       
     </div>

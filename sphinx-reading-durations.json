@@ -1,12 +1,12 @@
 {
-    "about": 0.019,
-    "api": 0.007,
-    "development": 0.039,
-    "generated/apcac.classes": 0.232,
-    "generated/apcac.indexes": 0.038,
+    "about": 0.015,
+    "api": 0.006,
+    "development": 0.013,
+    "generated/apcac.classes": 0.264,
+    "generated/apcac.indexes": 0.037,
     "includes/ipsum": 0.001,
     "includes/logo": 0.002,
     "includes/warning_dev": 0.001,
     "index": 0.003,
-    "usage": 0.014
+    "usage": 0.011
 }
