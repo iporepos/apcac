@@ -98,6 +98,7 @@ The following script runs a full ``APCAC`` analysis:
 
 
 """
+
 # IMPORTS
 # ***********************************************************************
 # import modules from other libs
@@ -107,7 +108,9 @@ The following script runs a full ``APCAC`` analysis:
 import os, shutil
 import time, datetime
 import textwrap
+from itertools import dropwhile
 from pathlib import Path
+from tkinter.constants import RAISED
 
 # ... {develop}
 
@@ -116,7 +119,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import geopandas as gpd
-import processing
 
 # ... {develop}
 
@@ -153,7 +155,7 @@ FIELDS_BASE = [
 ]
 
 # Raster index keys expected to be present after sampling
-FIELDS_INDEXES_INPUTS = ["t", "s", "g", "c", "n", "v", "slope", "uslek"]
+FIELDS_INDEXES_INPUTS = ["t", "s", "g", "c", "n", "v", "slope", "uslek", "erosion"]
 
 # n threshold above which a catchment is classified as predominantly natural (%)
 N2 = 60
@@ -165,12 +167,14 @@ V1 = -2
 SLOPE_THRESHOLD = 5
 # USLE-K erodibility threshold above which erosion risk is flagged
 USLEK_THRESHOLD = 0.03
+# Erosion factor threshold above which erosion risk is flagged
+EROSION_THRESHOLD = 3  # considering a scale from 1 to 5
 
 # Percentile breakpoints for the hydrology importance index (a)
 # A1/A2/A3 define the boundaries between classes X, C, B, and A
 A1 = 60
 A2 = 90
-A3 = 98
+A3 = 95
 
 APCAC_LABELS = {
     "cd_apcac": [
@@ -608,172 +612,6 @@ def analysis_apcac_upscaled(
 # =======================================================================
 
 
-def sample_indexes(
-    output_folder,
-    input_db,
-    raster_files,
-    input_layer="apcac_bho5k",
-    raster_multipliers=None,
-):
-    """
-    Samples mean values from multiple raster files over a vector layer
-    (e.g., catchments) and merges the results into a GeoDataFrame.
-
-    :param output_folder: Path to the directory where temporary and final output files will be stored.
-    :type output_folder: str
-    :param input_db: Path to the GeoPackage or database file containing the input vector layer.
-    :type input_db: str
-    :param raster_files: Dictionary where keys are the desired column names (index names) and values are the full paths to the corresponding raster files.
-    :type raster_files: dict
-    :param input_layer: Name of the vector layer within the input database to use for zonal statistics. Default value = "apcac_bho5k"
-    :type input_layer: str
-    :param raster_multipliers: [optional] Dictionary where keys are the index names (from ``raster_files``) and values are factors by which the sampled mean values should be divided (e.g., to convert units).
-    :type raster_multipliers: dict
-    :return: The file path to the final GeoPackage file containing the input layer with the new sampled index columns.
-    :rtype: str
-
-    **Notes**
-
-    The process uses QGIS's native zonal statistics algorithm (``native:zonalstatisticsfb``)
-    to calculate the mean of each raster within the polygons of the input vector layer.
-
-
-    **Script example**
-
-    .. code-block:: python
-
-        import importlib.util as iu
-
-        # define the paths to this module
-        # ----------------------------------------
-        the_module = "path/to/classes.py"
-
-        spec = iu.spec_from_file_location("module", the_module)
-        module = iu.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
-        # define the paths to input and output folders
-        # ----------------------------------------
-        input_dir = "path/to/input_folder"
-        output_dir = "path/to/output_folder"
-
-        # define the path to input database
-        # ----------------------------------------
-        input_db = f"{input_dir}/path/to/data.gpkg"
-
-        # define the paths to input rasters
-        # ----------------------------------------
-        raster_files = {
-            # change this paths
-            "t": f"{input_dir}/path/to/raster_t.tif",
-            "s": f"{input_dir}/path/to/raster_s.tif",
-            "g": f"{input_dir}/path/to/raster_g.tif",
-            "c": f"{input_dir}/path/to/raster_c.tif",
-            "n": f"{input_dir}/path/to/raster_n.tif",
-            "v": f"{input_dir}/path/to/raster_v.tif",
-            "slope": f"{input_dir}/path/to/raster_slope.tif",
-            "uslek": f"{input_dir}/path/to/raster_uslek.tif",
-        }
-
-        # define which index has multipliers (the value is divided)
-        # ----------------------------------------
-        raster_multipliers = {
-            "t": 1000,
-            "s": 100,
-            "slope": 100,
-            # change and add more if needed
-        }
-
-        # call the function
-        # ----------------------------------------
-        module.sample_indexes(
-            input_db=input_db,
-            raster_files=raster_files,
-            output_folder=output_dir,
-            raster_multipliers=raster_multipliers,
-            input_layer="apcac_bho5k",
-        )
-
-    """
-
-    # Startup
-    # -------------------------------------------------------------------
-    func_name = sample_indexes.__name__
-    print(f"running: {func_name}")
-
-    # Setup input variables
-    # -------------------------------------------------------------------
-    ls_input_indexes = []
-
-    # Setup output variables
-    # -------------------------------------------------------------------
-
-    # folders
-    # -----------------------------------
-    os.makedirs(output_folder, exist_ok=True)
-    output_folder = _make_run_folder(run_name=func_name, output_folder=output_folder)
-
-    # files
-    # -----------------------------------
-    output_file = Path(f"{output_folder}/apcac.gpkg")
-
-    # Run processes
-    # -------------------------------------------------------------------
-
-    # sampling loop
-    # -----------------------------------
-    for index in raster_files:
-        index_name = index[:]
-        index_file = raster_files[index]
-        print(f">> sampling {index_name} from \n {index_file}")
-
-        processing.run(
-            "native:zonalstatisticsfb",
-            {
-                "INPUT": "{}|layername={}".format(input_db, input_layer),
-                "INPUT_RASTER": index_file,
-                "RASTER_BAND": 1,
-                "COLUMN_PREFIX": f"{index_name}_",
-                "STATISTICS": [2],
-                "OUTPUT": "ogr:dbname='{}' table=\"{}\" (geom)".format(
-                    output_file, index_name
-                ),
-            },
-        )
-        ls_input_indexes.append(index_name)
-
-    # load data
-    # -----------------------------------
-    gdf = gpd.read_file(input_db, layer=input_layer)
-    gdf = gdf[FIELDS_BASE + ["geometry"]].copy()
-
-    # organization loop
-    # -----------------------------------
-    for index in ls_input_indexes:
-        gdf_index = gpd.read_file(output_file, layer=index)
-        gdf_index = gdf_index[["cobacia", f"{index}_mean"]].copy()
-        gdf_index.rename(columns={f"{index}_mean": index}, inplace=True)
-        gdf = pd.merge(left=gdf, right=gdf_index, on="cobacia", how="left")
-
-    # handle optional multipliers
-    # -----------------------------------
-    if raster_multipliers is not None:
-        for index in raster_multipliers:
-            gdf[index] = gdf[index] / raster_multipliers[index]
-
-    # Export
-    # -------------------------------------------------------------------
-
-    # save
-    # -----------------------------------
-    os.remove(output_file)
-    _save_gdf(gdf, db=output_file, layer=input_layer)
-
-    print(f"run successfull. see for outputs:\n{output_folder}")
-
-    return output_file
-
-
 def compute_index_a(output_folder, input_db, input_layer="apcac_bho5k"):
     """
     Computes the raw and fuzzified ``a`` (hydrology importance) index as
@@ -880,6 +718,8 @@ def compute_index_e(
     n_threshold=None,
     slope_threshold=None,
     uslek_threshold=None,
+    erosion_threshold=None,
+    use_e2=True,
 ):
     """
     Computes the binary ``e`` (erosion/degradation risk) index, classifying areas
@@ -898,6 +738,8 @@ def compute_index_e(
     :type slope_threshold: float
     :param uslek_threshold: [optional] The minimum ``uslek`` value (soil erodibility) considered to indicate risk. Default value = USLEK_THRESHOLD
     :type uslek_threshold: float
+    :param erosion_threshold: [optional] The minimum ``erosion`` value (user defined) considered to indicate risk. Default value = EROSION_THRESHOLD
+    :type erosion_threshold: float
     :return: The file path to the final GeoPackage file, which contains the input layer with the new boolean risk columns (``is_risk_n``, ``is_risk_slope``, ``is_risk_uslek``) and the final ``e`` index.
     :rtype: str
 
@@ -962,12 +804,17 @@ def compute_index_e(
 
     # classify
     # -----------------------------------
-    gdf = _compute_e(
-        gdf=gdf,
-        n_threshold=n_threshold,
-        slope_threshold=slope_threshold,
-        uslek_threshold=uslek_threshold,
-    )
+    if use_e2:
+        gdf = compute_e2(
+            gdf=gdf, n_threshold=n_threshold, erosion_threshold=erosion_threshold
+        )
+    else:
+        gdf = compute_e(
+            gdf=gdf,
+            n_threshold=n_threshold,
+            slope_threshold=slope_threshold,
+            uslek_threshold=uslek_threshold,
+        )
 
     # Export
     # -------------------------------------------------------------------
@@ -1117,7 +964,7 @@ def compute_upscaled_indexes(
     return output_file
 
 
-def compute_apcac(output_folder, input_db, input_layer="apcac_bho5k"):
+def compute_apcac(output_folder, input_db, input_layer="apcac_bho5k", subset=None):
     """
     Calculates the final APCAC (Áreas Prioritárias para Conservação de Água)
     classification codes and IDs for the input catchment GeoDataFrame.
@@ -1199,7 +1046,26 @@ def compute_apcac(output_folder, input_db, input_layer="apcac_bho5k"):
 
     # compute apcac
     # -----------------------------------
-    gdf = _classify_apcac(gdf)
+
+    # full size sample
+    if subset is None:
+        gdf = classify_apcac(gdf)
+    else:
+        # block-samples
+        cols = gdf.columns
+        if subset in cols:
+            ls_gdfs = []
+            ls_ids = list(gdf[subset].unique())
+            for i in ls_ids:
+                q = f"{subset} == {i}"
+                gdf_q = gdf.query(q).copy().reset_index(drop=True)
+                # now classify in the subset
+                gdf_q = classify_apcac(gdf_q)
+                ls_gdfs.append(gdf_q)
+            gdf = pd.concat(ls_gdfs).reset_index(drop=True)
+        else:
+            raise KeyError
+
     # Export
     # -------------------------------------------------------------------
 
@@ -1309,6 +1175,208 @@ def compute_apcac_stats(output_folder, input_db, input_layer="apcac_bho5k"):
     return output_file
 
 
+def classify_apcac(gdf):
+    """
+    Classifies catchments based on natural/anthropic,
+    hydrology, and risk factors using a three-level system (APCAC).
+
+    :param gdf: GeoDataFrame containing catchment data with ``n``, ``a``, ``c``, ``v``, and ``e`` columns for classification.
+    :type gdf: :class:`geopandas.GeoDataFrame`
+    :return: GeoDataFrame with added classification columns: ``cd_apcac_n``, ``id_apcac_n``, ``cd_apcac_a``, ``id_apcac_a``, ``cd_apcac_risk``, ``id_apcac_risk``, ``cd_apcac``, and ``id_apcac``.
+    :rtype: :class:`geopandas.GeoDataFrame`
+    """
+    # natural or anthropic
+    # -------------------------------------------------------------------
+    gdf["cd_apcac_n"] = np.where(gdf["n"] >= N2, "I", "II")
+
+    # hydrology
+    # -------------------------------------------------------------------
+    gdf["a"] = gdf["a"].fillna(0)
+    thresholds = [
+        0,
+        np.percentile(gdf["a"].values, A1),
+        np.percentile(gdf["a"].values, A2),
+        np.percentile(gdf["a"].values, A3),
+        np.inf,
+    ]
+    labels = ["X", "C", "B", "A"]
+
+    # Bin values
+    gdf["cd_apcac_a"] = pd.cut(gdf["a"], bins=thresholds, labels=labels, right=False)
+
+    # ecosystem risks
+    # -------------------------------------------------------------------
+
+    # split
+    gdf_n = gdf.query("cd_apcac_n == 'I'").copy()
+    gdf_a = gdf.query("cd_apcac_n == 'II'").copy()
+
+    # risk in natural catchments
+    gdf_n["cd_apcac_risk"] = np.where(gdf_n["v"] <= V1, "R", "")
+
+    # risk in anthropic catchments
+    # -------------------------------------------------------------------
+    gdf_a["cd_apcac_risk"] = np.where(gdf_a["e"] > 0, "R", "")
+
+    # concat
+    gdf = pd.concat([gdf_n, gdf_a]).reset_index(drop=True)
+
+    # climate risks
+    # -------------------------------------------------------------------
+
+    # split
+    gdf_r = gdf.query("cd_apcac_risk == 'R'").copy()
+    gdf_rn = gdf.query("cd_apcac_risk != 'R'").copy()
+
+    gdf_r["cd_apcac_c"] = ""
+
+    gdf_rna = gdf_rn.query("cd_apcac_n == 'II'").copy()
+    gdf_rnn = gdf_rn.query("cd_apcac_n != 'II'").copy()
+
+    gdf_rnn["cd_apcac_c"] = ""
+    gdf_rna["cd_apcac_c"] = np.where(gdf_rna["c"] <= 0, "C", "")
+
+    # concat
+    gdf = pd.concat([gdf_r, gdf_rna, gdf_rnn]).reset_index(drop=True)
+
+    # wrap up
+    # -------------------------------------------------------------------
+
+    # concat columns
+    gdf["cd_apcac"] = (
+        gdf["cd_apcac_n"].astype(str)
+        + gdf["cd_apcac_a"].astype(str)
+        + gdf["cd_apcac_risk"].astype(str)
+        + gdf["cd_apcac_c"].astype(str)
+    )
+
+    # if regular X and C: overwrite classe to XC
+    # split
+    gdf_x = gdf.query("cd_apcac_a == 'X'").copy()
+    gdf_xn = gdf.query("cd_apcac_a != 'X'").copy()
+
+    gdf_x["cd_apcac"] = np.where(gdf_x["c"] <= 0, "XC", gdf_x["cd_apcac"].values)
+    gdf = pd.concat([gdf_x, gdf_xn]).reset_index(drop=True)
+
+    return gdf
+
+
+def compute_e(gdf, n_threshold=None, slope_threshold=None, uslek_threshold=None):
+    """
+    Computes the erosion risk 'e' based on multiple environmental
+    thresholds and adds the result to the GeoDataFrame.
+
+    :param gdf: GeoDataFrame containing the environmental factors ``n``, ``slope``, and ``uslek``.
+    :type gdf: :class:`geopandas.GeoDataFrame`
+    :param n_threshold: [optional] The threshold value for the ``n`` factor (e.g., vegetation cover). Defaults to a predefined global constant ``N1``.
+    :type n_threshold: float or None
+    :param slope_threshold: [optional] The minimum slope value considered risky. Defaults to a predefined global constant ``SLOPE_THRESHOLD``.
+    :type slope_threshold: float or None
+    :param uslek_threshold: [optional] The minimum USLE-K factor value considered risky. Defaults to a predefined global constant ``USLEK_THRESHOLD``.
+    :type uslek_threshold: float or None
+    :return: The input GeoDataFrame with new boolean columns (``is_risk_n``, ``is_risk_slope``, ``is_risk_uslek``) and the final combined erosion risk column (``e``).
+    :rtype: :class:`geopandas.GeoDataFrame`
+
+    **Notes**
+
+    The erosion risk ``e`` is classified as 1 (risk) if the ``n`` factor
+    is below its threshold AND either the 'slope' or 'uslek' factors are above
+    their respective thresholds. Otherwise, ``e`` is 0 (no risk).
+    The process first calculates intermediate boolean risk columns for each factor.
+
+    """
+    # get thresholds
+    # -----------------------------------
+    if n_threshold is None:
+        n_threshold = N1
+
+    if slope_threshold is None:
+        slope_threshold = SLOPE_THRESHOLD
+
+    if uslek_threshold is None:
+        uslek_threshold = USLEK_THRESHOLD
+
+    # compute boolean conservation risk
+    # -----------------------------------
+    gdf["is_risk_n"] = np.where(gdf["n"].values <= n_threshold, 1, 0)
+
+    # compute boolean slope risk
+    # -----------------------------------
+    gdf["is_risk_slope"] = np.where(gdf["slope"].values >= slope_threshold, 1, 0)
+    # remove well conserved areas
+    gdf["is_risk_slope"] = gdf["is_risk_slope"].values * np.where(
+        gdf["n"].values <= N2, 1, 0
+    )
+
+    # compute boolean slope risk
+    # -----------------------------------
+    gdf["is_risk_uslek"] = np.where(gdf["uslek"].values >= uslek_threshold, 1, 0)
+    # remove well conserved areas
+    gdf["is_risk_uslek"] = gdf["is_risk_uslek"].values * np.where(
+        gdf["n"].values <= N2, 1, 0
+    )
+
+    # print(f"uslek: {uslek_threshold}")
+    # print("risks: {}".format(gdf["is_risk_uslek"].sum()))
+
+    # classify risk
+    # -----------------------------------
+    gdf["e"] = gdf["is_risk_n"] + gdf["is_risk_slope"] + gdf["is_risk_uslek"]
+    gdf["e"] = np.where(gdf["e"].values > 0, 1, 0)
+
+    return gdf
+
+
+def compute_e2(gdf, n_threshold=None, erosion_threshold=None):
+    """
+    Computes the erosion risk 'e' based on two environmental
+    thresholds and adds the result to the GeoDataFrame.
+
+    :param gdf: GeoDataFrame containing the environmental factors ``n``, and ``erosion``.
+    :type gdf: :class:`geopandas.GeoDataFrame`
+    :param n_threshold: [optional] The threshold value for the ``n`` factor (e.g., vegetation cover). Defaults to a predefined global constant ``N1``.
+    :type n_threshold: float or None
+    :param erosion_threshold: [optional] The minimum erosion factor value considered risky. Defaults to a predefined global constant ``EROSION_THRESHOLD``.
+    :type erosion_threshold: float or None
+    :return: The input GeoDataFrame with new boolean columns (``is_risk_n``, ``is_risk_slope``, ``is_risk_uslek``) and the final combined erosion risk column (``e``).
+    :rtype: :class:`geopandas.GeoDataFrame`
+
+    **Notes**
+
+    The erosion risk ``e`` is classified as 1 (risk) if the ``n`` factor
+    is below its threshold AND either the 'erosion' factor is above
+    its respective threshold. Otherwise, ``e`` is 0 (no risk).
+    The process first calculates intermediate boolean risk columns for each factor.
+
+    """
+    # get thresholds
+    # -----------------------------------
+    if n_threshold is None:
+        n_threshold = N1
+
+    if erosion_threshold is None:
+        erosion_threshold = EROSION_THRESHOLD
+
+    # compute boolean conservation risk
+    # -----------------------------------
+    gdf["is_risk_n"] = np.where(gdf["n"].values <= n_threshold, 1, 0)
+
+    # compute boolean erosion risk
+    # -----------------------------------
+    gdf["is_risk_erosion"] = np.where(gdf["erosion"].values >= erosion_threshold, 1, 0)
+    # remove well conserved areas
+    gdf["is_risk_erosion"] = gdf["is_risk_erosion"].values * np.where(
+        gdf["n"].values <= N2, 1, 0
+    )
+
+    # classify risk
+    # -----------------------------------
+    gdf["e"] = gdf["is_risk_n"] + gdf["is_risk_erosion"]
+    gdf["e"] = np.where(gdf["e"].values > 0, 1, 0)
+
+    return gdf
+
+
 def get_latex_table(output_folder, input_csv):
     """
     Reads a CSV file containing APCAC summary statistics, converts
@@ -1398,9 +1466,6 @@ def get_latex_table(output_folder, input_csv):
     return output_file
 
 
-# ... {develop}
-
-
 # FUNCTIONS -- Module-level
 # =======================================================================
 
@@ -1433,158 +1498,6 @@ def _save_gdf(gdf, db, layer):
     print(" >> saving...")
     gdf.to_file(db, layer=layer, driver="GPKG")
     return None
-
-
-def _classify_apcac(gdf):
-    """
-    Classifies catchments based on natural/anthropic,
-    hydrology, and risk factors using a three-level system (APCAC).
-
-    :param gdf: GeoDataFrame containing catchment data with ``n``, ``a``, ``c``, ``v``, and ``e`` columns for classification.
-    :type gdf: :class:`geopandas.GeoDataFrame`
-    :return: GeoDataFrame with added classification columns: ``cd_apcac_n``, ``id_apcac_n``, ``cd_apcac_a``, ``id_apcac_a``, ``cd_apcac_risk``, ``id_apcac_risk``, ``cd_apcac``, and ``id_apcac``.
-    :rtype: :class:`geopandas.GeoDataFrame`
-    """
-    # natural or anthropic
-    # -------------------------------------------------------------------
-    gdf["cd_apcac_n"] = np.where(gdf["n"] >= N2, "I", "II")
-
-    # hydrology
-    # -------------------------------------------------------------------
-    gdf["a"] = gdf["a"].fillna(0)
-    thresholds = [
-        0,
-        np.percentile(gdf["a"].values, A1),
-        np.percentile(gdf["a"].values, A2),
-        np.percentile(gdf["a"].values, A3),
-        np.inf,
-    ]
-    labels = ["X", "C", "B", "A"]
-
-    # Bin values
-    gdf["cd_apcac_a"] = pd.cut(gdf["a"], bins=thresholds, labels=labels, right=False)
-
-    # ecosystem risks
-    # -------------------------------------------------------------------
-
-    # split
-    gdf_n = gdf.query("cd_apcac_n == 'I'").copy()
-    gdf_a = gdf.query("cd_apcac_n == 'II'").copy()
-
-    # risk in natural catchments
-    gdf_n["cd_apcac_risk"] = np.where(gdf_n["v"] <= V1, "R", "")
-
-    # risk in anthropic catchments
-    # -------------------------------------------------------------------
-    gdf_a["cd_apcac_risk"] = np.where(gdf_a["e"] > 0, "R", "")
-
-    # concat
-    gdf = pd.concat([gdf_n, gdf_a]).reset_index(drop=True)
-
-    # climate risks
-    # -------------------------------------------------------------------
-
-    # split
-    gdf_r = gdf.query("cd_apcac_risk == 'R'").copy()
-    gdf_rn = gdf.query("cd_apcac_risk != 'R'").copy()
-
-    gdf_r["cd_apcac_c"] = ""
-
-    gdf_rna = gdf_rn.query("cd_apcac_n == 'II'").copy()
-    gdf_rnn = gdf_rn.query("cd_apcac_n != 'II'").copy()
-
-    gdf_rnn["cd_apcac_c"] = ""
-    gdf_rna["cd_apcac_c"] = np.where(gdf_rna["c"] <= 0, "C", "")
-
-    # concat
-    gdf = pd.concat([gdf_r, gdf_rna, gdf_rnn]).reset_index(drop=True)
-
-    # wrap up
-    # -------------------------------------------------------------------
-
-    # concat columns
-    gdf["cd_apcac"] = (
-        gdf["cd_apcac_n"].astype(str)
-        + gdf["cd_apcac_a"].astype(str)
-        + gdf["cd_apcac_risk"].astype(str)
-        + gdf["cd_apcac_c"].astype(str)
-    )
-
-    # if regular X and C: overwrite classe to XC
-    # split
-    gdf_x = gdf.query("cd_apcac_a == 'X'").copy()
-    gdf_xn = gdf.query("cd_apcac_a != 'X'").copy()
-
-    gdf_x["cd_apcac"] = np.where(gdf_x["c"] <= 0, "XC", gdf_x["cd_apcac"].values)
-    gdf = pd.concat([gdf_x, gdf_xn]).reset_index(drop=True)
-
-    return gdf
-
-
-def _compute_e(gdf, n_threshold=None, slope_threshold=None, uslek_threshold=None):
-    """
-    Computes the erosion risk 'e' based on multiple environmental
-    thresholds and adds the result to the GeoDataFrame.
-
-    :param gdf: GeoDataFrame containing the environmental factors ``n``, ``slope``, and ``uslek``.
-    :type gdf: :class:`geopandas.GeoDataFrame`
-    :param n_threshold: [optional] The threshold value for the ``n`` factor (e.g., vegetation cover). Defaults to a predefined global constant ``N1``.
-    :type n_threshold: float or None
-    :param slope_threshold: [optional] The minimum slope value considered risky. Defaults to a predefined global constant ``SLOPE_THRESHOLD``.
-    :type slope_threshold: float or None
-    :param uslek_threshold: [optional] The minimum USLE-K factor value considered risky. Defaults to a predefined global constant ``USLEK_THRESHOLD``.
-    :type uslek_threshold: float or None
-    :return: The input GeoDataFrame with new boolean columns (``is_risk_n``, ``is_risk_slope``, ``is_risk_uslek``) and the final combined erosion risk column (``e``).
-    :rtype: :class:`geopandas.GeoDataFrame`
-
-    **Notes**
-
-    The erosion risk ``e`` is classified as 1 (risk) if the ``n`` factor
-    is below its threshold AND either the 'slope' or 'uslek' factors are above
-    their respective thresholds. Otherwise, ``e`` is 0 (no risk).
-    The process first calculates intermediate boolean risk columns for each factor.
-
-    """
-    # get thresholds
-    # -----------------------------------
-    if n_threshold is None:
-        n_threshold = N1
-
-    if slope_threshold is None:
-        slope_threshold = SLOPE_THRESHOLD
-
-    if uslek_threshold is None:
-        uslek_threshold = USLEK_THRESHOLD
-
-    # compute boolean conservation risk
-    # -----------------------------------
-    gdf["is_risk_n"] = np.where(gdf["n"].values <= n_threshold, 1, 0)
-
-    # compute boolean slope risk
-    # -----------------------------------
-    gdf["is_risk_slope"] = np.where(gdf["slope"].values >= slope_threshold, 1, 0)
-    # remove well conserved areas
-    gdf["is_risk_slope"] = gdf["is_risk_slope"].values * np.where(
-        gdf["n"].values <= N2, 1, 0
-    )
-
-    # compute boolean slope risk
-    # -----------------------------------
-    gdf["is_risk_uslek"] = np.where(gdf["uslek"].values >= uslek_threshold, 1, 0)
-    # remove well conserved areas
-    gdf["is_risk_uslek"] = gdf["is_risk_uslek"].values * np.where(
-        gdf["n"].values <= N2, 1, 0
-    )
-
-    # print(f"uslek: {uslek_threshold}")
-    # print("risks: {}".format(gdf["is_risk_uslek"].sum()))
-
-    # classify risk
-    # -----------------------------------
-    gdf["e"] = gdf["is_risk_n"] + gdf["is_risk_slope"] + gdf["is_risk_uslek"]
-    gdf["e"] = np.where(gdf["e"].values > 0, 1, 0)
-
-    return gdf
 
 
 def _upscale_indexes(gdf, field_upscale, field_area):
